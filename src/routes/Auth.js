@@ -1,5 +1,6 @@
 import passport from "passport";
-import "../auth/localStrategy";
+import "../auth/localStrategy.js";
+import { Router } from "express";
 
 const router = Router();
 

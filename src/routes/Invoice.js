@@ -1,14 +1,14 @@
 import { Router } from "express";
-import authenticated from "../middlewares/authenticated";
-import checkRole from "../middlewares/checkRole";
-import createInvoice from "../controllers/Invoice/create";
-import updateInvoice from "../controllers/Invoice/update";
+import authenticated from "../middlewares/authenticated.js";
+import checkRole from "../middlewares/checkRole.js";
+import createInvoice from "../controllers/Invoice/create.js";
+import updateInvoice from "../controllers/Invoice/update.js";
 import validate from "../middlewares/validate";
-import InvoiceSchema, { InvoiceUpdateFeesSchema } from "../validators/InvoiceSchema";
+import InvoiceSchema, { InvoiceUpdateFeesSchema } from "../validators/InvoiceSchema.js";
 import mongoose from "mongoose";
-import changeInvoiceStatus from "../controllers/Invoice/changeStatus";
-import listInvoices from "../controllers/Invoice/list";
-import getInvoice from "../controllers/Invoice/get";
+import changeInvoiceStatus from "../controllers/Invoice/changeStatus.js";
+import listInvoices from "../controllers/Invoice/list.js";
+import getInvoice from "../controllers/Invoice/get.js";
 
 const router = Router();
 

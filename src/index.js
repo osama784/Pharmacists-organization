@@ -1,11 +1,12 @@
-import { logger, loggerMiddlware } from "./middlewares/logger";
+// import { logger, loggerMiddlware } from "./middlewares/logger.js";
 import mongoose from "mongoose";
+import express from "express";
 import { config } from "dotenv";
-import "./config/dbConn";
+import "./config/dbConn.js";
 import MongoStore from "connect-mongo";
 import session from "express-session";
 import passport from "passport";
-import authRouter from "./routes/Auth";
+import authRouter from "./routes/Auth.js";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -28,7 +29,7 @@ app.use(
         },
     })
 );
-app.use(loggerMiddlware);
+// app.use(loggerMiddlware);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,7 +42,8 @@ app.use((err, req, res, next) => {
             message: err.message,
         });
     } else {
-        logger.error(err.message);
+        // logger.error(err.message);
+        console.log(err.message);
         res.status(500).json({
             message: "Something went wrong on the server",
         });

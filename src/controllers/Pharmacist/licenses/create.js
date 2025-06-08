@@ -1,4 +1,4 @@
-import Pharmacist from "../../../models/Pharmacist";
+import Pharmacist from "../../../models/Pharmacist.js";
 
 const createLicense = async (req, res, next) => {
     try {

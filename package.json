@@ -3,10 +3,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "build": "tsc --build",
-        "start": "node ./dist/src/index.js",
-        "start:dev": "tsc && node ./dist/src/index.js",
-        "load": "node ./dist/load/scripts/main.js"
+        "start": "node ./src/index.js",
+        "load": "node ./load/scripts/main.js"
     },
     "type": "module",
     "keywords": [],

@@ -1,6 +1,6 @@
-import Invoice from "../../models/Invoice";
-import Pharmacist from "../../models/Pharmacist";
-import Fee from "../../models/Fee";
+import Invoice from "../../models/Invoice.js";
+import Pharmacist from "../../models/Pharmacist.js";
+import Fee from "../../models/Fee.js";
 
 const createInvoice = async (req, res, next) => {
     try {

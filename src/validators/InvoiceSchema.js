@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { invoiceStatuses } from "../models/Invoice";
+import { invoiceStatuses } from "../models/Invoice.js";
 import mongoose from "mongoose";
-import PracticeType from "../models/PracticeType";
+import PracticeType from "../models/PracticeType.js";
 
 const InvoiceSchema = z.object({
     practiceType: z

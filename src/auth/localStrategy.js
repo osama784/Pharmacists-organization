@@ -1,8 +1,8 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import User from "../models/User";
+import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import AppError from "../utils/AppError";
+import AppError from "../utils/AppError.js";
 
 export default (function initPassport() {
     passport.serializeUser((user, done) => {

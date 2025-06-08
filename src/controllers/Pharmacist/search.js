@@ -1,4 +1,4 @@
-import Pharmacist from "../../models/Pharmacist";
+import Pharmacist from "../../models/Pharmacist.js";
 
 const searchPharmacists = async (req, res, next) => {
     const queryKey = req.query.filter;

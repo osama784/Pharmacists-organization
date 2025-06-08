@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { z } from "zod";
-import { licenseTypes, penaltyTypes, practiceRecordsInfo, universityDegreeTypes } from "../models/Pharmacist";
+import { licenseTypes, penaltyTypes, practiceRecordsInfo, universityDegreeTypes } from "../models/Pharmacist.js";
 
 const PharmacistSchema = z.object({
     firstName: z.string().trim(),

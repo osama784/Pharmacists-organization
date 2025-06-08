@@ -1,4 +1,4 @@
-import Invoice, { invoiceStatuses } from "../../models/Invoice";
+import Invoice, { invoiceStatuses } from "../../models/Invoice.js";
 
 const changeInvoiceStatus = async (req, res, next) => {
     const status = req.query.status;

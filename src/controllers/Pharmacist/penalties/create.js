@@ -1,4 +1,4 @@
-import Pharmacist from "../../../models/Pharmacist";
+import Pharmacist from "../../../models/Pharmacist.js";
 
 const createPenalty = async (req, res, next) => {
     try {

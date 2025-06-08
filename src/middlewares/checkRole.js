@@ -1,4 +1,4 @@
-import { userRoles } from "../models/User";
+import { userRoles } from "../models/User.js";
 
 const checkRole = (role) => (req, res, next) => {
     if (!(role in userRoles)) {

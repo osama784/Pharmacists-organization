@@ -1,30 +1,30 @@
 import e, { Router } from "express";
-import validate from "../middlewares/validate";
-import authenticated from "../middlewares/authenticated";
+import validate from "../middlewares/validate.js";
+import authenticated from "../middlewares/authenticated.js";
 import PharmacistSchema, {
     licenseSchema,
     penaltySchema,
     practiceRecordSchema,
     universityDegreeSchema,
-} from "../validators/PharmacistSchema";
-import createPharmacist from "../controllers/Pharmacist/create";
-import checkRole from "../middlewares/checkRole";
-import listPharmacists from "../controllers/Pharmacist/list";
-import updatePharmacist from "../controllers/Pharmacist/update";
-import deletePharmacist from "../controllers/Pharmacist/delete";
-import createPracticeRecord from "../controllers/Pharmacist/practiceRecords/create";
-import deletePracticeRecord from "../controllers/Pharmacist/practiceRecords/delete";
-import updatePracticeRecord from "../controllers/Pharmacist/practiceRecords/update";
+} from "../validators/PharmacistSchema.js";
+import createPharmacist from "../controllers/Pharmacist/create.js";
+import checkRole from "../middlewares/checkRole.js";
+import listPharmacists from "../controllers/Pharmacist/list.js";
+import updatePharmacist from "../controllers/Pharmacist/update.js";
+import deletePharmacist from "../controllers/Pharmacist/delete.js";
+import createPracticeRecord from "../controllers/Pharmacist/practiceRecords/create.js";
+import deletePracticeRecord from "../controllers/Pharmacist/practiceRecords/delete.js";
+import updatePracticeRecord from "../controllers/Pharmacist/practiceRecords/update.js";
 import mongoose from "mongoose";
-import AppError from "../utils/AppError";
-import createUniversityDegree from "../controllers/Pharmacist/universityDegrees/create";
-import deleteUniversityDegree from "../controllers/Pharmacist/universityDegrees/delete";
-import updateUniversityDegree from "../controllers/Pharmacist/universityDegrees/update";
-import createLicense from "../controllers/Pharmacist/licenses/create";
-import deleteLicense from "../controllers/Pharmacist/licenses/delete";
-import updateLicense from "../controllers/Pharmacist/licenses/update";
-import createPenalty from "../controllers/Pharmacist/penalties/create";
-import updatePenalty from "../controllers/Pharmacist/penalties/update";
+import AppError from "../utils/AppError.js";
+import createUniversityDegree from "../controllers/Pharmacist/universityDegrees/create.js";
+import deleteUniversityDegree from "../controllers/Pharmacist/universityDegrees/delete.js";
+import updateUniversityDegree from "../controllers/Pharmacist/universityDegrees/update.js";
+import createLicense from "../controllers/Pharmacist/licenses/create.js";
+import deleteLicense from "../controllers/Pharmacist/licenses/delete.js";
+import updateLicense from "../controllers/Pharmacist/licenses/update.js";
+import createPenalty from "../controllers/Pharmacist/penalties/create.js";
+import updatePenalty from "../controllers/Pharmacist/penalties/update.js";
 
 const router = Router();
 router.param("id", (req, res, next, value, name) => {
