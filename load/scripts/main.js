@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import "./db";
-import createSections from "./createSections";
-import { createFees } from "./createFees";
-import createPracticeTypes from "./createPracticeTypes";
+import "./db.js";
+import createSections from "./createSections.js";
+import { createFees } from "./createFees.js";
+import createPracticeTypes from "./createPracticeTypes.js";
 
 const main = async () => {
     // await createSections();

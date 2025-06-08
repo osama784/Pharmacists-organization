@@ -1,6 +1,6 @@
-import { AnyBulkWriteOperation } from "mongoose";
-import practiceTypes from "../data/practiceTypes.json";
-import PracticeType from "../../src/models/PracticeType";
+import PracticeType from "../../src/models/PracticeType.js";
+import loadJSONFile from "./loadJsonFile.js";
+const practiceTypes = await loadJSONFile("../data/practiceTypes.json");
 
 const createPracticeTypes = async () => {
     let objects = [];

@@ -1,6 +1,6 @@
-import { AnyBulkWriteOperation } from "mongoose";
-import sections from "../data/sections.json";
-import Section from "../../src/models/Section";
+import loadJSONFile from "./loadJsonFile.js";
+import Section from "../../src/models/Section.js";
+const sections = await loadJSONFile("../data/sections.json");
 
 const createSections = async () => {
     let objects = [];
