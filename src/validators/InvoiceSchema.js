@@ -1,0 +1,40 @@
+import { z } from "zod";
+import { invoiceStatuses } from "../models/Invoice";
+import mongoose from "mongoose";
+import PracticeType from "../models/PracticeType";
+
+const InvoiceSchema = z.object({
+    practiceType: z
+        .string()
+        .trim()
+        .refine(async (value) => {
+            if (!mongoose.Types.ObjectId.isValid(value)) {
+                return false;
+            }
+            const condition = await PracticeType.exists({ _id: value });
+            if (condition) {
+                return true;
+            }
+            return false;
+        }),
+    status: z.enum(Object.values(invoiceStatuses)),
+    createdAt: z
+        .string()
+        .trim()
+        .refine((value) => {
+            return !isNaN(Date.parse(value));
+        })
+        .transform((value) => {
+            return new Date(value);
+        }),
+});
+
+export const InvoiceUpdateFeesSchema = z.array(
+    z.object({
+        name: z.string(),
+        value: z.number(),
+        section: z.string(),
+    })
+);
+
+export default InvoiceSchema;

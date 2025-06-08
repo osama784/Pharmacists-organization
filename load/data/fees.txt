@@ -1,0 +1,435 @@
+[
+    // حساب نقابة صيادلة سورية رقم 209999 جاري
+    {
+        "name": "انتساب نقابة سوريين",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إعادة قيد نقابة",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسم الهوية",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسوم سنين سابقة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "دعم فروع",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": true,
+        "value": 0,
+        "detail": {
+            "1996": 0,
+            "1997": 0,
+            "1998": 0,
+            "1999": 0,
+            "2000": 0,
+            "2001": 0,
+            "2002": 0,
+            "2003": 0,
+            "2004": 0,
+            "2005": 0,
+            "2006": 0,
+            "2007": 0,
+            "2008": 0,
+            "2009": 0,
+            "2010": 0,
+            "2011": 0,
+            "2012": 0,
+            "2013": 0,
+            "2014": 0,
+            "2015": 0,
+            "2016": 0,
+            "2017": 0,
+            "2018": 0,
+            "2019": 0,
+            "2020": 0,
+            "2021": 0,
+            "2022": 0,
+            "2023": 0,
+            "2024": 0,
+            "2025": 0
+        }
+    },
+    {
+        "name": "معونة اجتماعية",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "نشر اسم بجدول لاحق",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتقال نقابة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسوم متنوعة",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "غرامات تأخير نقابة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "دعم نشاط النقابة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "مطبوعات",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتساب نقابة أجانب",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إيرادات نقابة متنوعة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+
+    // حساب خزانة تقاعد صيادلة سورية رقم 203333 جاري
+    {
+        "name": "انتساب خزانة سوريين",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إعادة قيد خزانة",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "عدم المزاولة",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "عائدات تقاعدية",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسم السن",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسم المزاولة",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتقال خزانة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "مكافأة الخزانة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": true,
+        "value": 0,
+        "detail": {
+            "1996": 0,
+            "1997": 0,
+            "1998": 0,
+            "1999": 0,
+            "2000": 0,
+            "2001": 0,
+            "2002": 0,
+            "2003": 0,
+            "2004": 0,
+            "2005": 0,
+            "2006": 0,
+            "2007": 0,
+            "2008": 0,
+            "2009": 0,
+            "2010": 0,
+            "2011": 0,
+            "2012": 0,
+            "2013": 0,
+            "2014": 0,
+            "2015": 0,
+            "2016": 0,
+            "2017": 0,
+            "2018": 0,
+            "2019": 0,
+            "2020": 0,
+            "2021": 0,
+            "2022": 0,
+            "2023": 0,
+            "2024": 0,
+            "2025": 0
+        }
+    },
+    {
+        "name": "غرامات تأخير خزانة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسم اغتراب",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتساب خزانة أجانب",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "ضم سنين إلى المزاولة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إيرادات خزانة متنوعة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+
+    // حساب صندوق إعانة العجز و الوفاة لصيادلة سورية رقم 2077777 جاري
+    {
+        "name": "انتساب معونة سوريين",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إعادة قيد معونة",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "سلف التعاون",
+        "section": "",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "رسوم تعاونية",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": true,
+        "value": 0,
+        "detail": {
+            "1996": 0,
+            "1997": 0,
+            "1998": 0,
+            "1999": 0,
+            "2000": 0,
+            "2001": 0,
+            "2002": 0,
+            "2003": 0,
+            "2004": 0,
+            "2005": 0,
+            "2006": 0,
+            "2007": 0,
+            "2008": 0,
+            "2009": 0,
+            "2010": 0,
+            "2011": 0,
+            "2012": 0,
+            "2013": 0,
+            "2014": 0,
+            "2015": 0,
+            "2016": 0,
+            "2017": 0,
+            "2018": 0,
+            "2019": 0,
+            "2020": 0,
+            "2021": 0,
+            "2022": 0,
+            "2023": 0,
+            "2024": 0,
+            "2025": 0
+        }
+    },
+    {
+        "name": "مكافأة التعاون",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": true,
+        "value": 0,
+        "detail": {
+            "1996": 0,
+            "1997": 0,
+            "1998": 0,
+            "1999": 0,
+            "2000": 0,
+            "2001": 0,
+            "2002": 0,
+            "2003": 0,
+            "2004": 0,
+            "2005": 0,
+            "2006": 0,
+            "2007": 0,
+            "2008": 0,
+            "2009": 0,
+            "2010": 0,
+            "2011": 0,
+            "2012": 0,
+            "2013": 0,
+            "2014": 0,
+            "2015": 0,
+            "2016": 0,
+            "2017": 0,
+            "2018": 0,
+            "2019": 0,
+            "2020": 0,
+            "2021": 0,
+            "2022": 0,
+            "2023": 0,
+            "2024": 0,
+            "2025": 0
+        }
+    },
+    {
+        "name": "غرامات تأخير معونة الوفاة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتساب معونة أجانب",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إيرادات معونة متنوعة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+
+    // حساب التكافل الصحي لصيادلة سورية رقم 205550 جاري
+    {
+        "name": "اشتراكات تكافل صحي",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": true,
+        "value": 0,
+        "detail": {
+            "1996": 0,
+            "1997": 0,
+            "1998": 0,
+            "1999": 0,
+            "2000": 0,
+            "2001": 0,
+            "2002": 0,
+            "2003": 0,
+            "2004": 0,
+            "2005": 0,
+            "2006": 0,
+            "2007": 0,
+            "2008": 0,
+            "2009": 0,
+            "2010": 0,
+            "2011": 0,
+            "2012": 0,
+            "2013": 0,
+            "2014": 0,
+            "2015": 0,
+            "2016": 0,
+            "2017": 0,
+            "2018": 0,
+            "2019": 0,
+            "2020": 0,
+            "2021": 0,
+            "2022": 0,
+            "2023": 0,
+            "2024": 0,
+            "2025": 0
+        }
+    },
+    {
+        "name": "غرامات تأخير تكافل",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إيرادات تكافل متنوعة",
+        "section": "",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    }
+]
