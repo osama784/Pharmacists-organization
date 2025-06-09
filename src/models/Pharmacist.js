@@ -7,7 +7,6 @@ const Pharmacist = new Schema({
     motherName: String,
     gender: String,
     nationalNumber: String,
-    restrict: String,
     birthDate: Date,
     birthPlace: String,
     phoneNumber: String,

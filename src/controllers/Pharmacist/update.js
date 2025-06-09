@@ -7,7 +7,7 @@ const updatePharmacist = async (req, res, next) => {
             res.status(404);
             return;
         }
-        const doc = await pharmacist.updateOne(req.validatedData, { new: true }).lean().exec();
+        const doc = await pharmacist.updateOne({ $set: req.validatedData }, { new: true }).lean().exec();
         res.status(200).json(doc);
     } catch (e) {
         next(e);

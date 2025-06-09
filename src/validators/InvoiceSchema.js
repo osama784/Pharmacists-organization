@@ -27,13 +27,22 @@ const InvoiceSchema = z.object({
         .transform((value) => {
             return new Date(value);
         }),
+    paidDate: z
+        .string()
+        .trim()
+        .refine((value) => {
+            return !isNaN(Date.parse(value));
+        })
+        .transform((value) => {
+            return new Date(value);
+        }),
 });
 
 export const InvoiceUpdateFeesSchema = z.array(
     z.object({
-        name: z.string(),
+        name: z.string().trim(),
         value: z.number(),
-        section: z.string(),
+        section: z.string().trim(),
     })
 );
 

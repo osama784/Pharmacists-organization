@@ -27,9 +27,9 @@ const changeInvoiceStatus = async (req, res, next) => {
                 paidDate: new Date(),
             };
         }
-        invoice.updateOne({ $set: { status: status } }, { new: true });
+        const doc = await invoice.updateOne({ $set: { status: status } }, { new: true });
 
-        res.status(200);
+        res.status(200).json(doc);
         return;
     } catch (e) {
         next(e);

@@ -7,9 +7,8 @@ const updateInvoice = async (req, res, next) => {
             res.status(404);
             return;
         }
-        invoice.fees = req.validatedDate;
+        const doc = await invoice.updateOne({ $set: req.validatedDate }, { new: true });
 
-        const doc = await invoice.save();
         res.status(200).json(doc);
     } catch (e) {
         next(e);

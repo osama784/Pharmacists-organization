@@ -7,6 +7,10 @@ import MongoStore from "connect-mongo";
 import session from "express-session";
 import passport from "passport";
 import authRouter from "./routes/Auth.js";
+import PharmacistsRouter from "./routes/Pharmacist.js";
+import InvoiceRouter from "./routes/Invoice.js";
+import FeeRouter from "./routes/Fee.js";
+import UserRouter from "./routes/User.js";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -35,6 +39,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRouter);
+app.use("/pharmacists", PharmacistsRouter);
+app.use("/invoices", InvoiceRouter);
+app.use("/fees", FeeRouter);
+app.use("/users", UserRouter);
 
 app.use((err, req, res, next) => {
     if (err.isOperational) {
