@@ -5,14 +5,14 @@ import { Router } from "express";
 const router = Router();
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
-    res.status(200);
+    res.sendStatus(200);
 });
 
 router.post("/status", (req, res) => {
     if (req.isAuthenticated()) {
-        res.status(200);
+        res.sendStatus(200);
     } else {
-        res.status(401);
+        res.sendStatus(401);
     }
 });
 

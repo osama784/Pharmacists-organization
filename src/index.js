@@ -26,7 +26,7 @@ app.use(
         saveUninitialized: false,
         resave: false,
         cookie: {
-            secure: true,
+            secure: false,
             httpOnly: true,
             sameSite: "strict",
             maxAge: 60000 * 60,
@@ -51,7 +51,9 @@ app.use((err, req, res, next) => {
         });
     } else {
         // logger.error(err.message);
-        console.log(err.message);
+        if (err instanceof Error) {
+            console.log(err.stack);
+        }
         res.status(500).json({
             message: "Something went wrong on the server",
         });

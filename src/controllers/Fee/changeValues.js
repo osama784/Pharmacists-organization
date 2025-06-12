@@ -1,32 +1,48 @@
-import Fee from "../../models/Fee";
+import Fee from "../../models/Fee.js";
 
 const changeFeesValues = async (req, res, next) => {
     let result = [];
     try {
-        req.validatedData.forEach(async (fee) => {
-            const fee = await Fee.findById(fee.id);
+        for (const feeObject of req.validatedData) {
+            if (!feeObject.detail && !feeObject.value) {
+                res.status(400).json({ message: 'please send "detail" object if the fee is mutable, otherwise send "value" number' });
+                return;
+            }
+            const fee = await Fee.findById(feeObject.id);
             if (!fee) {
-                res.status(404);
+                res.sendStatus(404);
                 return;
             }
             if (fee.isMutable) {
-                if (!req.validatedData.detail) {
-                    res.status(400).json({ message: "please send detail object if the fee is mutable" });
+                if (!feeObject.detail) {
+                    res.status(400).json({ message: 'please send "detail" object if the fee is mutable' });
                     return;
                 }
-                fee.detail = req.validatedData.detail;
-                fee.save();
-                result.push(fee);
+                await fee.updateOne({
+                    $set: {
+                        detail: feeObject.detail,
+                    },
+                });
+                const doc = await Fee.findById(fee._id);
+                result.push(doc);
             } else {
-                if (!req.validatedData.value) {
-                    res.status(400).json({ message: "please send value number if the fee is immutable" });
+                if (!feeObject.value) {
+                    res.status(400).json({ message: 'please send "value" number if the fee is immutable' });
                     return;
                 }
-                fee.value = req.validatedData.value;
-                fee.save();
-                result.push(fee);
+                await fee.updateOne({
+                    $set: {
+                        value: feeObject.value,
+                    },
+                });
+                const doc = await Fee.findById(fee._id);
+                result.push(doc);
             }
-        });
+        }
+        // req.validatedData.forEach(async (feeObject) => {
+
+        // });
+        res.status(200).json(result);
     } catch (e) {
         next(e);
     }

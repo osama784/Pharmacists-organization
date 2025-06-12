@@ -10,15 +10,33 @@ import deleteRole from "../controllers/User/deleteRole.js";
 import assignPermissions from "../controllers/User/assignPermissions.js";
 import validate from "../middlewares/validate.js";
 import UserSchema, { PermissionsSchema, RoleSchema } from "../validators/UserSchema.js";
+import mongoose from "mongoose";
+import AppError from "../utils/AppError.js";
 
 const router = Router();
+
+router.param("id", (req, res, next, value, name) => {
+    if (!mongoose.Types.ObjectId.isValid(value)) {
+        next(new AppError("invalid ID", 400));
+        return;
+    }
+    next();
+});
+
+router.param("roleID", (req, res, next, value, name) => {
+    if (!mongoose.Types.ObjectId.isValid(value)) {
+        next(new AppError("invalid ID", 400));
+        return;
+    }
+    next();
+});
 
 router.post("/create", authenticated, checkPermission(permissions.createUser), validate(UserSchema), createUser);
 router.patch("/update/:id", authenticated, checkPermission(permissions.updateUser), validate(UserSchema.partial()), updateUser);
 router.delete("/delete/:id", authenticated, checkPermission(permissions.deleteUser), deleteUser);
 router.post("/create-role", authenticated, checkPermission(permissions.createRole), validate(RoleSchema), createRole);
-router.delete("/delete-role", authenticated, checkPermission(permissions.deleteRole), deleteRole);
-router.post(
+router.delete("/delete-role/:roleID", authenticated, checkPermission(permissions.deleteRole), deleteRole);
+router.patch(
     "/assign-permissions/:roleID",
     authenticated,
     checkPermission(permissions.assignPermissions),

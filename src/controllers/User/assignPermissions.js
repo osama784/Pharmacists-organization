@@ -1,13 +1,14 @@
-import Role from "../../models/Role";
+import Role from "../../models/Role.js";
 
 const assignPermissions = async (req, res, next) => {
     try {
         const role = await Role.findById(req.params.roleID);
         if (!role) {
-            res.status(404);
+            res.sendStatus(404);
             return;
         }
-        const doc = await role.updateOne({ $set: req.validatedDate }, { new: true });
+        await role.updateOne({ $set: { permissions: req.validatedData } }, { new: true });
+        const doc = await Role.findById(role._id);
         res.status(200).json(doc);
     } catch (e) {
         next(e);

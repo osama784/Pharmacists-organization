@@ -1,10 +1,17 @@
-import User from "../../models/User";
+import User from "../../models/User.js";
 
 const createUser = async (req, res, next) => {
     try {
-        const user = await (await User.create(req.validatedDate)).populate("role");
+        const username = req.validatedData.username;
+        const exists = await User.checkUniqueUsername(null, username);
+        if (exists) {
+            res.status(400).json({ messgae: "username is taken" });
+            return;
+        }
 
-        res.status(200).json({ username: user.username, role: user.role });
+        const user = await User.create(req.validatedData);
+        await user.populate("role");
+        res.status(200).json({ _id: user._id, username: user.username, role: user.role });
     } catch (e) {
         next(e);
     }

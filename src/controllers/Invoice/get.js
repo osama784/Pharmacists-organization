@@ -8,7 +8,7 @@ const getInvoice = async (req, res, next) => {
             res.status(404).json({ message: "no invoice found" });
             return;
         }
-        res.status(200).json({ invoice });
+        res.status(200).json(invoice);
     } catch (e) {
         next(e);
     }

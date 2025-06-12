@@ -1,8 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
-const RoleSchema = new Schema({
+const Role = new Schema({
     name: { type: String, unique: true },
     permissions: [String],
 });
 
-export default mongoose.model("Role", RoleSchema, "roles");
+Role.statics.checkUniqueName = async function (name) {
+    const exists = await mongoose.model("Role").exists({ name });
+    return exists;
+};
+
+export default mongoose.model("Role", Role, "roles");

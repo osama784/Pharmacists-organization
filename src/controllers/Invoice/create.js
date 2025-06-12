@@ -1,22 +1,21 @@
 import Invoice from "../../models/Invoice.js";
 import Pharmacist from "../../models/Pharmacist.js";
 import Fee from "../../models/Fee.js";
+import Section from "../../models/Section.js";
 
 const createInvoice = async (req, res, next) => {
     try {
         const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
         if (!pharmacist) {
-            res.status(404);
+            res.sendStatus(404);
             return;
         }
 
         const invoice = await (await Invoice.create({ ...req.validatedData, pharmacist })).populate("practiceType");
         const practiceType = await invoice.practiceType.populate({
+            path: "fees",
             populate: {
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
+                path: "section",
             },
         });
         let lastTimePaidYear = pharmacist.lastTimePaid.getFullYear();
@@ -25,7 +24,6 @@ const createInvoice = async (req, res, next) => {
         let age = currentYear - pharmacist.birthDate.getFullYear();
         let fees = [];
         let excludedIDs = [];
-
         // finding the required year (the last year he paid at, or the graduation year if he didn't pay before)
         let value = 0;
         let requiredYear = graduationYear;
@@ -43,12 +41,11 @@ const createInvoice = async (req, res, next) => {
                 requiredYear = graduationYear;
             }
         }
-
         practiceType.fees.forEach((fee) => {
-            if (fee.get("isMutable")) {
+            if (fee.isMutable) {
                 // summing value depending from last year to current year
                 while (requiredYear != currentYear + 1) {
-                    value += fee.get("details")[`${requiredYear}`];
+                    value += fee.detail.get(`${requiredYear}`);
                     requiredYear += 1;
                 }
             } else if (fee.isRepeatable) {
@@ -58,7 +55,9 @@ const createInvoice = async (req, res, next) => {
             }
 
             fees.push({
-                section: fee.section.name,
+                _id: fee._id,
+                sectionID: fee.section._id,
+                sectionName: fee.section.name,
                 name: fee.name,
                 value: value,
             });
@@ -76,7 +75,9 @@ const createInvoice = async (req, res, next) => {
 
         otherFees.forEach((fee) => {
             fees.push({
-                section: fee.section.name,
+                _id: fee._id,
+                sectionID: fee.section._id,
+                sectionName: fee.section.name,
                 name: fee.name,
                 value: 0,
             });

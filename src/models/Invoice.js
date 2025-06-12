@@ -15,14 +15,21 @@ const Invoice = new Schema({
     practiceType: { type: Schema.Types.ObjectId, ref: "PracticeType" },
     fees: [
         {
-            _id: Schema.Types.ObjectId,
-            section: String,
+            _id: {
+                type: Schema.Types.ObjectId,
+                ref: "Fee",
+            },
+            sectionName: String,
+            sectionID: {
+                type: Schema.Types.ObjectId,
+                ref: "Section",
+            },
             name: String,
             value: Number,
         },
     ],
     paidDate: Date,
-    createaAt: Date,
+    createdAt: Date,
 });
 
 export default mongoose.model("Invoice", Invoice, "invoices");

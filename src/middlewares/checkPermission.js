@@ -1,12 +1,13 @@
 import permissions from "../utils/permissions.js";
 
 const checkPermission = (permission) => (req, res, next) => {
-    if (!(permission in Object.values(permissions))) {
-        next(new Error("provided role doesn't exist in allowed user roles"));
+    if (!Object.values(permissions).includes(permission)) {
+        next(new Error("provided permission doesn't exist in allowed user permissions"));
         return;
     }
-    if (!(permission in req.user.role.permissions)) {
-        res.status(403);
+
+    if (!req.user.role.permissions.includes(permission)) {
+        res.sendStatus(403);
         return;
     }
     next();

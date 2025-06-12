@@ -57,88 +57,96 @@ const PharmacistSchema = z.object({
     }),
 
     licenses: z
-        .object({
-            licenseType: z.enum(Object.values(licenseTypes)),
-            startDate: z
-                .string()
-                .trim()
-                .refine((value) => {
-                    return !isNaN(Date.parse(value));
-                })
-                .transform((value) => {
-                    return new Date(value);
-                }),
-            endDate: z
-                .string()
-                .trim()
-                .refine((value) => {
-                    return !isNaN(Date.parse(value));
-                })
-                .transform((value) => {
-                    return new Date(value);
-                }),
-            details: z.string().trim(),
-        })
+        .array(
+            z.object({
+                licenseType: z.enum(Object.values(licenseTypes)),
+                startDate: z
+                    .string()
+                    .trim()
+                    .refine((value) => {
+                        return !isNaN(Date.parse(value));
+                    })
+                    .transform((value) => {
+                        return new Date(value);
+                    }),
+                endDate: z
+                    .string()
+                    .trim()
+                    .refine((value) => {
+                        return !isNaN(Date.parse(value));
+                    })
+                    .transform((value) => {
+                        return new Date(value);
+                    }),
+                details: z.string().trim(),
+            })
+        )
         .optional(),
 
     practiceRecords: z
-        .object({
-            organization: z.enum(Object.values(practiceRecordsInfo.organization)),
-            characteristic: z.enum(Object.values(practiceRecordsInfo.characteristic)),
-            startDate: z
-                .string()
-                .trim()
-                .refine((value) => {
-                    return !isNaN(Date.parse(value));
-                })
-                .transform((value) => {
-                    return new Date(value);
-                }),
-            endDate: z
-                .string()
-                .trim()
-                .refine((value) => {
-                    return !isNaN(Date.parse(value));
-                })
-                .transform((value) => {
-                    return new Date(value);
-                }),
-            sector: z.string().trim(),
-            place: z.string().trim(),
-        })
+        .array(
+            z.object({
+                organization: z.enum(Object.values(practiceRecordsInfo.organization)),
+                characteristic: z.enum(Object.values(practiceRecordsInfo.characteristic)),
+                startDate: z
+                    .string()
+                    .trim()
+                    .refine((value) => {
+                        return !isNaN(Date.parse(value));
+                    })
+                    .transform((value) => {
+                        return new Date(value);
+                    }),
+                endDate: z
+                    .string()
+                    .trim()
+                    .refine((value) => {
+                        return !isNaN(Date.parse(value));
+                    })
+                    .transform((value) => {
+                        return new Date(value);
+                    }),
+                sector: z.string().trim(),
+                place: z.string().trim(),
+            })
+        )
         .optional(),
 
     universityDegrees: z
-        .object({
-            degreeType: z.enum(Object.values(universityDegreeTypes)),
-            obtainingDate: z
-                .string()
-                .trim()
-                .refine((value) => {
-                    return !isNaN(Date.parse(value));
-                })
-                .transform((value) => {
-                    return new Date(value);
-                }),
-            university: z.string().trim(),
-        })
+        .array(
+            z.object({
+                degreeType: z.enum(Object.values(universityDegreeTypes)),
+                obtainingDate: z
+                    .string()
+                    .trim()
+                    .refine((value) => {
+                        return !isNaN(Date.parse(value));
+                    })
+                    .transform((value) => {
+                        return new Date(value);
+                    }),
+                university: z.string().trim(),
+            })
+        )
         .optional(),
 
     penalties: z
-        .object({
-            penaltyType: z.enum(Object.values(penaltyTypes)),
-            date: z
-                .string()
-                .trim()
-                .refine((value) => {
-                    return !isNaN(Date.parse(value));
-                })
-                .transform((value) => {
-                    return new Date(value);
-                }),
-            reason: z.string().trim(),
-            details: z.string().trim(),
-        })
+        .array(
+            z.object({
+                penaltyType: z.enum(Object.values(penaltyTypes)),
+                date: z
+                    .string()
+                    .trim()
+                    .refine((value) => {
+                        return !isNaN(Date.parse(value));
+                    })
+                    .transform((value) => {
+                        return new Date(value);
+                    }),
+                reason: z.string().trim(),
+                details: z.string().trim(),
+            })
+        )
         .optional(),
 });
 

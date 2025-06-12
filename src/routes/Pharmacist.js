@@ -9,6 +9,8 @@ import deletePharmacist from "../controllers/Pharmacist/delete.js";
 import mongoose from "mongoose";
 import AppError from "../utils/AppError.js";
 import permissions from "../utils/permissions.js";
+import PharmacistSchema from "../validators/PharmacistSchema.js";
+import getPharmacist from "../controllers/Pharmacist/get.js";
 
 const router = Router();
 router.param("id", (req, res, next, value, name) => {
@@ -28,6 +30,7 @@ router.param("recordID", (req, res, next, value, name) => {
 });
 
 router.get("/list", authenticated, checkPermission(permissions.listPharmacists), listPharmacists);
+router.get("/detail/:id", authenticated, checkPermission(permissions.getPharmacist), getPharmacist);
 router.post(
     "/create",
     authenticated,
@@ -35,7 +38,13 @@ router.post(
     validate(PharmacistSchema.partial()),
     createPharmacist
 );
-router.patch("/update/:id", authenticated, checkPermission(permissions.updatePharmacist), validate(PharmacistSchema), updatePharmacist);
+router.patch(
+    "/update/:id",
+    authenticated,
+    checkPermission(permissions.updatePharmacist),
+    validate(PharmacistSchema.partial()),
+    updatePharmacist
+);
 router.delete("/delete/:id", authenticated, checkPermission(permissions.deletePharmacist), deletePharmacist);
 
 export default router;

@@ -1,20 +1,20 @@
 import Invoice, { invoiceStatuses } from "../../models/Invoice.js";
 
 const changeInvoiceStatus = async (req, res, next) => {
-    const status = req.query.status;
-    if (!status || Object.values(invoiceStatuses).includes(status)) {
-        res.status(400).send({ detail: "invalid invoice status" });
+    const status = req.body.status;
+    if (!status || !Object.values(invoiceStatuses).includes(status)) {
+        res.status(400).json({ detail: "invalid invoice status" });
         return;
     }
 
     try {
         const invoice = await Invoice.findById(req.params.id);
         if (!invoice) {
-            res.status(404).send({ detail: "invalid invoice id" });
+            res.sendStatus(404);
             return;
         }
-        let updatedFields = { status: status };
-        if (status in [invoiceStatuses.cancelled, invoiceStatuses.ready]) {
+        let updatedFields = { status };
+        if ([invoiceStatuses.cancelled, invoiceStatuses.ready].includes(status)) {
             updatedFields = {
                 status: status,
                 paidDate: null,
@@ -27,7 +27,8 @@ const changeInvoiceStatus = async (req, res, next) => {
                 paidDate: new Date(),
             };
         }
-        const doc = await invoice.updateOne({ $set: { status: status } }, { new: true });
+        await invoice.updateOne({ $set: updatedFields });
+        const doc = await Invoice.findById(invoice._id);
 
         res.status(200).json(doc);
         return;

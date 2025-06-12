@@ -1,9 +1,9 @@
 import { Router } from "express";
 import authenticated from "../middlewares/authenticated.js";
-import checkRole from "../middlewares/checkRole.js";
+import checkPermission from "../middlewares/checkPermission.js";
 import createInvoice from "../controllers/Invoice/create.js";
 import updateInvoice from "../controllers/Invoice/update.js";
-import validate from "../middlewares/validate";
+import validate from "../middlewares/validate.js";
 import InvoiceSchema, { InvoiceUpdateFeesSchema } from "../validators/InvoiceSchema.js";
 import mongoose from "mongoose";
 import changeInvoiceStatus from "../controllers/Invoice/changeStatus.js";
@@ -29,11 +29,11 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-router.post("/create/:pharmacistID", authenticated, checkRole(permissions.createInvoice), validate(InvoiceSchema.partial()), createInvoice);
-router.patch("/update/:id", authenticated, checkRole(permissions.updateInvoice), validate(InvoiceUpdateFeesSchema), updateInvoice);
-router.delete("/delete/:id", authenticated, checkRole(permissions.deleteInvoice), deleteInvoice);
-router.patch("/change-status/:id", authenticated, checkRole(permissions.changeInvoiceStatus), changeInvoiceStatus);
-router.get("/list", authenticated, checkRole(permissions.listInvoices), listInvoices);
-router.get("/detail/:id", authenticated, checkRole(permissions.getInvoice), getInvoice);
+router.post("/create/:pharmacistID", authenticated, checkPermission(permissions.createInvoice), validate(InvoiceSchema), createInvoice);
+router.patch("/update/:id", authenticated, checkPermission(permissions.updateInvoice), validate(InvoiceUpdateFeesSchema), updateInvoice);
+router.delete("/delete/:id", authenticated, checkPermission(permissions.deleteInvoice), deleteInvoice);
+router.patch("/change-status/:id", authenticated, checkPermission(permissions.changeInvoiceStatus), changeInvoiceStatus);
+router.get("/list", authenticated, checkPermission(permissions.listInvoices), listInvoices);
+router.get("/detail/:id", authenticated, checkPermission(permissions.getInvoice), getInvoice);
 
 export default router;

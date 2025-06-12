@@ -5,13 +5,13 @@ const searchPharmacists = async (req, res, next) => {
     const queryValue = req.query.value;
     const allowedFilters = ["fullName", "ministerialNumber"];
     if (!(queryKey in allowedFilters)) {
-        res.status(404);
+        res.status(400).json({ message: "you send a filter that doesn't match any pharmacist field" });
         return;
     }
     const pharmacists = await Pharmacist.find({ [queryKey]: queryValue }).limit(10);
 
     if (!pharmacists) {
-        res.status(404);
+        res.sendStatus(404);
         return;
     }
 

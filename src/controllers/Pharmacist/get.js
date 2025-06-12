@@ -2,16 +2,12 @@ import Pharmacist from "../../models/Pharmacist.js";
 
 const getPharmacist = async (req, res, next) => {
     try {
-        if (req.query.ministerialNumber) {
-            const pharmacist = await Pharmacist.find();
-        }
         const pharmacist = await Pharmacist.findById(req.params.id);
         if (!pharmacist) {
-            res.status(404).json({ detail: "invalid id" });
+            res.sendStatus(404);
             return;
         }
         res.status(200).json({ pharmacist });
-        return;
     } catch (e) {
         next(e);
     }

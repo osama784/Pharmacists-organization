@@ -1,5 +1,7 @@
 import { z } from "zod";
-import permissions from "../utils/permissions";
+import permissions from "../utils/permissions.js";
+import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 const UserSchema = z.object({
     username: z.string().trim(),
@@ -12,6 +14,13 @@ const UserSchema = z.object({
 
             return hash;
         }),
+    role: z
+        .string()
+        .trim()
+        .refine((value) => {
+            return mongoose.Types.ObjectId.isValid(value);
+        })
+        .optional(),
 });
 
 export const PermissionsSchema = z
@@ -20,8 +29,8 @@ export const PermissionsSchema = z
             .string()
             .trim()
             .refine((value) => {
-                return value in Object.values(permissions);
-            })
+                return Object.values(permissions).includes(value);
+            }, "this permission doesn't exist on the server")
     )
     .optional();
 

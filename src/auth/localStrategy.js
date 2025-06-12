@@ -13,9 +13,11 @@ export default (function initPassport() {
         try {
             const user = await User.findById(id);
             if (!user) {
-                throw new Error("user not found");
+                done(new Error("user not found"), null);
+                return;
             }
-            done(null, user);
+            const populatedUser = await user.populate("role");
+            done(null, populatedUser);
         } catch (e) {
             done(e, null);
         }

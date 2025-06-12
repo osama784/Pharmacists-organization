@@ -4,11 +4,12 @@ const updateInvoice = async (req, res, next) => {
     try {
         const invoice = await Invoice.findById(req.params.id);
         if (!invoice) {
-            res.status(404);
+            res.sendStatus(404);
             return;
         }
-        const doc = await invoice.updateOne({ $set: req.validatedDate }, { new: true });
 
+        await invoice.updateOne({ $set: { fees: req.validatedData } });
+        const doc = await Invoice.findById(invoice._id);
         res.status(200).json(doc);
     } catch (e) {
         next(e);

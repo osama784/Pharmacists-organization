@@ -66,7 +66,7 @@ const Pharmacist = new Schema({
         ref: "Invoice",
     },
 });
-export const licenseTypes = [""];
+export const licenseTypes = ["something"];
 export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة"];
 export const practiceRecordsInfo = {
     organization: [
@@ -125,7 +125,7 @@ export const practiceRecordsInfo = {
     ],
 };
 
-export const penaltyTypes = [""];
+export const penaltyTypes = ["something"];
 
 Pharmacist.virtual("fullName").get(function () {
     return `${this.firstName} ${this.fatherName} ${this.lastName}`;

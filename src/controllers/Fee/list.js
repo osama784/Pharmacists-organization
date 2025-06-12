@@ -5,9 +5,9 @@ const listFees = async (req, res, next) => {
     let fees = [];
     try {
         if (queryStatus == "mutable") {
-            fees = await Fee.find({ isMutable: false });
-        } else if (queryStatus == "immutable") {
             fees = await Fee.find({ isMutable: true });
+        } else if (queryStatus == "immutable") {
+            fees = await Fee.find({ isMutable: false });
         } else {
             fees = await Fee.find();
         }
