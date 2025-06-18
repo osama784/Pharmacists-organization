@@ -2,16 +2,23 @@ import Pharmacist from "../../models/Pharmacist.js";
 
 const listPharmacists = async (req, res, next) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        let queries = req.query;
+        const page = parseInt(queries.page) || 1;
+        const limit = parseInt(queries.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const results = await Pharmacist.find().skip(skip).limit(limit);
+        queries = Object.fromEntries(
+            Object.entries(queries).filter(([key, value]) => {
+                return Object.keys(Pharmacist.schema.paths).includes(key);
+            })
+        );
+
+        const result = await Pharmacist.find(queries).skip(skip).limit(limit);
 
         const total = await Pharmacist.countDocuments();
 
         res.json({
-            data: results,
+            data: result,
             meta: {
                 totalItems: total,
                 currentPage: page,

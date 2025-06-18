@@ -1,91 +1,53 @@
 import Invoice from "../../models/Invoice.js";
-import Pharmacist from "../../models/Pharmacist.js";
-import Fee from "../../models/Fee.js";
 import Section from "../../models/Section.js";
+import loadJSONFile from "../../utils/loadJsonFile.js";
+import path from "path";
+
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const createInvoice = async (req, res, next) => {
     try {
-        const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
-        if (!pharmacist) {
-            res.sendStatus(404);
-            return;
-        }
+        // check fines date, adding fines
+        const fees = req.validatedData.fees;
+        const DATA_PATH = path.resolve(__dirname, "../..", "config", "static-data.json");
+        const staticData = await loadJSONFile(DATA_PATH);
+        const finesDate = new Date(staticData["fines Date"]);
 
-        const invoice = await (await Invoice.create({ ...req.validatedData, pharmacist })).populate("practiceType");
-        const practiceType = await invoice.practiceType.populate({
-            path: "fees",
-            populate: {
-                path: "section",
-            },
-        });
-        let lastTimePaidYear = pharmacist.lastTimePaid.getFullYear();
-        let graduationYear = pharmacist.graduationYear;
-        const currentYear = new Date().getFullYear();
-        let age = currentYear - pharmacist.birthDate.getFullYear();
-        let fees = [];
-        let excludedIDs = [];
-        // finding the required year (the last year he paid at, or the graduation year if he didn't pay before)
-        let value = 0;
-        let requiredYear = graduationYear;
-        if (lastTimePaidYear) {
-            requiredYear = lastTimePaidYear;
+        const sections = await Section.find().populate("fineableFees fineSummaryFee");
+        let fineSummaryFeeValue = 0;
+        let currentFee = null;
+        let isFinesIncluded = false;
+        if (new Date() >= finesDate) {
+            isFinesIncluded = true;
+            sections.forEach((section) => {
+                section.fineableFees.forEach((fee) => {
+                    currentFee = fees.filter((obj) => obj.feeRef == fee._id)[0];
+                    fineSummaryFeeValue += (currentFee.value * 25) / 100;
+                });
+                fees.push({
+                    feeRef: section.fineSummaryFee._id,
+                    feeName: section.fineSummaryFee.name,
+                    sectionName: section.name,
+                    value: fineSummaryFeeValue,
+                });
+                fineSummaryFeeValue = 0;
+            });
         } else {
-            if (age >= 25) {
-                let yearWhenAge25 = pharmacist.birthDate.getFullYear() + 25;
-                if (yearWhenAge25 < graduationYear) {
-                    requiredYear = yearWhenAge25;
-                } else {
-                    requiredYear = graduationYear;
-                }
-            } else {
-                requiredYear = graduationYear;
-            }
+            sections.forEach((section) => {
+                fees.push({
+                    feeRef: section.fineSummaryFee._id,
+                    feeName: section.fineSummaryFee.name,
+                    sectionName: section.name,
+                    value: 0,
+                });
+            });
         }
-        practiceType.fees.forEach((fee) => {
-            if (fee.isMutable) {
-                // summing value depending from last year to current year
-                while (requiredYear != currentYear + 1) {
-                    value += fee.detail.get(`${requiredYear}`);
-                    requiredYear += 1;
-                }
-            } else if (fee.isRepeatable) {
-                value = fee.value * (currentYear - requiredYear + 1);
-            } else {
-                value = fee.value;
-            }
 
-            fees.push({
-                _id: fee._id,
-                sectionID: fee.section._id,
-                sectionName: fee.section.name,
-                name: fee.name,
-                value: value,
-            });
-            excludedIDs.push(fee._id);
-        });
-
-        // appending other fees that is not related with the practice type with a value of 0.
-        const otherFees = await Fee.find({
-            _id: {
-                $nin: excludedIDs,
-            },
-        })
-            .select("_id name section")
-            .populate("section");
-
-        otherFees.forEach((fee) => {
-            fees.push({
-                _id: fee._id,
-                sectionID: fee.section._id,
-                sectionName: fee.section.name,
-                name: fee.name,
-                value: 0,
-            });
-        });
-        invoice.fees = fees;
-        const doc = await invoice.save();
-
-        res.status(200).json(doc);
+        const invoice = await Invoice.create({ ...req.validatedData, fees, isFinesIncluded });
+        res.json(invoice);
     } catch (e) {
         next(e);
     }

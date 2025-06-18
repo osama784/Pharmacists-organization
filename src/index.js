@@ -11,10 +11,20 @@ import PharmacistsRouter from "./routes/Pharmacist.js";
 import InvoiceRouter from "./routes/Invoice.js";
 import FeeRouter from "./routes/Fee.js";
 import UserRouter from "./routes/User.js";
+import PracticeTypeRouter from "./routes/PracticeType.js";
+import qs from "qs";
 config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+
+app.set("query parser", (str) =>
+    qs.parse(str, {
+        // allowDots: true,
+        comma: true,
+        parseArrays: true,
+    })
+);
 
 app.use(express.json());
 app.use(
@@ -43,6 +53,7 @@ app.use("/pharmacists", PharmacistsRouter);
 app.use("/invoices", InvoiceRouter);
 app.use("/fees", FeeRouter);
 app.use("/users", UserRouter);
+app.use("/practiceTypes", PracticeTypeRouter);
 
 app.use((err, req, res, next) => {
     if (err.isOperational) {

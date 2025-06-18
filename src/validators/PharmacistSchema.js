@@ -33,28 +33,26 @@ const PharmacistSchema = z.object({
         }),
     nationality: z.string().trim(),
 
-    registrationInfo: z.object({
-        ministerialNumber: z.number(),
-        ministerialRegistrationDate: z
-            .string()
-            .trim()
-            .refine((value) => {
-                return !isNaN(Date.parse(value));
-            })
-            .transform((value) => {
-                return new Date(value);
-            }),
-        registrationNumber: z.number(),
-        registrationDate: z
-            .string()
-            .trim()
-            .refine((value) => {
-                return !isNaN(Date.parse(value));
-            })
-            .transform((value) => {
-                return new Date(value);
-            }),
-    }),
+    ministerialNumber: z.number(),
+    ministerialRegistrationDate: z
+        .string()
+        .trim()
+        .refine((value) => {
+            return !isNaN(Date.parse(value));
+        })
+        .transform((value) => {
+            return new Date(value);
+        }),
+    registrationNumber: z.number(),
+    registrationDate: z
+        .string()
+        .trim()
+        .refine((value) => {
+            return !isNaN(Date.parse(value));
+        })
+        .transform((value) => {
+            return new Date(value);
+        }),
 
     licenses: z
         .array(

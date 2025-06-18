@@ -1,6 +1,6 @@
 import Invoice, { invoiceStatuses } from "../../models/Invoice.js";
 
-const changeInvoiceStatus = async (req, res, next) => {
+const updateInvoiceStatus = async (req, res, next) => {
     const status = req.body.status;
     if (!status || !Object.values(invoiceStatuses).includes(status)) {
         res.status(400).json({ detail: "invalid invoice status" });
@@ -37,4 +37,4 @@ const changeInvoiceStatus = async (req, res, next) => {
     }
 };
 
-export default changeInvoiceStatus;
+export default updateInvoiceStatus;

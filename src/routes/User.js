@@ -8,6 +8,7 @@ import deleteUser from "../controllers/User/delete.js";
 import createRole from "../controllers/User/createRole.js";
 import deleteRole from "../controllers/User/deleteRole.js";
 import assignPermissions from "../controllers/User/assignPermissions.js";
+import listPermissions from "../controllers/User/listPermissions.js";
 import validate from "../middlewares/validate.js";
 import UserSchema, { PermissionsSchema, RoleSchema } from "../validators/UserSchema.js";
 import mongoose from "mongoose";
@@ -30,6 +31,8 @@ router.param("roleID", (req, res, next, value, name) => {
     }
     next();
 });
+
+router.get("/list-permissions", authenticated, checkPermission(permissions.listPermissions), listPermissions);
 
 router.post("/create", authenticated, checkPermission(permissions.createUser), validate(UserSchema), createUser);
 router.patch("/update/:id", authenticated, checkPermission(permissions.updateUser), validate(UserSchema.partial()), updateUser);

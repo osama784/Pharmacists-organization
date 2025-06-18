@@ -15,12 +15,10 @@ const Pharmacist = new Schema({
     lastTimePaid: Date,
     nationality: String,
 
-    registrationInfo: {
-        ministerialNumber: Number,
-        ministerialRegistrationDate: Date,
-        registrationNumber: Number,
-        registrationDate: Date,
-    },
+    ministerialNumber: Number,
+    ministerialRegistrationDate: Date,
+    registrationNumber: Number,
+    registrationDate: Date,
 
     licenses: [
         {

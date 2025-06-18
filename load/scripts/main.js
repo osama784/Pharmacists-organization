@@ -4,11 +4,15 @@ import createSections from "./createSections.js";
 import { createFees } from "./createFees.js";
 import createPracticeTypes from "./createPracticeTypes.js";
 import createUser from "./createUser.js";
+import { assignFeesToSections } from "./assignFeesToSections.js";
+import createSuperAdminRole from "./createSuperAdminRole.js";
 
 const main = async () => {
     // await createSections();
     // await createFees();
-    await createPracticeTypes();
+    // await assignFeesToSections();
+    // await createPracticeTypes();
     // await createUser();
+    await createSuperAdminRole();
 };
-main();
+await main();

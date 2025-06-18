@@ -2,15 +2,15 @@ import { Router } from "express";
 import authenticated from "../middlewares/authenticated.js";
 import checkPermission from "../middlewares/checkPermission.js";
 import createInvoice from "../controllers/Invoice/create.js";
-import updateInvoice from "../controllers/Invoice/update.js";
 import validate from "../middlewares/validate.js";
-import InvoiceSchema, { InvoiceUpdateFeesSchema } from "../validators/InvoiceSchema.js";
+import InvoiceSchema from "../validators/InvoiceSchema.js";
 import mongoose from "mongoose";
-import changeInvoiceStatus from "../controllers/Invoice/changeStatus.js";
+import updateInvoiceStatus from "../controllers/Invoice/updateStatus.js";
 import listInvoices from "../controllers/Invoice/list.js";
 import getInvoice from "../controllers/Invoice/get.js";
 import permissions from "../utils/permissions.js";
 import deleteInvoice from "../controllers/Invoice/delete.js";
+import exportInvoicesAsExcel from "../controllers/Invoice/exportExcel.js";
 
 const router = Router();
 
@@ -29,11 +29,11 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-router.post("/create/:pharmacistID", authenticated, checkPermission(permissions.createInvoice), validate(InvoiceSchema), createInvoice);
-router.patch("/update/:id", authenticated, checkPermission(permissions.updateInvoice), validate(InvoiceUpdateFeesSchema), updateInvoice);
+router.post("/create/:id", authenticated, checkPermission(permissions.createInvoice), validate(InvoiceSchema), createInvoice);
 router.delete("/delete/:id", authenticated, checkPermission(permissions.deleteInvoice), deleteInvoice);
-router.patch("/change-status/:id", authenticated, checkPermission(permissions.changeInvoiceStatus), changeInvoiceStatus);
+router.patch("/update-status/:id", authenticated, checkPermission(permissions.updateInvoiceStatus), updateInvoiceStatus);
 router.get("/list", authenticated, checkPermission(permissions.listInvoices), listInvoices);
 router.get("/detail/:id", authenticated, checkPermission(permissions.getInvoice), getInvoice);
+router.get("/export", exportInvoicesAsExcel);
 
 export default router;

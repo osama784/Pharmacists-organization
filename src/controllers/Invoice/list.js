@@ -2,16 +2,23 @@ import Invoice from "../../models/Invoice.js";
 
 const listInvoices = async (req, res, next) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        let queries = req.query;
+        const page = parseInt(queries.page) || 1;
+        const limit = parseInt(queries.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const results = await Invoice.find().skip(skip).limit(limit).select("-fees").populate("pharmacist");
+        queries = Object.fromEntries(
+            Object.entries(queries).filter(([key, value]) => {
+                return Object.keys(Invoice.schema.paths).includes(key);
+            })
+        );
+
+        const result = await Invoice.find(queries).select("-fees").skip(skip).limit(limit).populate("pharmacist practiceType");
 
         const total = await Invoice.countDocuments();
 
         res.json({
-            data: results,
+            data: result,
             meta: {
                 totalItems: total,
                 currentPage: page,
@@ -19,7 +26,6 @@ const listInvoices = async (req, res, next) => {
                 itemsPerPage: limit,
             },
         });
-        return;
     } catch (e) {
         next(e);
     }

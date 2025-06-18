@@ -1,4 +1,4 @@
-export const invoiceTranslation = {
+export const invoiceTR = {
     status: {
         paid: "مدفوع",
         ready: "جاهزة لللإرسال",
@@ -13,8 +13,34 @@ export const invoiceTranslation = {
     },
 };
 
-export const pharmacistSchema = {
-    firstName: "",
+export const invoiceSchemaTR = {
+    pharmacist: "اسم الصيدلي",
+    status: "حالة الفاتورة",
+    practiceType: "نوع المزاولة",
+    paidDate: "تاريخ الدفع",
+    createdAt: "تاريخ إنشاء الفاتورة",
+    total: "المجموع الكلي",
+};
+
+export const pharmacistSchemaTR = {
+    firstName: "الاسم الأول",
+    lastName: "الشهرة",
+    fatherName: "اسم الأب",
+    motherName: "اسم الأم",
+    gender: "الجنس",
+    nationalNumber: "الرقم الوطني",
+    birthDate: "تاريخ الولادة",
+    birthPlace: "مكان الولادة",
+    phoneNumber: "رقم الجوال",
+    address: "العنوان",
+    graduationYear: "سنة التخرج",
+    lastTimePaid: "تاريخ آخر دفع",
+    nationality: "الجنسية",
+
+    ministerialNumber: "الرقم الوزاري",
+    ministerialRegistrationDate: "تاريخ التسجيل في الوزارة",
+    registrationNumber: "الرقم النقابي",
+    registrationDate: "تاريخ التسجيل في النقابة",
 };
 
 export const feesTranslation = {};

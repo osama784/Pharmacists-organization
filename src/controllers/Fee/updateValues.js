@@ -1,6 +1,6 @@
 import Fee from "../../models/Fee.js";
 
-const changeFeesValues = async (req, res, next) => {
+const updateFeesValues = async (req, res, next) => {
     let result = [];
     try {
         for (const feeObject of req.validatedData) {
@@ -48,4 +48,4 @@ const changeFeesValues = async (req, res, next) => {
     }
 };
 
-export default changeFeesValues;
+export default updateFeesValues;

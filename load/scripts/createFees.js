@@ -4,6 +4,7 @@ const feesRetirement = await loadJsonFile("../data/fees_retirement_treasury_acco
 const feesDisabiltiy = await loadJsonFile("../data/fees_Disability_and_Death_Benefit_Fund_Account.json");
 const feesHealth = await loadJsonFile("../data/fees_Health_Takaful_Account.json");
 import Fee from "../../src/models/Fee.js";
+import Section from "../../src/models/Section.js";
 
 export const createFees = async () => {
     // const syndicateSectionID = "683ed7fcd8be3402ffb2f839";
@@ -44,10 +45,6 @@ export const createFees = async () => {
             },
         });
     });
-    try {
-        let result = await Fee.bulkWrite(objects);
-        console.log(result);
-    } catch (e) {
-        console.log(e);
-    }
+    let result = await Fee.bulkWrite(objects);
+    console.log(result);
 };

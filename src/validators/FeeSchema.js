@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { z } from "zod";
 
-export const FeesChangeValuesSchema = z.array(
+export const updateFeesValuesSchema = z.array(
     z.object({
         id: z
             .string()
