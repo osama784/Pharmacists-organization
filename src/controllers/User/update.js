@@ -17,7 +17,7 @@ const updateUser = async (req, res, next) => {
             }
         }
         await user.updateOne({ $set: req.validatedData });
-        const doc = await User.findById({ _id: user._id }).select("-password");
+        const doc = await User.findById(user._id).select("-password");
         res.status(200).json(doc);
     } catch (e) {
         next(e);

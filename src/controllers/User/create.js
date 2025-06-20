@@ -10,8 +10,8 @@ const createUser = async (req, res, next) => {
         }
 
         const user = await User.create(req.validatedData);
-        await user.populate("role");
-        res.status(200).json({ _id: user._id, username: user.username, role: user.role });
+        const doc = await User.findById(user._id).populate("role").select("-password");
+        res.status(200).json(doc);
     } catch (e) {
         next(e);
     }

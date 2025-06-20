@@ -12,7 +12,6 @@ const main = async () => {
     // await createFees();
     // await assignFeesToSections();
     // await createPracticeTypes();
-    // await createUser();
-    await createSuperAdminRole();
+    await createUser();
 };
 await main();

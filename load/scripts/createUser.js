@@ -2,6 +2,8 @@ import User from "../../src/models/User.js";
 import Role from "../../src/models/Role.js";
 import bcrypt from "bcryptjs";
 import createSuperAdminRole from "./createSuperAdminRole.js";
+import { config } from "dotenv";
+config();
 
 const createUser = async () => {
     let role = await Role.findOne({
@@ -11,9 +13,9 @@ const createUser = async () => {
         role = await createSuperAdminRole();
     }
     const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash("admin", salt);
+    const hash = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD, salt);
     const user = await User.create({
-        username: "osama",
+        username: process.env.SUPER_ADMIN_USERNAME,
         password: hash,
         role: role,
     });

@@ -11,15 +11,13 @@ export default (function initPassport() {
 
     passport.deserializeUser(async (id, done) => {
         try {
-            const user = await User.findById(id);
+            const user = await User.findById(id).populate("role");
             if (!user) {
                 done(new AppError("user with the ID in the sent session not found, that means the user gets deleted", 400), null);
                 return;
             }
-            const populatedUser = await user.populate("role");
-            done(null, populatedUser);
+            done(null, user);
         } catch (e) {
-            console.log("entered");
             done(e, null);
         }
     });
@@ -29,7 +27,7 @@ export default (function initPassport() {
             try {
                 const user = await User.findOne({
                     username: username,
-                });
+                }).populate("role");
                 if (!user) {
                     return done(new AppError("username or password is incorrect", 400), false);
                 }

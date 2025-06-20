@@ -39,7 +39,7 @@ app.use(
             secure: false,
             httpOnly: true,
             sameSite: "strict",
-            maxAge: 60000 * 60,
+            maxAge: 1000 * 60 * 60 * 24 * 100,
         },
     })
 );

@@ -5,7 +5,11 @@ import { Router } from "express";
 const router = Router();
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
-    res.sendStatus(200);
+    res.status(200).json({
+        _id: req.user._id,
+        username: req.user.username,
+        role: req.user.role,
+    });
 });
 
 router.post("/status", (req, res) => {

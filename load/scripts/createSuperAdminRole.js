@@ -8,7 +8,7 @@ const createSuperAdminRole = async () => {
             name: "SUPER_ADMIN",
         });
     }
-    role.permissions = Object.values(permissions);
+    role.permissions = [...new Set(Object.values(permissions))];
     const doc = await role.save();
     console.log(doc);
 

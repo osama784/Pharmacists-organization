@@ -1,13 +1,13 @@
 import Role from "../../models/Role.js";
 
-const assignPermissions = async (req, res, next) => {
+const updateRole = async (req, res, next) => {
     try {
         const role = await Role.findById(req.params.roleID);
         if (!role) {
             res.sendStatus(404);
             return;
         }
-        await role.updateOne({ $set: { permissions: req.validatedData } }, { new: true });
+        await role.updateOne({ $set: req.validatedData }, { new: true });
         const doc = await Role.findById(role._id);
         res.status(200).json(doc);
     } catch (e) {
@@ -15,4 +15,4 @@ const assignPermissions = async (req, res, next) => {
     }
 };
 
-export default assignPermissions;
+export default updateRole;
