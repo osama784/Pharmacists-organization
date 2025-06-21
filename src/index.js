@@ -11,6 +11,7 @@ import PharmacistsRouter from "./routes/Pharmacist.js";
 import InvoiceRouter from "./routes/Invoice.js";
 import FeeRouter from "./routes/Fee.js";
 import UserRouter from "./routes/User.js";
+import RoleRouter from "./routes/Role.js";
 import PracticeTypeRouter from "./routes/PracticeType.js";
 import qs from "qs";
 config();
@@ -20,7 +21,6 @@ const app = express();
 
 app.set("query parser", (str) =>
     qs.parse(str, {
-        // allowDots: true,
         comma: true,
         parseArrays: true,
     })
@@ -53,11 +53,13 @@ app.use("/pharmacists", PharmacistsRouter);
 app.use("/invoices", InvoiceRouter);
 app.use("/fees", FeeRouter);
 app.use("/users", UserRouter);
+app.use("/users/roles", RoleRouter);
 app.use("/practiceTypes", PracticeTypeRouter);
 
 app.use((err, req, res, next) => {
     if (err.isOperational) {
         res.status(err.statusCode).json({
+            success: false,
             message: err.message,
         });
     } else {
@@ -66,6 +68,7 @@ app.use((err, req, res, next) => {
             console.log(err.stack);
         }
         res.status(500).json({
+            success: false,
             message: "Something went wrong on the server",
         });
     }

@@ -18,6 +18,7 @@ const listInvoices = async (req, res, next) => {
         const total = await Invoice.countDocuments();
 
         res.json({
+            success: true,
             data: result,
             meta: {
                 totalItems: total,

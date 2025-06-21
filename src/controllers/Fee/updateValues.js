@@ -5,17 +5,20 @@ const updateFeesValues = async (req, res, next) => {
     try {
         for (const feeObject of req.validatedData) {
             if (!feeObject.detail && !feeObject.value) {
-                res.status(400).json({ message: 'please send "detail" object if the fee is mutable, otherwise send "value" number' });
+                res.status(400).json({
+                    success: false,
+                    message: 'please send "detail" object if the fee is mutable, otherwise send "value" number',
+                });
                 return;
             }
             const fee = await Fee.findById(feeObject.id);
             if (!fee) {
-                res.sendStatus(404);
+                res.status(404).json({ success: false });
                 return;
             }
             if (fee.isMutable) {
                 if (!feeObject.detail) {
-                    res.status(400).json({ message: 'please send "detail" object if the fee is mutable' });
+                    res.status(400).json({ success: false, message: 'please send "detail" object if the fee is mutable' });
                     return;
                 }
                 await fee.updateOne({
@@ -27,7 +30,7 @@ const updateFeesValues = async (req, res, next) => {
                 result.push(doc);
             } else {
                 if (!feeObject.value) {
-                    res.status(400).json({ message: 'please send "value" number if the fee is immutable' });
+                    res.status(400).json({ success: false, message: 'please send "value" number if the fee is immutable' });
                     return;
                 }
                 await fee.updateOne({
@@ -39,10 +42,8 @@ const updateFeesValues = async (req, res, next) => {
                 result.push(doc);
             }
         }
-        // req.validatedData.forEach(async (feeObject) => {
 
-        // });
-        res.status(200).json(result);
+        res.json({ success: true, data: result });
     } catch (e) {
         next(e);
     }

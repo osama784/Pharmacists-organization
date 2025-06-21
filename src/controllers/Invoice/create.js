@@ -47,7 +47,7 @@ const createInvoice = async (req, res, next) => {
         }
 
         const invoice = await Invoice.create({ ...req.validatedData, fees, isFinesIncluded });
-        res.json(invoice);
+        res.json({ success: true, data: invoice });
     } catch (e) {
         next(e);
     }

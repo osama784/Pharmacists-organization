@@ -1,28 +1,32 @@
 import mongoose, { Schema } from "mongoose";
 
 const User = new Schema({
-    username: {
+    username: String,
+    email: {
         type: String,
         unique: true,
     },
     password: String,
+    phoneNumber: String,
     role: {
         type: Schema.Types.ObjectId,
         ref: "Role",
     },
 });
 
-User.statics.checkUniqueUsername = async function (currentDocID, username) {
+User.path("password").select(false);
+
+User.statics.checkUniqueEmail = async function (currentDocID, email) {
     let lookup = {};
     if (currentDocID) {
         lookup = {
             _id: {
                 $ne: currentDocID,
             },
-            username,
+            email,
         };
     } else {
-        lookup = { username };
+        lookup = { email };
     }
     const exists = await mongoose.model("User").exists(lookup);
     return exists;

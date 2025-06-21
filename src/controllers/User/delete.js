@@ -4,7 +4,7 @@ const deleteUser = async (req, res, next) => {
     try {
         const result = await User.deleteOne({ _id: req.params.id });
         if (result.deletedCount != 1) {
-            res.sendStatus(404);
+            res.status(404).json({ success: false });
             return;
         }
         res.sendStatus(204);

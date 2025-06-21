@@ -2,14 +2,14 @@ import Role from "../../models/Role.js";
 
 const updateRole = async (req, res, next) => {
     try {
-        const role = await Role.findById(req.params.roleID);
+        const role = await Role.findById(req.params.id);
         if (!role) {
-            res.sendStatus(404);
+            res.status(404).json({ success: false });
             return;
         }
         await role.updateOne({ $set: req.validatedData }, { new: true });
         const doc = await Role.findById(role._id);
-        res.status(200).json(doc);
+        res.json({ success: true, data: doc });
     } catch (e) {
         next(e);
     }

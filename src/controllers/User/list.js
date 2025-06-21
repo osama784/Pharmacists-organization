@@ -1,6 +1,6 @@
-import Pharmacist from "../../models/Pharmacist.js";
+import User from "../../models/User.js";
 
-const listPharmacists = async (req, res, next) => {
+const listUsers = async (req, res, next) => {
     try {
         let queries = req.query;
         const page = parseInt(queries.page) || 1;
@@ -9,13 +9,13 @@ const listPharmacists = async (req, res, next) => {
 
         queries = Object.fromEntries(
             Object.entries(queries).filter(([key, value]) => {
-                return Object.keys(Pharmacist.schema.paths).includes(key);
+                return Object.keys(User.schema.paths).includes(key);
             })
         );
 
-        const result = await Pharmacist.find(queries).skip(skip).limit(limit);
+        const result = await User.find(queries).skip(skip).limit(limit);
 
-        const total = await Pharmacist.countDocuments();
+        const total = await User.countDocuments();
 
         res.json({
             success: true,
@@ -32,4 +32,4 @@ const listPharmacists = async (req, res, next) => {
     }
 };
 
-export default listPharmacists;
+export default listUsers;

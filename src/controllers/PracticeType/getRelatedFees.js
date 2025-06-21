@@ -7,7 +7,7 @@ const getPracticeTypeRelatedFees = async (req, res, next) => {
     try {
         const pharmacist = await Pharmacist.findById(req.validatedData.pharmacist);
         if (!pharmacist) {
-            res.sendStatus(404);
+            res.status(404).json({ success: false });
             return;
         }
 
@@ -237,7 +237,7 @@ const getPracticeTypeRelatedFees = async (req, res, next) => {
             return fee;
         });
 
-        res.status(200).json(fees);
+        res.json({ success: true, data: fees });
     } catch (e) {
         next(e);
     }

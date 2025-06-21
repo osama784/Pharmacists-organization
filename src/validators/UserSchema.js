@@ -1,10 +1,10 @@
 import { z } from "zod";
-import permissions from "../utils/permissions.js";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 
 const UserSchema = z.object({
     username: z.string().trim(),
+    email: z.string().email(),
     password: z
         .string()
         .trim()
@@ -14,29 +14,15 @@ const UserSchema = z.object({
 
             return hash;
         }),
+    phoneNumber: z.string().trim().optional(),
     role: z
         .string()
         .trim()
         .refine((value) => {
             return mongoose.Types.ObjectId.isValid(value);
-        })
-        .optional(),
+        }, "please send a valid Role ID"),
 });
 
-export const PermissionsSchema = z
-    .array(
-        z
-            .string()
-            .trim()
-            .refine((value) => {
-                return Object.values(permissions).includes(value);
-            }, "this permission doesn't exist on the server")
-    )
-    .optional();
-
-export const RoleSchema = z.object({
-    name: z.string().trim(),
-    permissions: PermissionsSchema.optional(),
-});
+export const UserUpdateSchema = UserSchema.omit({ password: true }).partial();
 
 export default UserSchema;

@@ -4,12 +4,12 @@ const updatePharmacist = async (req, res, next) => {
     try {
         const pharmacist = await Pharmacist.findById(req.params.id);
         if (!pharmacist) {
-            res.sendStatus(404);
+            res.status(404).json({ success: false });
             return;
         }
         await pharmacist.updateOne({ $set: req.validatedData });
         const doc = await Pharmacist.findById(pharmacist._id);
-        res.status(200).json(doc);
+        res.json({ success: true, data: doc });
     } catch (e) {
         next(e);
     }

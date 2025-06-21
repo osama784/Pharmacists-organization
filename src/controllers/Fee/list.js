@@ -11,7 +11,10 @@ const listFees = async (req, res, next) => {
         } else {
             fees = await Fee.find();
         }
-        res.status(200).json(fees);
+        res.json({
+            success: true,
+            data: fees,
+        });
     } catch (e) {
         next(e);
     }

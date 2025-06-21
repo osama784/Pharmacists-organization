@@ -5,10 +5,10 @@ const getInvoice = async (req, res, next) => {
         const invoice = await Invoice.findById(req.params.id);
 
         if (!invoice) {
-            res.status(404).json({ message: "no invoice found" });
+            res.status(404).json({ success: false });
             return;
         }
-        res.status(200).json(invoice);
+        res.json({ success: true, data: invoice });
     } catch (e) {
         next(e);
     }

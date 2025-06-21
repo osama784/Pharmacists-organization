@@ -5,11 +5,11 @@ const createRole = async (req, res, next) => {
         const roleName = req.validatedData.name;
         const exists = await Role.checkUniqueName(roleName);
         if (exists) {
-            res.status(400).json({ message: "role name is taken" });
+            res.status(400).json({ success: false, message: "role name is taken" });
             return;
         }
         const role = await Role.create(req.validatedData);
-        res.status(200).json(role);
+        res.json({ success: true, data: role });
     } catch (e) {
         next(e);
     }

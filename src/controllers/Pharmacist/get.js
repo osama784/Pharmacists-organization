@@ -4,10 +4,10 @@ const getPharmacist = async (req, res, next) => {
     try {
         const pharmacist = await Pharmacist.findById(req.params.id);
         if (!pharmacist) {
-            res.sendStatus(404);
+            res.status(404).json({ success: false });
             return;
         }
-        res.status(200).json({ pharmacist });
+        res.json({ success: true, data: pharmacist });
     } catch (e) {
         next(e);
     }

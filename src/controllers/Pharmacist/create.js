@@ -3,7 +3,7 @@ import Pharmacist from "../../models/Pharmacist.js";
 const createPharmacist = async (req, res, next) => {
     try {
         const pharmacist = await Pharmacist.create(req.validatedData);
-        res.status(200).json({ pharmacist });
+        res.json({ success: true, data: pharmacist });
         return;
     } catch (e) {
         next(e);

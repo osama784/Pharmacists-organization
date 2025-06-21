@@ -4,19 +4,29 @@ import { Router } from "express";
 
 const router = Router();
 
-router.post("/login", passport.authenticate("local"), (req, res) => {
-    res.status(200).json({
-        _id: req.user._id,
-        username: req.user.username,
-        role: req.user.role,
-    });
-});
+router.post(
+    "/login",
+    (req, res, next) => {
+        if (!req.body.email || !req.body.password) {
+            res.status(400).json({
+                success: false,
+                message: "invalid information",
+            });
+            return;
+        }
+        next();
+    },
+    passport.authenticate("local"),
+    (req, res) => {
+        res.json({ success: true, data: req.user });
+    }
+);
 
 router.post("/status", (req, res) => {
     if (req.isAuthenticated()) {
-        res.sendStatus(200);
+        res.status(200).json({ success: true, data: req.user });
     } else {
-        res.sendStatus(401);
+        res.status(401).json({ success: false });
     }
 });
 
