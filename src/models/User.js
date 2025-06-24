@@ -7,6 +7,7 @@ const User = new Schema({
         unique: true,
     },
     password: String,
+    resetPasswordToken: String,
     phoneNumber: String,
     role: {
         type: Schema.Types.ObjectId,
@@ -15,6 +16,7 @@ const User = new Schema({
 });
 
 User.path("password").select(false);
+User.path("resetPasswordToken").select(false);
 
 User.statics.checkUniqueEmail = async function (currentDocID, email) {
     let lookup = {};
