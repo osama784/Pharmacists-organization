@@ -1,19 +1,55 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 const Pharmacist = new Schema({
-    firstName: String,
-    lastName: String,
-    fatherName: String,
-    motherName: String,
-    gender: String,
-    nationalNumber: String,
-    birthDate: Date,
-    birthPlace: String,
-    phoneNumber: String,
-    address: String,
-    graduationYear: Number,
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
+    fatherName: {
+        type: String,
+        required: true,
+    },
+    motherName: {
+        type: String,
+        required: true,
+    },
+    gender: {
+        type: String,
+        required: true,
+    },
+    nationalNumber: {
+        type: String,
+        required: true,
+    },
+    birthDate: {
+        type: String,
+        required: true,
+    },
+    birthPlace: {
+        type: String,
+        required: true,
+    },
+    phoneNumber: {
+        type: String,
+        required: true,
+    },
+    address: {
+        type: String,
+        required: true,
+    },
+    graduationYear: {
+        type: Number,
+        required: true,
+    },
     lastTimePaid: Date,
-    nationality: String,
+    nationality: {
+        type: String,
+        required: true,
+    },
 
     ministerialNumber: Number,
     ministerialRegistrationDate: Date,

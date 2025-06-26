@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authenticated from "../middlewares/authenticated.js";
+import passport from "passport";
 import checkPermission from "../middlewares/checkPermission.js";
 import createInvoice from "../controllers/Invoice/create.js";
 import validate from "../middlewares/validate.js";
@@ -29,11 +29,13 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-router.post("/create/:id", authenticated, checkPermission(permissions.createInvoice), validate(InvoiceSchema), createInvoice);
-router.delete("/delete/:id", authenticated, checkPermission(permissions.deleteInvoice), deleteInvoice);
-router.patch("/update-status/:id", authenticated, checkPermission(permissions.updateInvoiceStatus), updateInvoiceStatus);
-router.get("/list", authenticated, checkPermission(permissions.listInvoices), listInvoices);
-router.get("/detail/:id", authenticated, checkPermission(permissions.getInvoice), getInvoice);
+router.use(passport.authenticate("jwt", { session: false }));
+
+router.post("/create/:id", checkPermission(permissions.createInvoice), validate(InvoiceSchema), createInvoice);
+router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);
+router.patch("/update-status/:id", checkPermission(permissions.updateInvoiceStatus), updateInvoiceStatus);
+router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
+router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
 router.get("/export", exportInvoicesAsExcel);
 
 export default router;

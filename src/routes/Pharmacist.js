@@ -1,6 +1,6 @@
 import { Router } from "express";
+import passport from "passport";
 import validate from "../middlewares/validate.js";
-import authenticated from "../middlewares/authenticated.js";
 import createPharmacist from "../controllers/Pharmacist/create.js";
 import checkPermission from "../middlewares/checkPermission.js";
 import listPharmacists from "../controllers/Pharmacist/list.js";
@@ -29,24 +29,13 @@ router.param("recordID", (req, res, next, value, name) => {
     }
     next();
 });
+router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/list", authenticated, checkPermission(permissions.listPharmacists), listPharmacists);
-router.get("/detail/:id", authenticated, checkPermission(permissions.getPharmacist), getPharmacist);
+router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);
+router.get("/detail/:id", checkPermission(permissions.getPharmacist), getPharmacist);
 router.get("/export", exportPharmacistsAsExcel);
-router.post(
-    "/create",
-    authenticated,
-    checkPermission(permissions.createPharmacist),
-    validate(PharmacistSchema.partial()),
-    createPharmacist
-);
-router.patch(
-    "/update/:id",
-    authenticated,
-    checkPermission(permissions.updatePharmacist),
-    validate(PharmacistSchema.partial()),
-    updatePharmacist
-);
-router.delete("/delete/:id", authenticated, checkPermission(permissions.deletePharmacist), deletePharmacist);
+router.post("/create", checkPermission(permissions.createPharmacist), validate(PharmacistSchema.partial()), createPharmacist);
+router.patch("/update/:id", checkPermission(permissions.updatePharmacist), validate(PharmacistSchema.partial()), updatePharmacist);
+router.delete("/delete/:id", checkPermission(permissions.deletePharmacist), deletePharmacist);
 
 export default router;

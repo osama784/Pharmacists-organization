@@ -3,8 +3,6 @@ import mongoose from "mongoose";
 import express from "express";
 import { config } from "dotenv";
 import "./config/dbConn.js";
-import MongoStore from "connect-mongo";
-import session from "express-session";
 import passport from "passport";
 import authRouter from "./routes/Auth.js";
 import PharmacistsRouter from "./routes/Pharmacist.js";
@@ -14,6 +12,7 @@ import UserRouter from "./routes/User.js";
 import RoleRouter from "./routes/Role.js";
 import PracticeTypeRouter from "./routes/PracticeType.js";
 import qs from "qs";
+import cors from "./middlewares/cors.js";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -27,26 +26,9 @@ app.set("query parser", (str) =>
 );
 
 app.use(express.json());
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        store: MongoStore.create({
-            client: mongoose.connection.getClient(),
-        }),
-        saveUninitialized: false,
-        resave: false,
-        cookie: {
-            secure: false,
-            httpOnly: true,
-            sameSite: "strict",
-            maxAge: 1000 * 60 * 60 * 24 * 100,
-        },
-    })
-);
-// app.use(loggerMiddlware);
+app.use(cors);
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use("/auth", authRouter);
 app.use("/pharmacists", PharmacistsRouter);

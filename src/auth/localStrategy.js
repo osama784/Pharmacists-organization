@@ -5,22 +5,22 @@ import bcrypt from "bcryptjs";
 import AppError from "../utils/AppError.js";
 
 export default (function initPassport() {
-    passport.serializeUser((user, done) => {
-        done(null, user._id);
-    });
+    // passport.serializeUser((user, done) => {
+    //     done(null, user._id);
+    // });
 
-    passport.deserializeUser(async (id, done) => {
-        try {
-            const user = await User.findById(id).populate("role");
-            if (!user) {
-                done(new AppError("user with the ID in the sent session not found, that means the user gets deleted", 400), null);
-                return;
-            }
-            done(null, user);
-        } catch (e) {
-            done(e, null);
-        }
-    });
+    // passport.deserializeUser(async (id, done) => {
+    //     try {
+    //         const user = await User.findById(id).populate("role");
+    //         if (!user) {
+    //             done(null, false);
+    //             return;
+    //         }
+    //         done(null, user);
+    //     } catch (e) {
+    //         done(e, null);
+    //     }
+    // });
 
     passport.use(
         new Strategy(

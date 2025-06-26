@@ -1,6 +1,7 @@
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import Role from "../models/Role.js";
 
 const UserSchema = z.object({
     username: z.string().trim(),
@@ -18,8 +19,15 @@ const UserSchema = z.object({
     role: z
         .string()
         .trim()
-        .refine((value) => {
-            return mongoose.Types.ObjectId.isValid(value);
+        .refine(async (value) => {
+            if (!mongoose.Types.ObjectId.isValid(value)) {
+                return false;
+            }
+            const exists = await Role.exists({ _id: value });
+            if (exists) {
+                return true;
+            }
+            return false;
         }, "please send a valid Role ID"),
 });
 

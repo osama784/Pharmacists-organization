@@ -6,6 +6,10 @@ const checkPermission = (permission) => (req, res, next) => {
         return;
     }
 
+    if (!req.user.role || !req.user.role.permissions) {
+        res.sendStatus(403);
+        return;
+    }
     if (!req.user.role.permissions.includes(permission)) {
         res.sendStatus(403);
         return;

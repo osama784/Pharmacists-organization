@@ -1,5 +1,4 @@
 import { Router } from "express";
-import authenticated from "../middlewares/authenticated.js";
 import checkPermission from "../middlewares/checkPermission.js";
 import permissions from "../utils/permissions.js";
 import createUser from "../controllers/User/create.js";
@@ -10,6 +9,7 @@ import UserSchema, { UserUpdateSchema } from "../validators/UserSchema.js";
 import mongoose from "mongoose";
 import AppError from "../utils/AppError.js";
 import listUsers from "../controllers/User/list.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -20,10 +20,11 @@ router.param("id", (req, res, next, value, name) => {
     }
     next();
 });
+router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/list", authenticated, checkPermission(permissions.listUsers), listUsers);
-router.post("/create", authenticated, checkPermission(permissions.createUser), validate(UserSchema), createUser);
-router.patch("/update/:id", authenticated, checkPermission(permissions.updateUser), validate(UserUpdateSchema), updateUser);
-router.delete("/delete/:id", authenticated, checkPermission(permissions.deleteUser), deleteUser);
+router.get("/list", checkPermission(permissions.listUsers), listUsers);
+router.post("/create", checkPermission(permissions.createUser), validate(UserSchema), createUser);
+router.patch("/update/:id", checkPermission(permissions.updateUser), validate(UserUpdateSchema), updateUser);
+router.delete("/delete/:id", checkPermission(permissions.deleteUser), deleteUser);
 
 export default router;
