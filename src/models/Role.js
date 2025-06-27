@@ -12,10 +12,10 @@ Role.statics.checkUniqueName = async function (name) {
 };
 
 async function preDeleteLogic(doc) {
-    let EMPTY_ROLE = await doc.model.findOne({ name: "EMPTY" });
+    let EMPTY_ROLE = await doc.model().findOne({ name: "EMPTY" });
     if (!EMPTY_ROLE) {
-        EMPTY_ROLE = await doc.model.create({
-            name: "EMPTY_ROLE",
+        EMPTY_ROLE = await doc.model().create({
+            name: "EMPTY",
             permissions: [],
         });
     }
@@ -29,8 +29,14 @@ async function preDeleteLogic(doc) {
     );
 }
 
-Role.pre("deleteOne", { document: true, query: true }, async function () {
+Role.pre("deleteOne", { document: true, query: false }, async function () {
     await preDeleteLogic(this);
+});
+Role.pre("deleteOne", { document: false, query: true }, async function () {
+    const doc = await this.model.findOne(this.getFilter());
+    if (doc) {
+        await preDeleteLogic(doc);
+    }
 });
 
 Role.pre("findOneAndDelete", { document: true, query: true }, async function () {
