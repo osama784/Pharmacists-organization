@@ -13,7 +13,7 @@ const listUsers = async (req, res, next) => {
             })
         );
 
-        const result = await User.find(queries).skip(skip).limit(limit);
+        const result = await User.find(queries).skip(skip).limit(limit).populate("role");
 
         const total = await User.countDocuments();
 
