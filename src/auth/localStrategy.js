@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import User from "../models/User.js";
+import User, { UserStatuses } from "../models/User.js";
 import bcrypt from "bcryptjs";
 import AppError from "../utils/AppError.js";
 
@@ -14,15 +14,16 @@ export default (function initPassport() {
                 try {
                     const user = await User.findOne({
                         email: email,
+                        status: UserStatuses.active,
                     })
                         .select("+password")
                         .populate("role");
                     if (!user) {
-                        return done(new AppError("email or password is incorrect", 400), false);
+                        return done(new AppError("email or password is incorrect, or the user is inactive", 400), false);
                     }
                     const isMatch = await bcrypt.compare(password, user.password);
                     if (!isMatch) {
-                        return done(new AppError("email or password is incorrect", 400), false);
+                        return done(new AppError("email or password is incorrect, or the user is inactive", 400), false);
                     }
                     const doc = user.toObject({
                         transform: (doc, ret) => {

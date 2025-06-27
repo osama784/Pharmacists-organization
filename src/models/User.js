@@ -1,17 +1,31 @@
 import mongoose, { Schema } from "mongoose";
 
+export const UserStatuses = {
+    pending: "pending",
+    active: "active",
+    deleted: "deleted",
+};
+
 const User = new Schema({
-    username: String,
+    username: { type: String, required: true },
     email: {
         type: String,
         unique: true,
+        required: true,
     },
-    password: String,
+    password: { type: String, required: true },
     resetPasswordToken: String,
-    phoneNumber: String,
+    phoneNumber: { type: String, required: true },
+    status: {
+        type: String,
+        required: true,
+        enum: Object.values(UserStatuses),
+        default: UserStatuses.active,
+    },
     role: {
         type: Schema.Types.ObjectId,
         ref: "Role",
+        required: true,
     },
 });
 

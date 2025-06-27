@@ -2,6 +2,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import Role from "../models/Role.js";
+import { UserStatuses } from "../models/User.js";
 
 const UserSchema = z.object({
     username: z.string().trim(),
@@ -15,7 +16,8 @@ const UserSchema = z.object({
 
             return hash;
         }),
-    phoneNumber: z.string().trim().optional(),
+    phoneNumber: z.string().trim(),
+    status: z.enum(Object.values(UserStatuses)).default(UserStatuses.active),
     role: z
         .string()
         .trim()

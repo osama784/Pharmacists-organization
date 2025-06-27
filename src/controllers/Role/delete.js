@@ -2,11 +2,12 @@ import Role from "../../models/Role.js";
 
 const deleteRole = async (req, res, next) => {
     try {
-        const result = await Role.deleteOne({ _id: req.params.id });
-        if (result.deletedCount != 1) {
-            res.status(404).json({ success: false });
+        const doc = await Role.findById(req.params.id);
+        if (doc.name == "SUPER_ADMIN" || doc.name == "EMPTY") {
+            res.status(400).json({ success: false, message: "you can't delete fixed roles (SUPER_ADMIN, EMPTY)" });
             return;
         }
+        await doc.deleteOne();
         res.sendStatus(204);
     } catch (e) {
         next(e);
