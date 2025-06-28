@@ -6,8 +6,6 @@ import { config } from "dotenv";
 config();
 
 const createUser = async () => {
-    await User.deleteMany();
-
     const role = await createSuperAdminRole();
 
     const salt = await bcrypt.genSalt(10);
@@ -15,6 +13,7 @@ const createUser = async () => {
     const user = await User.create({
         username: process.env.SUPER_ADMIN_USERNAME,
         email: process.env.SUPER_ADMIN_EMAIL,
+        phoneNumber: "e231213",
         password: hash,
         role: role,
     });

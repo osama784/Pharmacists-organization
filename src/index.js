@@ -12,7 +12,7 @@ import UserRouter from "./routes/User.js";
 import RoleRouter from "./routes/Role.js";
 import PracticeTypeRouter from "./routes/PracticeType.js";
 import qs from "qs";
-import cors from "./middlewares/cors.js";
+import cors from "cors";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -26,7 +26,7 @@ app.set("query parser", (str) =>
 );
 
 app.use(express.json());
-app.use(cors);
+app.use(cors());
 
 app.use(passport.initialize());
 
