@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-export const idTransformPlugin = (schema) => {
-    const transform = function (doc, ret) {
+export const idTransformPlugin = (schema: Schema) => {
+    const transform = function (doc: Document, ret: Record<string, any>) {
         if (ret._id instanceof mongoose.Types.ObjectId) {
             ret.id = ret._id.toString();
             delete ret._id;

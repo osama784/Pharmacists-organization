@@ -57,7 +57,7 @@ const PharmacistSchema = z.object({
     licenses: z
         .array(
             z.object({
-                licenseType: z.enum(Object.values(licenseTypes)),
+                licenseType: z.enum(Object.values(licenseTypes) as [string]),
                 startDate: z
                     .string()
                     .trim()
@@ -84,8 +84,8 @@ const PharmacistSchema = z.object({
     practiceRecords: z
         .array(
             z.object({
-                organization: z.enum(Object.values(practiceRecordsInfo.organization)),
-                characteristic: z.enum(Object.values(practiceRecordsInfo.characteristic)),
+                organization: z.enum(Object.values(practiceRecordsInfo.organization) as [string]),
+                characteristic: z.enum(Object.values(practiceRecordsInfo.characteristic) as [string]),
                 startDate: z
                     .string()
                     .trim()
@@ -113,7 +113,7 @@ const PharmacistSchema = z.object({
     universityDegrees: z
         .array(
             z.object({
-                degreeType: z.enum(Object.values(universityDegreeTypes)),
+                degreeType: z.enum(Object.values(universityDegreeTypes) as [string]),
                 obtainingDate: z
                     .string()
                     .trim()
@@ -131,7 +131,7 @@ const PharmacistSchema = z.object({
     penalties: z
         .array(
             z.object({
-                penaltyType: z.enum(Object.values(penaltyTypes)),
+                penaltyType: z.enum(Object.values(penaltyTypes) as [string]),
                 date: z
                     .string()
                     .trim()

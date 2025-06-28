@@ -15,14 +15,14 @@ const transporter = nodemailer.createTransport({
 });
 
 // Password reset email function
-export const sendPasswordResetEmail = async (email, info) => {
+export const sendPasswordResetEmail = async (email: string, info: { username: string; resetToken: string }) => {
     // Read HTML template
     const templatePath = path.join(__dirname, "..", "templates", "password-reset.html");
     let html = await fs.readFile(templatePath, "utf8");
 
     // Replace placeholders
     html = html
-        .replace("{{currentYear}}", new Date().getFullYear())
+        .replace("{{currentYear}}", `${new Date().getFullYear()}`)
         .replace("{{username}}", info.username)
         .replace("{{resetToken}}", info.resetToken);
 

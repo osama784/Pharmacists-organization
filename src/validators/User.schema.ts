@@ -17,7 +17,7 @@ const UserSchema = z.object({
             return hash;
         }),
     phoneNumber: z.string().trim(),
-    status: z.enum(Object.values(UserStatuses)).default(UserStatuses.active),
+    status: z.enum(Object.values(UserStatuses) as [string]).default(UserStatuses.active),
     role: z
         .string()
         .trim()

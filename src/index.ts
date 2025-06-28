@@ -1,6 +1,6 @@
 // import { logger, loggerMiddlware } from "./middlewares/logger.js";
 import mongoose from "mongoose";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { config } from "dotenv";
 import "./config/dbConn.js";
 import passport from "passport";
@@ -13,12 +13,13 @@ import RoleRouter from "./routes/Role.js";
 import PracticeTypeRouter from "./routes/PracticeType.js";
 import qs from "qs";
 import cors from "./middlewares/cors.js";
+import AppError from "./utils/AppError.js";
 config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.set("query parser", (str) =>
+app.set("query parser", (str: string) =>
     qs.parse(str, {
         comma: true,
         parseArrays: true,
@@ -38,8 +39,8 @@ app.use("/users", UserRouter);
 app.use("/users/roles", RoleRouter);
 app.use("/practiceTypes", PracticeTypeRouter);
 
-app.use((err, req, res, next) => {
-    if (err.isOperational) {
+app.use((err: Error | AppError, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof AppError) {
         res.status(err.statusCode).json({
             success: false,
             message: err.message,
