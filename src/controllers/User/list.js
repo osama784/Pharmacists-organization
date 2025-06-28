@@ -15,7 +15,9 @@ const listUsers = async (req, res, next) => {
         // );
 
         const { role, email, username, phoneNumber, status, page = "1", limit = "10" } = req.query;
-        const skip = (page - 1) * limit;
+        const _page = parseInt(page) || 1;
+        const _limit = parseInt(limit) || 10;
+        const skip = (_page - 1) * _limit;
         const filters = {};
         if (role && typeof role == "object") {
             let roleFilter = {};
@@ -46,10 +48,18 @@ const listUsers = async (req, res, next) => {
                 filters.username = username;
             }
         }
-        if (phoneNumber && typeof phoneNumber == "string") filters.phoneNumber = phoneNumber;
+        if (phoneNumber) {
+            if (
+                (typeof phoneNumber == "object" && "$regex" in phoneNumber && typeof phoneNumber.$regex == "string") ||
+                typeof phoneNumber == "string"
+            ) {
+                filters.phoneNumber = phoneNumber;
+            }
+        }
+
         if (status && typeof status == "string") filters.status = status;
 
-        const users = await User.find(filters).skip(skip).limit(limit).populate("role", "name").leanWithId();
+        const users = await User.find(filters).skip(skip).limit(_limit).populate("role", "name").leanWithId();
         const result = users.map((user) => ({
             ...user,
             role: user.role.name || null, // Handle missing roles
@@ -62,9 +72,9 @@ const listUsers = async (req, res, next) => {
             data: result,
             meta: {
                 totalItems: total,
-                currentPage: page,
-                totalPages: Math.ceil(total / limit),
-                itemsPerPage: limit,
+                currentPage: _page,
+                totalPages: Math.ceil(total / _limit),
+                itemsPerPage: _limit,
             },
         });
     } catch (e) {
