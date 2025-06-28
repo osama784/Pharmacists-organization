@@ -7,6 +7,7 @@ import createSuperUser from "./createSuperUser.js";
 import { assignFeesToSections } from "./assignFeesToSections.js";
 import createSuperAdminRole from "./createSuperAdminRole.js";
 import createEmptyRole from "./createEmptyRole.js";
+import custom from "./custom.js";
 
 const main = async () => {
     // await createSections();
@@ -14,7 +15,8 @@ const main = async () => {
     // await assignFeesToSections();
     // await createPracticeTypes();
     // await createSuperUser();
-    // await createSuperAdminRole();
-    await createEmptyRole();
+    await createSuperAdminRole();
+    // await createEmptyRole();
+    // await custom();
 };
 await main();

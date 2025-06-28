@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import AppError from "../utils/AppError.js";
 import listUsers from "../controllers/User/list.js";
 import passport from "passport";
+import getUser from "../controllers/User/get.js";
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.param("id", (req, res, next, value, name) => {
 router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermission(permissions.listUsers), listUsers);
+router.get("/get/:id", checkPermission(permissions.readUser), getUser);
 router.post("/create", checkPermission(permissions.createUser), validate(UserSchema), createUser);
 router.patch("/update/:id", checkPermission(permissions.updateUser), validate(UserUpdateSchema), updateUser);
 router.delete("/delete/:id", checkPermission(permissions.deleteUser), deleteUser);

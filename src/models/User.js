@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
 export const UserStatuses = {
-    pending: "pending",
-    active: "active",
-    deleted: "deleted",
+    pending: "معلق",
+    active: "مفعل",
+    deleted: "محذوف",
 };
 
 const User = new Schema({
@@ -46,6 +46,17 @@ User.statics.checkUniqueEmail = async function (currentDocID, email) {
     }
     const exists = await mongoose.model("User").exists(lookup);
     return exists;
+};
+
+User.query.leanWithId = function () {
+    return this.lean()
+        .exec()
+        .then((docs) =>
+            docs.map((doc) => {
+                const { _id, __v, ...rest } = doc;
+                return { ...rest, id: _id.toString() };
+            })
+        );
 };
 
 export default mongoose.model("User", User, "users");
