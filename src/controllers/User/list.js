@@ -65,7 +65,7 @@ const listUsers = async (req, res, next) => {
             role: user.role.name || null, // Handle missing roles
         }));
 
-        const total = await User.countDocuments();
+        const total = await User.find(filters).countDocuments();
 
         res.json({
             success: true,
