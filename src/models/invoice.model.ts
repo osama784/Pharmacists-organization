@@ -7,22 +7,23 @@ export const invoiceStatuses = {
 };
 
 const Invoice = new Schema({
-    pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist" },
+    pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
     status: String,
-    practiceType: { type: Schema.Types.ObjectId, ref: "PracticeType" },
+    practiceType: { type: Schema.Types.ObjectId, ref: "PracticeType", required: true },
     isFinesIncluded: Boolean,
     fees: [
         {
             feeRef: {
                 type: Schema.Types.ObjectId,
                 ref: "Fee",
+                required: true,
             },
-            feeName: String,
-            sectionName: String,
-            value: Number,
+            feeName: { type: String, required: true },
+            sectionName: { type: String, required: true },
+            value: { type: Number, required: true },
         },
     ],
-    total: Number,
+    total: { type: Number, required: true },
     paidDate: Date,
     createdAt: Date,
 });

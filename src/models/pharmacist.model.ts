@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { PharmacistDocument } from "../types/models/pharmacist.types.js";
 
-const Pharmacist = new Schema({
+const Pharmacist = new Schema<PharmacistDocument>({
     firstName: {
         type: String,
         required: true,
@@ -22,7 +23,7 @@ const Pharmacist = new Schema({
         required: true,
     },
     nationalNumber: {
-        type: String,
+        type: Number,
         required: true,
     },
     birthDate: {
@@ -51,14 +52,14 @@ const Pharmacist = new Schema({
         required: true,
     },
 
-    ministerialNumber: Number,
-    ministerialRegistrationDate: Date,
-    registrationNumber: Number,
-    registrationDate: Date,
+    ministerialNumber: { type: Number, required: true },
+    ministerialRegistrationDate: { type: Date, required: true },
+    registrationNumber: { type: Number, required: true },
+    registrationDate: { type: Date, required: true },
 
     licenses: [
         {
-            _id: mongoose.Schema.Types.ObjectId,
+            _id: false,
             licenseType: String,
             startDate: Date,
             endDate: Date,
@@ -68,7 +69,7 @@ const Pharmacist = new Schema({
 
     practiceRecords: [
         {
-            _id: mongoose.Schema.Types.ObjectId,
+            _id: false,
             organization: String,
             startDate: Date,
             endDate: Date,
@@ -79,7 +80,7 @@ const Pharmacist = new Schema({
     ],
     universityDegrees: [
         {
-            _id: mongoose.Schema.Types.ObjectId,
+            _id: false,
             degreeType: String,
             obtainingDate: Date,
             university: String,
@@ -87,7 +88,7 @@ const Pharmacist = new Schema({
     ],
     penalties: [
         {
-            _id: mongoose.Schema.Types.ObjectId,
+            _id: false,
             penaltyType: String,
             date: Date,
             reason: String,
@@ -165,4 +166,4 @@ Pharmacist.virtual("fullName").get(function () {
     return `${this.firstName} ${this.fatherName} ${this.lastName}`;
 });
 
-export default mongoose.model("Pharmacist", Pharmacist, "pharmacists");
+export default mongoose.model<PharmacistDocument>("Pharmacist", Pharmacist, "pharmacists");

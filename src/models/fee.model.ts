@@ -1,8 +1,22 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
-const Fee = new Schema({
-    name: String,
-    section: { type: Schema.Types.ObjectId, ref: "Section" },
+interface IFee {
+    name: string;
+    section: Types.ObjectId;
+    detail?: Map<string, number>[];
+    value?: number;
+    isMutable: boolean;
+    isRepeatable: boolean;
+}
+
+type FeeDocument = Document & IFee;
+type PopulatedFeeDocument = Omit<FeeDocument, "section"> & {
+    section: any;
+};
+
+const Fee = new Schema<FeeDocument>({
+    name: { type: String, required: true },
+    section: { type: Schema.Types.ObjectId, ref: "Section", required: true },
     detail: {
         type: Map,
         of: Number,
@@ -11,8 +25,8 @@ const Fee = new Schema({
         type: Number,
         default: 0,
     },
-    isMutable: Boolean,
-    isRepeatable: Boolean,
+    isMutable: { type: Boolean, required: true },
+    isRepeatable: { type: Boolean, required: true },
 });
 
 /** "isMutable" = true: means it changes from one year to another
