@@ -3,13 +3,13 @@ import { z } from "zod";
 import { licenseTypes, penaltyTypes, practiceRecordsInfo, universityDegreeTypes } from "../models/Pharmacist.js";
 
 const PharmacistSchema = z.object({
-    firstName: z.string().trim(),
-    lastName: z.string().trim(),
-    motherName: z.string().trim(),
-    fatherName: z.string().trim(),
+    firstName: z.string().nonempty().trim(),
+    lastName: z.string().nonempty().trim(),
+    motherName: z.string().nonempty().trim(),
+    fatherName: z.string().nonempty().trim(),
     gender: z.enum(["male", "female"]),
-    nationalNumber: z.string().trim(),
-    birthPlace: z.string().trim(),
+    nationalNumber: z.string().nonempty().trim(),
+    birthPlace: z.string().nonempty().trim(),
     birthDate: z
         .string()
         .trim()
@@ -19,8 +19,8 @@ const PharmacistSchema = z.object({
         .transform((value) => {
             return new Date(value);
         }),
-    phoneNumber: z.string().trim(),
-    address: z.string(),
+    phoneNumber: z.string().nonempty().trim(),
+    address: z.string().nonempty().trim(),
     graduationYear: z.number(),
     lastTimePaid: z
         .string()
@@ -31,7 +31,7 @@ const PharmacistSchema = z.object({
         .transform((value) => {
             return new Date(value);
         }),
-    nationality: z.string().trim(),
+    nationality: z.string().nonempty().trim(),
 
     ministerialNumber: z.number(),
     ministerialRegistrationDate: z

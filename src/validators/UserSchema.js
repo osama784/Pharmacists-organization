@@ -5,10 +5,11 @@ import Role from "../models/Role.js";
 import { UserStatuses } from "../models/User.js";
 
 const UserSchema = z.object({
-    username: z.string().trim(),
+    username: z.string().nonempty().trim(),
     email: z.string().email(),
     password: z
         .string()
+        .min(4)
         .trim()
         .transform(async (value) => {
             const salt = await bcrypt.genSalt(10);
@@ -16,7 +17,7 @@ const UserSchema = z.object({
 
             return hash;
         }),
-    phoneNumber: z.string().trim(),
+    phoneNumber: z.string().nonempty().trim(),
     status: z.enum(Object.values(UserStatuses)).default(UserStatuses.active),
     role: z
         .string()
