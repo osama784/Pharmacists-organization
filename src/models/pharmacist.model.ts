@@ -27,7 +27,7 @@ const Pharmacist = new Schema<PharmacistDocument>({
         required: true,
     },
     birthDate: {
-        type: String,
+        type: Date,
         required: true,
     },
     birthPlace: {
@@ -162,7 +162,7 @@ export const practiceRecordsInfo = {
 
 export const penaltyTypes = ["something"];
 
-Pharmacist.virtual("fullName").get(function () {
+Pharmacist.virtual("fullName").get(function (this: PharmacistDocument) {
     return `${this.firstName} ${this.fatherName} ${this.lastName}`;
 });
 

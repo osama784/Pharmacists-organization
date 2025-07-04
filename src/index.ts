@@ -1,18 +1,17 @@
 // import { logger, loggerMiddlware } from "./middlewares/logger.js";
 import mongoose from "mongoose";
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response, TypedResponse } from "express";
 import { config } from "dotenv";
 import "./config/dbConn.js";
 import passport from "passport";
-import authRouter from "./routes/Auth.js";
-import PharmacistsRouter from "./routes/Pharmacist.js";
-import InvoiceRouter from "./routes/Invoice.js";
-import FeeRouter from "./routes/Fee.js";
-import UserRouter from "./routes/User.js";
-import RoleRouter from "./routes/Role.js";
-import PracticeTypeRouter from "./routes/PracticeType.js";
+import authRouter from "./routes/auth.router.js";
+import PharmacistsRouter from "./routes/pharmacist.router.js";
+import InvoiceRouter from "./routes/invoice.router.js";
+import FeeRouter from "./routes/fee.router.js";
+import UserRouter from "./routes/user.router.js";
+import RoleRouter from "./routes/role.router.js";
+import PracticeTypeRouter from "./routes/practiceType.router.js";
 import qs from "qs";
-import cors from "./middlewares/cors.js";
 import AppError from "./utils/AppError.js";
 config();
 
@@ -27,7 +26,6 @@ app.set("query parser", (str: string) =>
 );
 
 app.use(express.json());
-app.use(cors);
 
 app.use(passport.initialize());
 
@@ -39,11 +37,11 @@ app.use("/users", UserRouter);
 app.use("/users/roles", RoleRouter);
 app.use("/practiceTypes", PracticeTypeRouter);
 
-app.use((err: Error | AppError, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: NextFunction) => {
     if (err instanceof AppError) {
         res.status(err.statusCode).json({
             success: false,
-            message: err.message,
+            details: [err.message],
         });
     } else {
         // logger.error(err.message);
@@ -52,7 +50,7 @@ app.use((err: Error | AppError, req: Request, res: Response, next: NextFunction)
         }
         res.status(500).json({
             success: false,
-            message: "Something went wrong on the server",
+            details: ["Something went wrong on the server"],
         });
     }
 });

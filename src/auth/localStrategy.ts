@@ -1,8 +1,10 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import User, { UserStatuses } from "../models/User.js";
+import User, { UserStatuses } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import AppError from "../utils/AppError.js";
+import { Document } from "mongoose";
+import { RoleDocument } from "../types/models/role.types.js";
 
 export default (function initPassport() {
     passport.use(
@@ -17,7 +19,7 @@ export default (function initPassport() {
                         status: UserStatuses.active,
                     })
                         .select("+password")
-                        .populate("role");
+                        .populate<{ role: RoleDocument }>("role");
                     if (!user) {
                         return done(new AppError("email or password is incorrect, or the user is inactive", 400), false);
                     }
@@ -26,7 +28,7 @@ export default (function initPassport() {
                         return done(new AppError("email or password is incorrect, or the user is inactive", 400), false);
                     }
                     const doc = user.toObject({
-                        transform: (doc, ret) => {
+                        transform: (doc: Document, ret: Record<string, any>) => {
                             delete ret.password;
                             delete ret.__v;
                             return ret;

@@ -22,6 +22,15 @@ export const invoiceSchemaTR = {
     total: "المجموع الكلي",
 };
 
+export interface IInvoiceSchemaTR {
+    pharmacist: string;
+    status: string;
+    practiceType: string;
+    paidDate: string;
+    createdAt: string;
+    total: string;
+}
+
 export const pharmacistSchemaTR = {
     firstName: "الاسم الأول",
     lastName: "الشهرة",
@@ -42,5 +51,26 @@ export const pharmacistSchemaTR = {
     registrationNumber: "الرقم النقابي",
     registrationDate: "تاريخ التسجيل في النقابة",
 };
+
+export interface IPharmacistSchemaTR {
+    firstName: string;
+    lastName: string;
+    fatherName: string;
+    motherName: string;
+    gender: string;
+    nationalNumber: number;
+    birthDate: Date;
+    birthPlace: string;
+    phoneNumber: string;
+    address: string;
+    graduationYear: number;
+    lastTimePaid: Date;
+    nationality: string;
+
+    ministerialNumber: number;
+    ministerialRegistrationDate: Date;
+    registrationNumber: number;
+    registrationDate: Date;
+}
 
 export const feesTranslation = {};

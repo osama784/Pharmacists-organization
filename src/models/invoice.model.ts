@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { IInvoiceModel, InvoiceDocument } from "../types/models/invoice.types.js";
 
 export const invoiceStatuses = {
     paid: "مدفوع",
@@ -6,7 +7,7 @@ export const invoiceStatuses = {
     cancelled: "ملغاة",
 };
 
-const Invoice = new Schema({
+const Invoice = new Schema<InvoiceDocument>({
     pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
     status: String,
     practiceType: { type: Schema.Types.ObjectId, ref: "PracticeType", required: true },
@@ -25,7 +26,7 @@ const Invoice = new Schema({
     ],
     total: { type: Number, required: true },
     paidDate: Date,
-    createdAt: Date,
+    createdAt: { type: Date, required: true },
 });
 
 Invoice.pre("save", async function () {
@@ -35,4 +36,4 @@ Invoice.pre("save", async function () {
     }
 });
 
-export default mongoose.model("Invoice", Invoice, "invoices");
+export default mongoose.model<InvoiceDocument, IInvoiceModel>("Invoice", Invoice, "invoices");

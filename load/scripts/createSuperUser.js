@@ -1,12 +1,12 @@
-import User from "../../src/models/User.js";
-import Role from "../../src/models/Role.js";
+import User from "../../dist/models/user.model.js";
+import Role from "../../dist/models/role.model.js";
 import bcrypt from "bcryptjs";
 import createSuperAdminRole from "./createSuperAdminRole.js";
 import { config } from "dotenv";
 config();
 
 const createUser = async () => {
-    await User.deleteMany();
+    // await User.deleteMany();
 
     const role = await createSuperAdminRole();
 
@@ -16,6 +16,7 @@ const createUser = async () => {
         username: process.env.SUPER_ADMIN_USERNAME,
         email: process.env.SUPER_ADMIN_EMAIL,
         password: hash,
+        phoneNumber: "32132",
         role: role,
     });
     console.log(user);

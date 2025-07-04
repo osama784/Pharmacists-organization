@@ -1,4 +1,5 @@
-import { Document } from "mongoose";
+import { Document, HydratedDocument, Types } from "mongoose";
+import { IInvoice } from "./invoice.types.js";
 
 interface ILicense {
     licenseType: string;
@@ -29,14 +30,14 @@ interface IPenalty {
     details: String;
 }
 
-interface IPharmacist {
+export interface IPharmacist {
     firstName: string;
     lastName: string;
     fatherName: string;
     motherName: string;
     gender: string;
     nationalNumber: number;
-    birthDate: string;
+    birthDate: Date;
     birthPlace: string;
     phoneNumber: string;
     address: string;
@@ -53,10 +54,9 @@ interface IPharmacist {
     universityDegrees: IUniversityDegree[];
     penalties: IPenalty[];
 
-    invoices: any;
+    invoices: Types.ObjectId[];
 }
 
-export type PharmacistDocument = IPharmacist &
-    Document & {
-        fullName: string;
-    };
+export type PharmacistDocument = HydratedDocument<IPharmacist> & {
+    fullName: string;
+};

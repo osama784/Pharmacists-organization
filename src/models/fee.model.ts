@@ -1,18 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
-
-interface IFee {
-    name: string;
-    section: Types.ObjectId;
-    detail?: Map<string, number>[];
-    value?: number;
-    isMutable: boolean;
-    isRepeatable: boolean;
-}
-
-type FeeDocument = Document & IFee;
-type PopulatedFeeDocument = Omit<FeeDocument, "section"> & {
-    section: any;
-};
+import { FeeDocument, IFeeModel } from "../types/models/fee.types.js";
 
 const Fee = new Schema<FeeDocument>({
     name: { type: String, required: true },
@@ -38,4 +25,4 @@ const Fee = new Schema<FeeDocument>({
  * !Note: "isMutable" = true => "isRepeatble" = true
  */
 
-export default mongoose.model("Fee", Fee, "fees");
+export default mongoose.model<FeeDocument, IFeeModel>("Fee", Fee, "fees");
