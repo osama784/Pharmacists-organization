@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "node ./src/index.js",
+        "build": "tsc --build",
+        "start": "node ./dist/index.js",
         "load": "node ./load/scripts/main.js"
     },
     "type": "module",
@@ -26,5 +27,16 @@
         "passport-local": "^1.0.0",
         "winston": "^3.17.0",
         "zod": "^3.24.1"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.3",
+        "@types/express-session": "^1.18.2",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/nodemailer": "^6.4.17",
+        "@types/passport": "^1.0.17",
+        "@types/passport-jwt": "^4.0.1",
+        "@types/passport-local": "^1.0.38",
+        "typescript": "^5.8.3"
     }
 }

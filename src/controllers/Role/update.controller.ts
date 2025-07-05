@@ -1,0 +1,29 @@
+import Role from "../../models/role.model.js";
+import { NextFunction, Request, TypedResponse } from "express";
+import { RoleDocument } from "../../types/models/role.types.js";
+
+const updateRole = async (req: Request, res: TypedResponse<RoleDocument>, next: NextFunction) => {
+    try {
+        const doc = await Role.findById(req.params.id);
+        if (!doc) {
+            res.status(404).json({ success: false });
+            return;
+        }
+        if (doc.name == "SUPER_ADMIN" || doc.name == "EMPTY") {
+            res.status(400).json({ success: false, details: ["you can't update fixed roles (SUPER_ADMIN, EMPTY)"] });
+            return;
+        }
+        if (!doc) {
+            res.status(404).json({ success: false });
+            return;
+        }
+        await doc.updateOne({ $set: req.validatedData }, { new: true });
+
+        const newDoc = await Role.findById(doc._id);
+        res.json({ success: true, data: newDoc! });
+    } catch (e) {
+        next(e);
+    }
+};
+
+export default updateRole;
