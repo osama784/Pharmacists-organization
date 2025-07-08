@@ -1,60 +1,34 @@
 [
     {
-        "name": "انتساب خزانة سوريين",
-        "section": "",
+        "name": "انتساب نقابة سوريين",
         "isRepeatable": false,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "إعادة قيد خزانة",
-        "section": "",
+        "name": "إعادة قيد نقابة",
         "isRepeatable": false,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "عدم المزاولة",
-        "section": "",
+        "name": "رسم الهوية",
         "isRepeatable": false,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "عائدات تقاعدية",
-        "section": "",
+        "name": "رسوم سنين سابقة",
         "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "رسم السن",
-        "section": "",
-        "isRepeatable": true,
-        "isMutable": false,
-        "value": 0
-    },
-    {
-        "name": "رسم المزاولة",
-        "section": "",
-        "isRepeatable": false,
-        "isMutable": false,
-        "value": 0
-    },
-    {
-        "name": "انتقال خزانة",
-        "section": "",
-        "isRepeatable": true,
-        "isMutable": false,
-        "value": 0
-    },
-    {
-        "name": "مكافأة نهاية الخدمة خزانة",
-        "section": "",
+        "name": "دعم فروع",
         "isRepeatable": true,
         "isMutable": true,
         "value": 0,
-        "detail": {
+        "details": {
             "1996": 0,
             "1997": 0,
             "1998": 0,
@@ -88,36 +62,55 @@
         }
     },
     {
-        "name": "غرامات تأخير خزانة",
-        "section": "",
+        "name": "معونة اجتماعية",
         "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "رسم اغتراب",
-        "section": "",
+        "name": "نشر اسم بجدول لاحق",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتقال نقابة",
         "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "انتساب خزانة أجانب",
-        "section": "",
+        "name": "رسوم متنوعة",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "غرامات تأخير نقابة",
         "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "ضم سنين إلى المزاولة",
-        "section": "",
+        "name": "دعم نشاط النقابة",
         "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
     {
-        "name": "إيرادات خزانة متنوعة",
-        "section": "",
+        "name": "مطبوعات",
+        "isRepeatable": false,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "انتساب نقابة أجانب",
+        "isRepeatable": true,
+        "isMutable": false,
+        "value": 0
+    },
+    {
+        "name": "إيرادات نقابة متنوعة",
         "isRepeatable": true,
         "isMutable": false,
         "value": 0

@@ -1,89 +1,58 @@
 import { z } from "zod";
 import mongoose from "mongoose";
-import PracticeType from "../models/practiceType.model.js";
+import PracticeType, { practiceTypes } from "../models/practiceType.model.js";
 import Section from "../models/section.model.js";
 import Fee from "../models/fee.model.js";
+import { DateSchema, EnumSchema, mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 
 const InvoiceSchema = z.object({
-    practiceType: z
-        .string()
-        .trim()
-        .refine(async (value) => {
-            if (!mongoose.Types.ObjectId.isValid(value)) {
-                return false;
-            }
-            const exists = await PracticeType.exists({ _id: value });
-            if (exists) {
-                return true;
-            }
-            return false;
-        }, "no practiceType found with the given ID"),
+    practiceType: EnumSchema(practiceTypes as [string]),
 
-    createdAt: z
-        .string()
-        .trim()
-        .default(new Date().toISOString())
-        .refine((value) => {
-            return !isNaN(Date.parse(value));
-        })
-        .transform((value) => {
-            return new Date(value);
-        }),
+    createdAt: DateSchema,
     fees: z
         .array(
             z.object({
-                feeRef: z
-                    .string()
-                    .trim()
-                    .refine(async (value) => {
-                        if (value == null) {
-                            return true;
-                        }
-                        if (!mongoose.Types.ObjectId.isValid(value)) {
-                            return false;
-                        }
-                        const exists = await Fee.exists({ _id: value });
-                        if (exists) {
-                            return true;
-                        }
-                        return false;
-                    }, "please send a valid fee id"),
-                feeName: z
-                    .string()
-                    .trim()
-                    .refine(async (value) => {
+                feeRef: mongooseIDSchema(Fee),
+                feeName: StringSchema.refine(
+                    async (value) => {
                         const exists = await Fee.exists({ name: value });
                         if (exists) {
                             return true;
                         }
                         return false;
-                    }),
-                sectionName: z
-                    .string()
-                    .trim()
-                    .refine(async (value) => {
+                    },
+                    { message: zodSchemasMessages.INVOICE_SCHEMA.FEE_NAME_NOT_FOUND }
+                ),
+                sectionName: StringSchema.refine(
+                    async (value) => {
                         const exists = await Section.exists({ name: value });
                         if (exists) {
                             return true;
                         }
                         return false;
-                    }),
-                value: z.number(),
+                    },
+                    { message: zodSchemasMessages.INVOICE_SCHEMA.SECTION_NAME_NOT_FOUND }
+                ),
+                value: NumberSchemaPositive,
             })
         )
-        .refine(async (fees) => {
-            // check all fees' IDs get sent
-            const sections = await Section.find();
-            const excludedFees = sections.map((section) => section.fineSummaryFee);
-            const allFees = (await Fee.find({ _id: { $nin: excludedFees } })).map((fee) => fee.id);
-            if (fees.length != allFees.length) {
-                return false;
-            }
+        .refine(
+            async (fees) => {
+                // check all fees' IDs get sent
+                const sections = await Section.find();
+                const excludedFees = sections.map((section) => section.fineSummaryFee);
+                const allFees = (await Fee.find({ _id: { $nin: excludedFees } })).map((fee) => fee.id);
+                if (fees.length != allFees.length) {
+                    return false;
+                }
 
-            const filteredFees = fees.filter((fee) => !allFees.includes(fee.feeRef.toString()));
+                const filteredFees = fees.filter((fee) => !allFees.includes(fee.feeRef.toString()));
 
-            return filteredFees.length == 0;
-        }, "please send a complete list of fees"),
+                return filteredFees.length == 0;
+            },
+            { message: zodSchemasMessages.INVOICE_SCHEMA.ALL_FEES_SHOULD_EXIST }
+        ),
 });
 
 export default InvoiceSchema;

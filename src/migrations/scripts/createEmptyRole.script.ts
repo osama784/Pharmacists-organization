@@ -1,5 +1,4 @@
-import Role from "../../src/models/Role.js";
-import permissions from "../../src/utils/permissions.js";
+import Role from "../../models/role.model";
 
 const createEmptyRole = async () => {
     let role = await Role.findOne({ name: "EMPTY" });

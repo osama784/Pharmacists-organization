@@ -8,7 +8,7 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistDocum
         const validatedData: updatePharmacistDto = req.validatedData;
         const pharmacist = await Pharmacist.findById(req.params.id);
         if (!pharmacist) {
-            res.status(404).json({ success: false });
+            res.status(404);
             return;
         }
         await pharmacist.updateOne({ $set: validatedData });

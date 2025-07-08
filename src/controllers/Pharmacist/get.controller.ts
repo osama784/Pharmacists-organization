@@ -6,7 +6,7 @@ const getPharmacist = async (req: Request, res: TypedResponse<PharmacistDocument
     try {
         const pharmacist = await Pharmacist.findById(req.params.id);
         if (!pharmacist) {
-            res.status(404).json({ success: false });
+            res.status(404);
             return;
         }
         res.json({ success: true, data: pharmacist });

@@ -1,16 +1,17 @@
 import { z } from "zod";
+import { EmailSchema, StringSchema, PasswordSchema } from "../utils/customSchemas";
 
 export const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string(),
+    email: EmailSchema,
+    password: PasswordSchema,
 });
 
 export const sendPasswordResetEmailSchema = z.object({
-    email: z.string().email(),
+    email: EmailSchema,
 });
 
 export const resetPasswordSchema = z.object({
-    email: z.string().email(),
-    resetToken: z.string(),
-    password: z.string().trim(),
+    email: EmailSchema,
+    resetToken: StringSchema,
+    password: PasswordSchema,
 });

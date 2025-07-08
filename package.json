@@ -5,9 +5,9 @@
     "scripts": {
         "build": "tsc --build",
         "start": "node ./dist/index.js",
-        "load": "node ./load/scripts/main.js"
+        "load": "node ./dist/migrations/scripts/main.js"
     },
-    "type": "module",
+    "type": "commonjs",
     "keywords": [],
     "author": "",
     "license": "ISC",

@@ -6,7 +6,7 @@ const getUser = async (req: Request, res: TypedResponse<UserDocument>, next: Nex
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
-            res.status(404).json({ success: false });
+            res.status(404);
             return;
         }
         res.json({ success: true, data: user });

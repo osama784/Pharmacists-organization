@@ -1,5 +1,5 @@
-import Role from "../../dist/models/role.model.js";
-import permissions from "../../dist/utils/permissions.js";
+import Role from "../../models/role.model.js";
+import permissions from "../../utils/permissions.js";
 
 const createSuperAdminRole = async () => {
     let role = await Role.findOne({ name: "SUPER_ADMIN" });

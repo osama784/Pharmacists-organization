@@ -1,16 +1,10 @@
 import { z } from "zod";
 import permissions from "../utils/permissions.js";
+import { EnumSchema, StringSchema } from "../utils/customSchemas.js";
 
 const RoleSchema = z.object({
-    name: z.string().trim(),
-    permissions: z.array(
-        z
-            .string()
-            .trim()
-            .refine((value) => {
-                return Object.values(permissions).includes(value);
-            }, "this permission doesn't exist in the DB")
-    ),
+    name: StringSchema,
+    permissions: z.array(EnumSchema(Object.values(permissions) as [string])),
 });
 
 export default RoleSchema;

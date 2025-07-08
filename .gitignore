@@ -1,5 +1,6 @@
 logs/
 node_modules/
+load/
 dist/
 try.js
 TODO.txt

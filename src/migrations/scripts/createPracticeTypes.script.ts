@@ -1,7 +1,6 @@
-import PracticeType from "../../src/models/PracticeType.js";
-import Fee from "../../src/models/Fee.js";
-import loadJSONFile from "./loadJsonFile.js";
-const practiceTypes = await loadJSONFile("../data/practiceTypes.json");
+import PracticeType from "../../models/practiceType.model";
+import Fee from "../../models/fee.model";
+import practiceTypes from "../data/practiceTypes.json";
 
 const createPracticeTypes = async () => {
     await practiceTypes.forEach(async (practiceType) => {

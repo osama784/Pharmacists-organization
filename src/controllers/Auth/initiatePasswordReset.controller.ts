@@ -8,7 +8,7 @@ const initiatePasswordReset = async (req: Request, res: TypedResponse<null>, nex
         const email = req.validatedData.email;
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(404).json({ success: false, details: ["user with the given email not found"] });
+            res.status(404);
             return;
         }
         const resetToken = crypto.randomBytes(6).toString("hex");

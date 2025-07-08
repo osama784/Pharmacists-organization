@@ -7,7 +7,7 @@ const getInvoice = async (req: Request, res: TypedResponse<InvoiceDocument>, nex
         const invoice = await Invoice.findById(req.params.id);
 
         if (!invoice) {
-            res.status(404).json({ success: false });
+            res.status(404);
             return;
         }
         res.json({ success: true, data: invoice });

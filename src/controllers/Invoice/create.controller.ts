@@ -1,25 +1,17 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import Invoice from "../../models/invoice.model.js";
 import Section from "../../models/section.model.js";
-import loadJSONFile from "../../utils/loadJsonFile.js";
-import path from "path";
-
-import { fileURLToPath } from "url";
 import { InvoiceDocument } from "../../types/models/invoice.types.js";
 import { createInvoiceDto } from "../../types/dtos/invoice.dto.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import staticData from "../../config/static-data.json";
 
 const createInvoice = async (req: Request, res: TypedResponse<InvoiceDocument>, next: NextFunction) => {
     try {
         // check fines date, adding fines
         const validatedData: createInvoiceDto = req.validatedData;
         const fees = validatedData.fees;
-        const DATA_PATH = path.resolve(__dirname, "../..", "config", "static-data.json");
-        const staticData = await loadJSONFile(DATA_PATH);
-        const finesDate = new Date(staticData["fines Date"]);
+        const finesDate = new Date(staticData["fines-date"]);
 
         const sections = await Section.find().populate<{
             fineableFees: FeeDocument[];

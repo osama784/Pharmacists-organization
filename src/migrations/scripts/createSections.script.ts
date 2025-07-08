@@ -1,7 +1,6 @@
-import loadJSONFile from "./loadJsonFile.js";
-import Section from "../../src/models/Section.js";
-import Fee from "../../src/models/Fee.js";
-const sections = await loadJSONFile("../data/sections.json");
+import Section from "../../models/section.model.js";
+import Fee from "../../models/fee.model.js";
+import sections from "../data/sections.json";
 
 const createSections = async () => {
     await sections.forEach(async (section) => {

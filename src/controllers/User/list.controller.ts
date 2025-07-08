@@ -11,20 +11,18 @@ const listUsers = async (req: Request, res: TypedResponse<PopulatedUserDocument[
         const page = parseInt(queries.page!) || 1;
         const limit = parseInt(queries.limit!) || 10;
         const skip = (page - 1) * limit;
-
         const filters = buildUserFilters(queries);
-
         const result = await User.find(filters).skip(skip).limit(limit).populate<{ role: RoleDocument }>("role");
 
-        const total = await User.countDocuments();
+        const totalItems = await User.find(filters).countDocuments();
 
         res.json({
             success: true,
             data: result,
             meta: {
-                totalItems: total,
+                totalItems: totalItems,
                 currentPage: page,
-                totalPages: Math.ceil(total / limit),
+                totalPages: Math.ceil(totalItems / limit),
                 itemsPerPage: limit,
             },
         });

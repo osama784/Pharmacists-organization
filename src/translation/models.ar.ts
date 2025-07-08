@@ -13,7 +13,7 @@ export const invoiceTR = {
     },
 };
 
-export const invoiceSchemaTR = {
+export const InvoiceModelTR = {
     pharmacist: "اسم الصيدلي",
     status: "حالة الفاتورة",
     practiceType: "نوع المزاولة",
@@ -22,7 +22,7 @@ export const invoiceSchemaTR = {
     total: "المجموع الكلي",
 };
 
-export interface IInvoiceSchemaTR {
+export interface IInvoiceModelTR {
     pharmacist: string;
     status: string;
     practiceType: string;
@@ -31,7 +31,7 @@ export interface IInvoiceSchemaTR {
     total: string;
 }
 
-export const pharmacistSchemaTR = {
+export const IPharmacistModelTR = {
     firstName: "الاسم الأول",
     lastName: "الشهرة",
     fatherName: "اسم الأب",
@@ -52,7 +52,7 @@ export const pharmacistSchemaTR = {
     registrationDate: "تاريخ التسجيل في النقابة",
 };
 
-export interface IPharmacistSchemaTR {
+export interface IIPharmacistModelTR {
     firstName: string;
     lastName: string;
     fatherName: string;

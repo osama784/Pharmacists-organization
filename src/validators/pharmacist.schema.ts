@@ -1,81 +1,34 @@
 import { z } from "zod";
 import { licenseTypes, penaltyTypes, practiceRecordsInfo, universityDegreeTypes } from "../models/pharmacist.model.js";
+import { DateSchema, EnumSchema, NumberSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 
 const PharmacistSchema = z.object({
-    firstName: z.string().nonempty().trim(),
-    lastName: z.string().nonempty().trim(),
-    motherName: z.string().nonempty().trim(),
-    fatherName: z.string().nonempty().trim(),
-    gender: z.enum(["male", "female"]),
-    nationalNumber: z.string().nonempty().trim(),
-    birthPlace: z.string().nonempty().trim(),
-    birthDate: z
-        .string()
-        .trim()
-        .refine((value) => {
-            return !isNaN(Date.parse(value));
-        })
-        .transform((value) => {
-            return new Date(value);
-        }),
-    phoneNumber: z.string().nonempty().trim(),
-    address: z.string().nonempty().trim(),
-    graduationYear: z.number(),
-    lastTimePaid: z
-        .string()
-        .trim()
-        .refine((value) => {
-            return !isNaN(Date.parse(value));
-        })
-        .transform((value) => {
-            return new Date(value);
-        }),
-    nationality: z.string().nonempty().trim(),
+    firstName: StringSchema,
+    lastName: StringSchema,
+    motherName: StringSchema,
+    fatherName: StringSchema,
+    gender: EnumSchema(["ذكر", "أنثى"] as unknown as [string]),
+    nationalNumber: StringSchema,
+    birthPlace: StringSchema,
+    birthDate: DateSchema,
+    phoneNumber: StringSchema,
+    address: StringSchema,
+    graduationYear: NumberSchemaPositive,
+    lastTimePaid: DateSchema,
+    nationality: StringSchema,
 
-    ministerialNumber: z.number(),
-    ministerialRegistrationDate: z
-        .string()
-        .trim()
-        .refine((value) => {
-            return !isNaN(Date.parse(value));
-        })
-        .transform((value) => {
-            return new Date(value);
-        }),
-    registrationNumber: z.number(),
-    registrationDate: z
-        .string()
-        .trim()
-        .refine((value) => {
-            return !isNaN(Date.parse(value));
-        })
-        .transform((value) => {
-            return new Date(value);
-        }),
+    ministerialNumber: NumberSchema,
+    ministerialRegistrationDate: DateSchema,
+    registrationNumber: NumberSchema,
+    registrationDate: DateSchema,
 
     licenses: z
         .array(
             z.object({
-                licenseType: z.enum(Object.values(licenseTypes) as [string]),
-                startDate: z
-                    .string()
-                    .trim()
-                    .refine((value) => {
-                        return !isNaN(Date.parse(value));
-                    })
-                    .transform((value) => {
-                        return new Date(value);
-                    }),
-                endDate: z
-                    .string()
-                    .trim()
-                    .refine((value) => {
-                        return !isNaN(Date.parse(value));
-                    })
-                    .transform((value) => {
-                        return new Date(value);
-                    }),
-                details: z.string().trim(),
+                licenseType: EnumSchema(Object.values(licenseTypes) as [string]),
+                startDate: DateSchema,
+                endDate: DateSchema,
+                details: StringSchema.optional(),
             })
         )
         .optional(),
@@ -83,28 +36,12 @@ const PharmacistSchema = z.object({
     practiceRecords: z
         .array(
             z.object({
-                organization: z.enum(Object.values(practiceRecordsInfo.organization) as [string]),
-                characteristic: z.enum(Object.values(practiceRecordsInfo.characteristic) as [string]),
-                startDate: z
-                    .string()
-                    .trim()
-                    .refine((value) => {
-                        return !isNaN(Date.parse(value));
-                    })
-                    .transform((value) => {
-                        return new Date(value);
-                    }),
-                endDate: z
-                    .string()
-                    .trim()
-                    .refine((value) => {
-                        return !isNaN(Date.parse(value));
-                    })
-                    .transform((value) => {
-                        return new Date(value);
-                    }),
-                sector: z.string().trim(),
-                place: z.string().trim(),
+                organization: EnumSchema(Object.values(practiceRecordsInfo.organization) as [string]),
+                characteristic: EnumSchema(Object.values(practiceRecordsInfo.characteristic) as [string]),
+                startDate: DateSchema,
+                endDate: DateSchema,
+                sector: StringSchema,
+                place: StringSchema,
             })
         )
         .optional(),
@@ -112,17 +49,9 @@ const PharmacistSchema = z.object({
     universityDegrees: z
         .array(
             z.object({
-                degreeType: z.enum(Object.values(universityDegreeTypes) as [string]),
-                obtainingDate: z
-                    .string()
-                    .trim()
-                    .refine((value) => {
-                        return !isNaN(Date.parse(value));
-                    })
-                    .transform((value) => {
-                        return new Date(value);
-                    }),
-                university: z.string().trim(),
+                degreeType: EnumSchema(Object.values(universityDegreeTypes) as [string]),
+                obtainingDate: DateSchema,
+                university: StringSchema,
             })
         )
         .optional(),
@@ -130,18 +59,10 @@ const PharmacistSchema = z.object({
     penalties: z
         .array(
             z.object({
-                penaltyType: z.enum(Object.values(penaltyTypes) as [string]),
-                date: z
-                    .string()
-                    .trim()
-                    .refine((value) => {
-                        return !isNaN(Date.parse(value));
-                    })
-                    .transform((value) => {
-                        return new Date(value);
-                    }),
-                reason: z.string().trim(),
-                details: z.string().trim(),
+                penaltyType: EnumSchema(Object.values(penaltyTypes) as [string]),
+                date: DateSchema,
+                reason: StringSchema,
+                details: StringSchema,
             })
         )
         .optional(),

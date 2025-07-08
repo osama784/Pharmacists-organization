@@ -10,10 +10,10 @@ import InvoiceRouter from "./routes/invoice.router.js";
 import FeeRouter from "./routes/fee.router.js";
 import UserRouter from "./routes/user.router.js";
 import RoleRouter from "./routes/role.router.js";
-import PracticeTypeRouter from "./routes/practiceType.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
+import { responseMessages } from "./translation/response.ar.js";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -37,14 +37,17 @@ app.use("/invoices", InvoiceRouter);
 app.use("/fees", FeeRouter);
 app.use("/users", UserRouter);
 app.use("/users/roles", RoleRouter);
-app.use("/practiceTypes", PracticeTypeRouter);
 
 app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: NextFunction) => {
     if (err instanceof AppError) {
-        res.status(err.statusCode).json({
-            success: false,
-            details: [err.message],
-        });
+        if (err.message) {
+            res.status(err.statusCode).json({
+                success: false,
+                details: [err.message],
+            });
+        } else {
+            res.sendStatus(err.statusCode);
+        }
     } else {
         // logger.error(err.message);
         if (err instanceof Error) {
@@ -52,7 +55,7 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
         }
         res.status(500).json({
             success: false,
-            details: ["Something went wrong on the server"],
+            details: [responseMessages.SERVER_ERROR],
         });
     }
 });

@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import AppError from "../utils/AppError.js";
 import { Document } from "mongoose";
 import { RoleDocument } from "../types/models/role.types.js";
+import { responseMessages } from "../translation/response.ar.js";
 
 export default (function initPassport() {
     passport.use(
@@ -21,11 +22,11 @@ export default (function initPassport() {
                         .select("+password")
                         .populate<{ role: RoleDocument }>("role");
                     if (!user) {
-                        return done(new AppError("email or password is incorrect, or the user is inactive", 400), false);
+                        return done(new AppError(responseMessages.AUTH_CONTROLLERS.EMAIL_PASSWORD_INCORRECT, 400), false);
                     }
                     const isMatch = await bcrypt.compare(password, user.password);
                     if (!isMatch) {
-                        return done(new AppError("email or password is incorrect, or the user is inactive", 400), false);
+                        return done(new AppError(responseMessages.AUTH_CONTROLLERS.EMAIL_PASSWORD_INCORRECT, 400), false);
                     }
                     const doc = user.toObject({
                         transform: (doc: Document, ret: Record<string, any>) => {

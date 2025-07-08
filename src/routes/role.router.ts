@@ -11,22 +11,24 @@ import RoleSchema from "../validators/role.schema.js";
 import permissions from "../utils/permissions.js";
 import mongoose from "mongoose";
 import AppError from "../utils/AppError.js";
+import getRole from "../controllers/Role/get.controller.js";
 
 const router = Router();
 
 router.param("id", (req, res, next, value, name) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-        next(new AppError("invalid ID", 400));
+        next(new AppError(undefined, 404));
         return;
     }
     next();
 });
 router.use(passport.authenticate("jwt", { session: false }));
 
+router.get("/get/:id", checkPermission(permissions.getRole), getRole);
 router.get("/list", checkPermission(permissions.listRoles), listRoles);
 router.post("/create", checkPermission(permissions.createRole), validate(RoleSchema), createRole);
 router.delete("/delete/:id", checkPermission(permissions.deleteRole), deleteRole);
 router.patch("/update/:id", checkPermission(permissions.updateRole), validate(RoleSchema.partial()), updateRole);
-router.get("/permissions-list", checkPermission(permissions.listPermissions), listPermissions);
+router.get("/list-permissions", checkPermission(permissions.listPermissions), listPermissions);
 
 export default router;

@@ -7,11 +7,11 @@ import { IFeeInvoice } from "../../types/models/invoice.types.js";
 import { PopulatedFeeDocument } from "../../types/models/fee.types.js";
 import { SectionDocument } from "../../types/models/section.types.js";
 
-const getPracticeTypeRelatedFees = async (req: Request, res: TypedResponse<IFeeInvoice[]>, next: NextFunction) => {
+const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInvoice[]>, next: NextFunction) => {
     try {
-        const pharmacist = await Pharmacist.findById(req.validatedData.pharmacist);
+        const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
         if (!pharmacist) {
-            res.status(404).json({ success: false });
+            res.status(404);
             return;
         }
 
@@ -57,7 +57,7 @@ const getPracticeTypeRelatedFees = async (req: Request, res: TypedResponse<IFeeI
             if (fee.isMutable) {
                 // summing value depending from last year to current year
                 while (tmpYear != currentYear + 1) {
-                    value += fee.detail?.get(`${tmpYear}`)!;
+                    value += fee.details?.get(`${tmpYear}`)!;
                     tmpYear += 1;
                 }
             } else if (fee.isRepeatable) {
@@ -114,7 +114,7 @@ const getPracticeTypeRelatedFees = async (req: Request, res: TypedResponse<IFeeI
                 }
                 // finding the value of the fee
                 if (fee.isMutable) {
-                    value = fee.detail?.get(`${currentYear}`)!;
+                    value = fee.details?.get(`${currentYear}`)!;
                 } else {
                     value = fee.value!;
                 }
@@ -170,7 +170,7 @@ const getPracticeTypeRelatedFees = async (req: Request, res: TypedResponse<IFeeI
                     // finding the value of the fee
                     if (fee.isMutable) {
                         while (tmpYear != currentYear) {
-                            value += fee.detail?.get(`${tmpYear}`)!;
+                            value += fee.details?.get(`${tmpYear}`)!;
                             tmpYear += 1;
                         }
                     } else {
@@ -255,4 +255,4 @@ const getPracticeTypeRelatedFees = async (req: Request, res: TypedResponse<IFeeI
     }
 };
 
-export default getPracticeTypeRelatedFees;
+export default getPharmacistRelatedFees;

@@ -1,15 +1,16 @@
 import Role from "../../models/role.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
+import { responseMessages } from "../../translation/response.ar.js";
 
 const deleteRole = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const doc = await Role.findById(req.params.id);
         if (!doc) {
-            res.status(404).json({ success: false });
+            res.status(404);
             return;
         }
         if (doc.name == "SUPER_ADMIN" || doc.name == "EMPTY") {
-            res.status(400).json({ success: false, details: ["you can't delete fixed roles (SUPER_ADMIN, EMPTY)"] });
+            res.status(400).json({ success: false, details: [responseMessages.ROLE_CONTROLLERS.PROTECTED_ROLES] });
             return;
         }
         await doc.deleteOne();

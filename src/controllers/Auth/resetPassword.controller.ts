@@ -10,7 +10,7 @@ const resetPassword = async (req: Request, res: TypedResponse<UserDocument>, nex
             resetPasswordToken: req.validatedData.resetToken,
         });
         if (!user) {
-            res.status(404).json({ success: false, details: ["email or reset token is incorrect"] });
+            res.status(404);
             return;
         }
         const salt = await bcrypt.genSalt(10);

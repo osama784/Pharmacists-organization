@@ -9,6 +9,15 @@ const PracticeType = new Schema<PracticeTypeDocument>({
     },
 });
 
-// "fees": related fees that the pharmacist should pay
+export const practiceTypes: string[] = [
+    "انتساب",
+    "انتساب أجانب",
+    "سنة مزاول",
+    "سنة غير مزاول",
+    "سنتين مزاول",
+    "سنتين غير مزاول",
+    "إعادة قيد مزاول",
+    "إعادة قيد غير مزاول",
+];
 
 export default mongoose.model<PracticeTypeDocument, IPracticeTypeModel>("PracticeType", PracticeType, "practiceTypes");

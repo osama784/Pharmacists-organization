@@ -1,7 +1,6 @@
-import Fee from "../../src/models/Fee.js";
-import Section from "../../src/models/Section.js";
-import loadJSONFile from "./loadJsonFile.js";
-const sections = await loadJSONFile("../data/sections.json");
+import Fee from "../../models/fee.model";
+import Section from "../../models/section.model";
+import sections from "../data/sections.json";
 
 export const assignFeesToSections = async () => {
     const syndicateSectionDoc = await Section.findOne({ name: "حساب نقابة صيادلة سورية رقم 209999 جاري" });

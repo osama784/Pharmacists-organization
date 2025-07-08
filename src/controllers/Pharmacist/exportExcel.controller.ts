@@ -1,6 +1,6 @@
 import Pharmacist from "../../models/pharmacist.model.js";
 import ExcelJS from "exceljs";
-import { IPharmacistSchemaTR, pharmacistSchemaTR } from "../../translation/ar.js";
+import { IIPharmacistModelTR, IPharmacistModelTR } from "../../translation/models.ar.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import IPharmacistQueries from "../../types/queries/pharmacist.query.js";
 import buildPharmacistFilters from "./utils/buildPharmacistFilters.js";
@@ -26,7 +26,7 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
             return !excludedFields.includes(value);
         });
         worksheet.columns = headers.map((header) => ({
-            header: pharmacistSchemaTR[header as keyof IPharmacistSchemaTR],
+            header: IPharmacistModelTR[header as keyof IIPharmacistModelTR],
             key: header,
             width: 25,
         }));

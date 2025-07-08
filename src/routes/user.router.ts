@@ -16,7 +16,7 @@ const router = Router();
 
 router.param("id", (req, res, next, value, name) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-        next(new AppError("invalid ID", 400));
+        next(new AppError(undefined, 404));
         return;
     }
     next();

@@ -1,10 +1,7 @@
 import nodemailer from "nodemailer";
 import path from "path";
-import { fileURLToPath } from "url";
 import fs from "fs/promises";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 // Configure transporter (example using Gmail)
 const transporter = nodemailer.createTransport({
     service: "Gmail",

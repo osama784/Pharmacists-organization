@@ -1,10 +1,10 @@
-import loadJsonFile from "./loadJsonFile.js";
-const feesSyndicate = await loadJsonFile("../data/fees_syndicate_account.json");
-const feesRetirement = await loadJsonFile("../data/fees_retirement_treasury_account.json");
-const feesDisabiltiy = await loadJsonFile("../data/fees_Disability_and_Death_Benefit_Fund_Account.json");
-const feesHealth = await loadJsonFile("../data/fees_Health_Takaful_Account.json");
-import Fee from "../../src/models/Fee.js";
-import Section from "../../src/models/Section.js";
+import feesSyndicate from "../data/fees_syndicate_account.json";
+import feesRetirement from "../data/fees_retirement_treasury_account.json";
+import feesDisabiltiy from "../data/fees_Disability_and_Death_Benefit_Fund_Account.json";
+import feesHealth from "../data/fees_Health_Takaful_Account.json";
+import Fee from "../../models/fee.model";
+import Section from "../../models/section.model";
+import { AnyBulkWriteOperation } from "mongoose";
 
 export const createFees = async () => {
     // const syndicateSectionID = "683ed7fcd8be3402ffb2f839";
@@ -24,7 +24,7 @@ export const createFees = async () => {
         throw new Error("some sections are missing");
     }
 
-    let objects = [];
+    let objects: any[] = [];
     feesSyndicate.forEach((feeObject) => {
         objects.push({
             insertOne: {

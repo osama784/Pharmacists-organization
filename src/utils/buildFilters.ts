@@ -7,11 +7,11 @@ export const buildStringFilter = (value: string | Record<string, any>) => {
         return value;
     } else if (typeof value == "object") {
         for (const key in value) {
-            if (typeof key == "object" || !(key in allowedStringOperators)) {
+            if (typeof value[key] == "object" || !allowedStringOperators.includes(key)) {
                 return undefined;
             }
         }
-        return { ...value, $options: "i" };
+        return { $regex: `.*${value.$regex.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}.*`, $options: "i" };
     }
     return undefined;
 };
@@ -21,7 +21,7 @@ export const buildDateFilter = (value: string | Record<string, any>) => {
         return value;
     } else if (typeof value == "object") {
         for (const key in value) {
-            if (typeof key == "object" || !(key in allowedDateOperators)) {
+            if (typeof value[key] == "object" || !allowedDateOperators.includes(key)) {
                 return undefined;
             }
         }
@@ -35,7 +35,7 @@ export const buildNumberFilter = (value: string | Record<string, any>) => {
         return value;
     } else if (typeof value == "object") {
         for (const key in value) {
-            if (typeof key == "object" || !(key in allowedNumberOperators)) {
+            if (typeof value[key] == "object" || !allowedNumberOperators.includes(key)) {
                 return undefined;
             }
         }
