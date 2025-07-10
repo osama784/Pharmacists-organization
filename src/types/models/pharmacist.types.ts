@@ -16,6 +16,11 @@ interface IPracticeRecord {
     place: string;
     characteristic: string;
 }
+interface ISyndicateRecord {
+    organization: string;
+    startDate: Date;
+    endDate: Date;
+}
 
 interface IUniversityDegree {
     degreeType: string;
@@ -49,8 +54,12 @@ export interface IPharmacist {
     registrationNumber: number;
     registrationDate: Date;
 
+    integrity: string;
+    register: string;
+
     licenses: ILicense[];
     practiceRecords: IPracticeRecord[];
+    syndicateRecords: ISyndicateRecord[];
     universityDegrees: IUniversityDegree[];
     penalties: IPenalty[];
 

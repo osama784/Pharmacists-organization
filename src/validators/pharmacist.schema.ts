@@ -1,6 +1,13 @@
 import { z } from "zod";
-import { licenseTypes, penaltyTypes, practiceRecordsInfo, universityDegreeTypes } from "../models/pharmacist.model.js";
+import {
+    licenseTypes,
+    penaltyTypes,
+    practiceRecordsInfo,
+    syndicatesRecordsInfo,
+    universityDegreeTypes,
+} from "../models/pharmacist.model.js";
 import { DateSchema, EnumSchema, NumberSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 
 const PharmacistSchema = z.object({
     firstName: StringSchema,
@@ -22,27 +29,69 @@ const PharmacistSchema = z.object({
     registrationNumber: NumberSchema,
     registrationDate: DateSchema,
 
+    integrity: StringSchema,
+    register: StringSchema,
+
     licenses: z
         .array(
-            z.object({
-                licenseType: EnumSchema(Object.values(licenseTypes) as [string]),
-                startDate: DateSchema,
-                endDate: DateSchema,
-                details: StringSchema.optional(),
-            })
+            z
+                .object({
+                    licenseType: EnumSchema(Object.values(licenseTypes) as [string]),
+                    startDate: DateSchema,
+                    endDate: DateSchema,
+                    details: StringSchema.optional(),
+                })
+                .refine(
+                    (data) => {
+                        if (new Date(data.startDate) > new Date(data.endDate)) {
+                            return false;
+                        }
+                        return true;
+                    },
+                    { message: zodSchemasMessages.START_lt_END_DATE }
+                )
         )
         .optional(),
 
     practiceRecords: z
         .array(
-            z.object({
-                organization: EnumSchema(Object.values(practiceRecordsInfo.organization) as [string]),
-                characteristic: EnumSchema(Object.values(practiceRecordsInfo.characteristic) as [string]),
-                startDate: DateSchema,
-                endDate: DateSchema,
-                sector: StringSchema,
-                place: StringSchema,
-            })
+            z
+                .object({
+                    organization: EnumSchema(Object.values(practiceRecordsInfo.organization) as [string]),
+                    characteristic: EnumSchema(Object.values(practiceRecordsInfo.characteristic) as [string]),
+                    startDate: DateSchema,
+                    endDate: DateSchema,
+                    sector: StringSchema,
+                    place: StringSchema,
+                })
+                .refine(
+                    (data) => {
+                        if (new Date(data.startDate) > new Date(data.endDate)) {
+                            return false;
+                        }
+                        return true;
+                    },
+                    { message: zodSchemasMessages.START_lt_END_DATE }
+                )
+        )
+        .optional(),
+    syndicateRecords: z
+        .array(
+            z
+                .object({
+                    organization: EnumSchema(Object.values(syndicatesRecordsInfo.organization) as [string]),
+                    startDate: DateSchema,
+                    endDate: DateSchema,
+                })
+                .refine(
+                    (data) => {
+                        if (new Date(data.startDate) > new Date(data.endDate)) {
+                            return false;
+                        }
+                        return true;
+                    },
+                    { message: zodSchemasMessages.START_lt_END_DATE }
+                )
         )
         .optional(),
 

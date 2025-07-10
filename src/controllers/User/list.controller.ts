@@ -11,9 +11,21 @@ const listUsers = async (req: Request, res: TypedResponse<PopulatedUserDocument[
         const page = parseInt(queries.page!) || 1;
         const limit = parseInt(queries.limit!) || 10;
         const skip = (page - 1) * limit;
-        const filters = buildUserFilters(queries);
-        const result = await User.find(filters).skip(skip).limit(limit).populate<{ role: RoleDocument }>("role");
+        const filters = await buildUserFilters(queries);
+        const _result = await User.find(filters).skip(skip).limit(limit).populate<{ role: RoleDocument }>("role");
+        const result: any[] = [];
+        for (const user of _result) {
+            let newUser: any = user.toJSON();
+            delete newUser._id;
+            delete newUser.__v;
+            delete newUser.role;
 
+            result.push({
+                id: user._id,
+                role: user.role.name,
+                ...newUser,
+            });
+        }
         const totalItems = await User.find(filters).countDocuments();
 
         res.json({

@@ -57,6 +57,9 @@ const Pharmacist = new Schema<PharmacistDocument>({
     registrationNumber: { type: Number, required: true },
     registrationDate: { type: Date, required: true },
 
+    integrity: { type: String, required: true },
+    register: { type: String, required: true },
+
     licenses: [
         {
             _id: false,
@@ -76,6 +79,14 @@ const Pharmacist = new Schema<PharmacistDocument>({
             sector: String,
             place: String,
             characteristic: String,
+        },
+    ],
+    syndicateRecords: [
+        {
+            _id: false,
+            organization: String,
+            startDate: Date,
+            endDate: Date,
         },
     ],
     universityDegrees: [
@@ -161,6 +172,27 @@ export const practiceRecordsInfo = {
 };
 
 export const penaltyTypes = ["something"];
+
+export const syndicatesRecordsInfo = {
+    organization: [
+        "نقابة الصيادلة المركزية",
+        "نقابة صيادلة دمشق",
+        "نقابة صيادلة السويداء",
+        "نقابة صيادلة دير الزور",
+        "نقابة صيادلة الحسكة",
+        "نقابة صيادلة القامشلي",
+        "نقابة صيادلة إدلب",
+        "نقابة صيادلة الرقة",
+        "نقابة صيادلة ريف دمشق",
+        "نقابة صيادلة حلب",
+        "نقابة صيادلة حمص",
+        "نقابة صيادلة اللاذقية",
+        "نقابة صيادلة طرطوس",
+        "نقابة صيادلة حماة",
+        "نقابة صيادلة درعا",
+        "نقابة صيادلة القنيطرة",
+    ],
+};
 
 Pharmacist.virtual("fullName").get(function (this: PharmacistDocument) {
     return `${this.firstName} ${this.fatherName} ${this.lastName}`;
