@@ -3,8 +3,9 @@ import { NextFunction, Request, TypedResponse } from "express";
 import IPharmacistQueries from "../../types/queries/pharmacist.query.js";
 import buildPharmacistFilters from "./utils/buildPharmacistFilters.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
+import { PharmacistResponseDto, toPharmacistResponseDto } from "../../types/dtos/pharmacist.dto.js";
 
-const listPharmacists = async (req: Request, res: TypedResponse<PharmacistDocument[]>, next: NextFunction) => {
+const listPharmacists = async (req: Request, res: TypedResponse<PharmacistResponseDto[]>, next: NextFunction) => {
     try {
         const queries = req.query as IPharmacistQueries;
         const page = parseInt(queries.page!) || 1;
@@ -18,7 +19,7 @@ const listPharmacists = async (req: Request, res: TypedResponse<PharmacistDocume
 
         res.json({
             success: true,
-            data: result,
+            data: toPharmacistResponseDto(result),
             meta: {
                 totalItems: totalItems,
                 currentPage: page,

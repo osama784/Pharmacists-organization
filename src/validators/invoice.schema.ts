@@ -1,5 +1,4 @@
 import { z } from "zod";
-import mongoose from "mongoose";
 import PracticeType, { practiceTypes } from "../models/practiceType.model.js";
 import Section from "../models/section.model.js";
 import Fee from "../models/fee.model.js";

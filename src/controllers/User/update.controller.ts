@@ -7,7 +7,7 @@ const updateUser = async (req: Request, res: TypedResponse<UserDocument>, next: 
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         const email = req.validatedData.email;

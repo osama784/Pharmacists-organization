@@ -18,7 +18,7 @@ const updateFeesValues = async (req: Request, res: TypedResponse<FeeDocument[]>,
             }
             const fee = await Fee.findById(feeObject.id);
             if (!fee) {
-                res.status(404);
+                res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
                 return;
             }
             if (fee.isMutable) {

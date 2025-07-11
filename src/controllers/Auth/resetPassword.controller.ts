@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, TypedResponse } from "express";
 import User from "../../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { UserDocument } from "../../types/models/user.types.js";
+import { responseMessages } from "../../translation/response.ar.js";
 
 const resetPassword = async (req: Request, res: TypedResponse<UserDocument>, next: NextFunction) => {
     try {
@@ -10,7 +11,7 @@ const resetPassword = async (req: Request, res: TypedResponse<UserDocument>, nex
             resetPasswordToken: req.validatedData.resetToken,
         });
         if (!user) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         const salt = await bcrypt.genSalt(10);

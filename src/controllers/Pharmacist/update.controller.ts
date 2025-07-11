@@ -1,19 +1,20 @@
 import Pharmacist from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
-import { updatePharmacistDto } from "../../types/dtos/pharmacist.dto.js";
+import { PharmacistResponseDto, toPharmacistResponseDto, UpdatePharmacistDto } from "../../types/dtos/pharmacist.dto.js";
+import { responseMessages } from "../../translation/response.ar.js";
 
-const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistDocument>, next: NextFunction) => {
+const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: updatePharmacistDto = req.validatedData;
+        const validatedData: UpdatePharmacistDto = req.validatedData;
         const pharmacist = await Pharmacist.findById(req.params.id);
         if (!pharmacist) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         await pharmacist.updateOne({ $set: validatedData });
         const doc = await Pharmacist.findById(pharmacist._id);
-        res.json({ success: true, data: doc! });
+        res.json({ success: true, data: toPharmacistResponseDto(doc!) });
     } catch (e) {
         next(e);
     }

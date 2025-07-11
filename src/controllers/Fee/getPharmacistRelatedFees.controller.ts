@@ -6,12 +6,13 @@ import { NextFunction, Request, TypedResponse } from "express";
 import { IFeeInvoice } from "../../types/models/invoice.types.js";
 import { PopulatedFeeDocument } from "../../types/models/fee.types.js";
 import { SectionDocument } from "../../types/models/section.types.js";
+import { responseMessages } from "../../translation/response.ar.js";
 
 const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInvoice[]>, next: NextFunction) => {
     try {
         const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
         if (!pharmacist) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
 
@@ -23,7 +24,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
             },
         });
 
-        let lastTimePaidYear = pharmacist.lastTimePaid.getFullYear();
+        let lastTimePaidYear = pharmacist.lastTimePaid?.getFullYear();
         let graduationYear = pharmacist.graduationYear;
         const currentYear = new Date().getFullYear();
         let age = currentYear - pharmacist.birthDate.getFullYear();

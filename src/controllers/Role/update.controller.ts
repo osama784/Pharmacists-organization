@@ -7,7 +7,7 @@ const updateRole = async (req: Request, res: TypedResponse<RoleDocument>, next: 
     try {
         const doc = await Role.findById(req.params.id);
         if (!doc) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         if (doc.name == "SUPER_ADMIN" || doc.name == "EMPTY") {
@@ -15,7 +15,7 @@ const updateRole = async (req: Request, res: TypedResponse<RoleDocument>, next: 
             return;
         }
         if (!doc) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         await doc.updateOne({ $set: req.validatedData }, { new: true });

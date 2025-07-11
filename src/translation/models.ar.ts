@@ -1,3 +1,14 @@
+export const practiceTypesTR = {
+    affiliation: "انتساب",
+    "foreign-affiliation": "انتساب أجانب",
+    "practicing-year": "سنة مزاول",
+    "non-practicing-year": "سنة غير مزاول",
+    "two-years-of-practicing": "سنتين مزاول",
+    "two-years-of-non-practicing": "سنتين غير مزاول",
+    "re-registration-of-practitioner": "إعادة قيد مزاول",
+    "re-registration-of-non-practitioner": "إعادة قيد غير مزاول",
+};
+
 export const invoiceTR = {
     status: {
         paid: "مدفوع",

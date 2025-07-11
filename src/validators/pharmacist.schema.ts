@@ -19,9 +19,10 @@ const PharmacistSchema = z.object({
     birthPlace: StringSchema,
     birthDate: DateSchema,
     phoneNumber: StringSchema,
-    address: StringSchema,
+    landlineNumber: NumberSchema.optional(),
+    address: StringSchema.optional(),
     graduationYear: NumberSchemaPositive,
-    lastTimePaid: DateSchema,
+    lastTimePaid: DateSchema.optional(),
     nationality: StringSchema,
 
     ministerialNumber: NumberSchema,
@@ -29,8 +30,8 @@ const PharmacistSchema = z.object({
     registrationNumber: NumberSchema,
     registrationDate: DateSchema,
 
-    integrity: StringSchema,
-    register: StringSchema,
+    integrity: StringSchema.optional(),
+    register: StringSchema.optional(),
 
     licenses: z
         .array(
@@ -57,8 +58,8 @@ const PharmacistSchema = z.object({
         .array(
             z
                 .object({
-                    organization: EnumSchema(Object.values(practiceRecordsInfo.organization) as [string]),
-                    characteristic: EnumSchema(Object.values(practiceRecordsInfo.characteristic) as [string]),
+                    syndicate: EnumSchema(Object.values(practiceRecordsInfo.syndicate) as [string]),
+                    practiceType: EnumSchema(Object.values(practiceRecordsInfo.practiceType) as [string]),
                     startDate: DateSchema,
                     endDate: DateSchema,
                     sector: StringSchema,
@@ -79,7 +80,7 @@ const PharmacistSchema = z.object({
         .array(
             z
                 .object({
-                    organization: EnumSchema(Object.values(syndicatesRecordsInfo.organization) as [string]),
+                    syndicate: EnumSchema(Object.values(syndicatesRecordsInfo.organization) as [string]),
                     startDate: DateSchema,
                     endDate: DateSchema,
                 })

@@ -15,13 +15,14 @@ import getReRegistrationDate from "../controllers/Fee/getReRegistrationDate.cont
 import updateReRegistrationDate from "../controllers/Fee/updateReRegistrationDate.controller.js";
 import mongoose from "mongoose";
 import AppError from "../utils/AppError.js";
+import { responseMessages } from "../translation/response.ar.js";
 
 const router = Router();
 router.use(passport.authenticate("jwt", { session: false }));
 
 router.param("pharmacistID", (req, res, next, value, name) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-        next(new AppError(undefined, 404));
+        next(new AppError(responseMessages.NOT_FOUND, 400));
         return;
     }
     next();

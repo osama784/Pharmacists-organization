@@ -12,11 +12,12 @@ import permissions from "../utils/permissions.js";
 import PharmacistSchema from "../validators/pharmacist.schema.js";
 import getPharmacist from "../controllers/Pharmacist/get.controller.js";
 import exportPharmacistsAsExcel from "../controllers/Pharmacist/exportExcel.controller.js";
+import { responseMessages } from "../translation/response.ar.js";
 
 const router = Router();
 router.param("id", (req, res, next, value, name) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-        next(new AppError(undefined, 404));
+        next(new AppError(responseMessages.NOT_FOUND, 400));
         return;
     }
     next();
@@ -24,7 +25,7 @@ router.param("id", (req, res, next, value, name) => {
 
 router.param("recordID", (req, res, next, value, name) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-        next(new AppError(undefined, 404));
+        next(new AppError(responseMessages.NOT_FOUND, 400));
         return;
     }
     next();

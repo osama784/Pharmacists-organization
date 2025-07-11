@@ -6,7 +6,7 @@ const deleteRole = async (req: Request, res: TypedResponse<null>, next: NextFunc
     try {
         const doc = await Role.findById(req.params.id);
         if (!doc) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         if (doc.name == "SUPER_ADMIN" || doc.name == "EMPTY") {

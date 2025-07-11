@@ -40,14 +40,10 @@ app.use("/users/roles", RoleRouter);
 
 app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: NextFunction) => {
     if (err instanceof AppError) {
-        if (err.message) {
-            res.status(err.statusCode).json({
-                success: false,
-                details: [err.message],
-            });
-        } else {
-            res.sendStatus(err.statusCode);
-        }
+        res.status(err.statusCode).json({
+            success: false,
+            details: [err.message],
+        });
     } else {
         // logger.error(err.message);
         if (err instanceof Error) {

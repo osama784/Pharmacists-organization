@@ -1,34 +1,34 @@
 import { Document, HydratedDocument, Types } from "mongoose";
 import { IInvoice } from "./invoice.types.js";
 
-interface ILicense {
+export interface ILicense {
     licenseType: string;
     startDate: Date;
     endDate: Date;
     details: string;
 }
 
-interface IPracticeRecord {
-    organization: string;
+export interface IPracticeRecord {
+    syndicate: string;
     startDate: Date;
     endDate: Date;
     sector: string;
     place: string;
-    characteristic: string;
+    practiceType: string;
 }
-interface ISyndicateRecord {
-    organization: string;
+export interface ISyndicateRecord {
+    syndicate: string;
     startDate: Date;
     endDate: Date;
 }
 
-interface IUniversityDegree {
+export interface IUniversityDegree {
     degreeType: string;
     obtainingDate: Date;
     university: string;
 }
 
-interface IPenalty {
+export interface IPenalty {
     penaltyType: String;
     date: Date;
     reason: String;
@@ -45,27 +45,30 @@ export interface IPharmacist {
     birthDate: Date;
     birthPlace: string;
     phoneNumber: string;
-    address: string;
+    landlineNumber?: number;
+    address?: string;
     graduationYear: number;
-    lastTimePaid: Date;
+    lastTimePaid?: Date;
     nationality: string;
     ministerialNumber: number;
     ministerialRegistrationDate: Date;
     registrationNumber: number;
     registrationDate: Date;
 
-    integrity: string;
-    register: string;
+    integrity?: string;
+    register?: string;
 
-    licenses: ILicense[];
-    practiceRecords: IPracticeRecord[];
-    syndicateRecords: ISyndicateRecord[];
-    universityDegrees: IUniversityDegree[];
-    penalties: IPenalty[];
+    licenses?: ILicense[];
+    practiceRecords?: IPracticeRecord[];
+    syndicateRecords?: ISyndicateRecord[];
+    universityDegrees?: IUniversityDegree[];
+    penalties?: IPenalty[];
 
     invoices: Types.ObjectId[];
 }
 
 export type PharmacistDocument = HydratedDocument<IPharmacist> & {
     fullName: string;
+    practiceState: string;
+    syndicateMembershipStatus: string;
 };

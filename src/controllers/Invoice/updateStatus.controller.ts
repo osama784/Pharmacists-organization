@@ -13,7 +13,7 @@ const updateInvoiceStatus = async (req: Request, res: TypedResponse<InvoiceDocum
     try {
         const invoice = await Invoice.findById(req.params.id);
         if (!invoice) {
-            res.status(404);
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         let updatedFields: Record<string, any> = { status };

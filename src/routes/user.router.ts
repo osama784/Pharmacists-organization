@@ -11,12 +11,13 @@ import AppError from "../utils/AppError.js";
 import listUsers from "../controllers/User/list.controller.js";
 import passport from "passport";
 import getUser from "../controllers/User/get.controller.js";
+import { responseMessages } from "../translation/response.ar.js";
 
 const router = Router();
 
 router.param("id", (req, res, next, value, name) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-        next(new AppError(undefined, 404));
+        next(new AppError(responseMessages.NOT_FOUND, 400));
         return;
     }
     next();
