@@ -35,15 +35,16 @@ export type PharmacistResponseDto = {
     integrity?: string;
     register?: string;
 
+    fullName: string;
     syndicateMembershipStatus: string;
     currentSyndicate?: string;
     practiceState?: string;
 
-    licenses?: ILicense[];
-    practiceRecords?: IPracticeRecord[];
-    syndicateRecords?: ISyndicateRecord[];
-    universityDegrees?: IUniversityDegree[];
-    penalties?: IPenalty[];
+    licenses: ILicense[];
+    practiceRecords: IPracticeRecord[];
+    syndicateRecords: ISyndicateRecord[];
+    universityDegrees: IUniversityDegree[];
+    penalties: IPenalty[];
 };
 
 export function toPharmacistResponseDto(data: PharmacistDocument): PharmacistResponseDto;
@@ -76,6 +77,8 @@ export function toPharmacistResponseDto(data: PharmacistDocument | PharmacistDoc
                 integrity: doc.integrity,
                 register: doc.register,
 
+                fullName: doc.fullName,
+                currentSyndicate: doc.currentSyndicate,
                 practiceState: doc.practiceState,
                 syndicateMembershipStatus: doc.syndicateMembershipStatus,
 
@@ -111,6 +114,8 @@ export function toPharmacistResponseDto(data: PharmacistDocument | PharmacistDoc
         integrity: data.integrity,
         register: data.register,
 
+        fullName: data.fullName,
+        currentSyndicate: data.currentSyndicate,
         practiceState: data.practiceState,
         syndicateMembershipStatus: data.syndicateMembershipStatus,
 

@@ -58,11 +58,11 @@ export interface IPharmacist {
     integrity?: string;
     register?: string;
 
-    licenses?: ILicense[];
-    practiceRecords?: IPracticeRecord[];
-    syndicateRecords?: ISyndicateRecord[];
-    universityDegrees?: IUniversityDegree[];
-    penalties?: IPenalty[];
+    licenses: ILicense[];
+    practiceRecords: IPracticeRecord[];
+    syndicateRecords: ISyndicateRecord[];
+    universityDegrees: IUniversityDegree[];
+    penalties: IPenalty[];
 
     invoices: Types.ObjectId[];
 }
@@ -71,4 +71,5 @@ export type PharmacistDocument = HydratedDocument<IPharmacist> & {
     fullName: string;
     practiceState: string;
     syndicateMembershipStatus: string;
+    currentSyndicate: string;
 };
