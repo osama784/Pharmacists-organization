@@ -1,10 +1,10 @@
 import Role from "../../models/role.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import { RoleDocument } from "../../types/models/role.types.js";
 import { IRoleQueries } from "../../types/queries/role.query.js";
 import buildRoleFilters from "./utils/buildRoleFilters.js";
+import { RoleResponseDto, toRoleResponseDto } from "../../types/dtos/role.dto.js";
 
-const listRoles = async (req: Request, res: TypedResponse<RoleDocument[]>, next: NextFunction) => {
+const listRoles = async (req: Request, res: TypedResponse<RoleResponseDto[]>, next: NextFunction) => {
     try {
         const queries = req.query as IRoleQueries;
         const page = parseInt(queries.page!) || 1;
@@ -12,12 +12,12 @@ const listRoles = async (req: Request, res: TypedResponse<RoleDocument[]>, next:
         const skip = (page - 1) * limit;
         const filters = buildRoleFilters(queries);
 
-        const roles = await Role.find(filters).skip(skip).limit(limit);
+        const roles = await Role.find(filters).sort("-createdAt").skip(skip).limit(limit);
         const totalItems = await Role.find(filters).countDocuments();
 
         res.json({
             success: true,
-            data: roles,
+            data: toRoleResponseDto(roles),
             meta: {
                 totalItems: totalItems,
                 currentPage: page,

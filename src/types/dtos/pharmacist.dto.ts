@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
     ILicense,
     IPenalty,
@@ -7,9 +8,10 @@ import {
     IUniversityDegree,
     PharmacistDocument,
 } from "../models/pharmacist.types.js";
+import PharmacistSchema from "../../validators/pharmacist.schema.js";
 
-export type CreatePharmacistDto = Omit<IPharmacist, "invoices">;
-export type UpdatePharmacistDto = Partial<Omit<IPharmacist, "invoices">>;
+export type CreatePharmacistDto = z.infer<typeof PharmacistSchema>;
+export type UpdatePharmacistDto = Partial<CreatePharmacistDto>;
 
 export type PharmacistResponseDto = {
     id: string;
@@ -62,7 +64,7 @@ export function toPharmacistResponseDto(data: PharmacistDocument[]): PharmacistR
 
 export function toPharmacistResponseDto(data: PharmacistDocument | PharmacistDocument[]): PharmacistResponseDto | PharmacistResponseDto[] {
     if (Array.isArray(data)) {
-        let result: PharmacistResponseDto[] = [];
+        const result: PharmacistResponseDto[] = [];
         for (const doc of data) {
             result.push(_toPharmacistResponseDto(doc));
         }

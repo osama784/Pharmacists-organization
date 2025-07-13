@@ -1,12 +1,11 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import Role from "../../models/role.model.js";
-import { RoleDocument } from "../../types/models/role.types.js";
-import { createRoleDto } from "../../types/dtos/role.dto.js";
+import { CreateRoleDto, RoleResponseDto, toRoleResponseDto } from "../../types/dtos/role.dto.js";
 import { responseMessages } from "../../translation/response.ar.js";
 
-const createRole = async (req: Request, res: TypedResponse<RoleDocument>, next: NextFunction) => {
+const createRole = async (req: Request, res: TypedResponse<RoleResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: createRoleDto = req.validatedData;
+        const validatedData: CreateRoleDto = req.validatedData;
         const roleName = validatedData.name;
         const exists = await Role.checkUniqueName(roleName);
         if (exists) {
@@ -14,7 +13,7 @@ const createRole = async (req: Request, res: TypedResponse<RoleDocument>, next: 
             return;
         }
         const role = await Role.create(validatedData);
-        res.json({ success: true, data: role });
+        res.json({ success: true, data: toRoleResponseDto(role) });
     } catch (e) {
         next(e);
     }

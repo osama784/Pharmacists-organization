@@ -1,9 +1,9 @@
 import Role from "../../models/role.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import { RoleDocument } from "../../types/models/role.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
+import { RoleResponseDto, toRoleResponseDto } from "../../types/dtos/role.dto.js";
 
-const updateRole = async (req: Request, res: TypedResponse<RoleDocument>, next: NextFunction) => {
+const updateRole = async (req: Request, res: TypedResponse<RoleResponseDto>, next: NextFunction) => {
     try {
         const doc = await Role.findById(req.params.id);
         if (!doc) {
@@ -20,8 +20,8 @@ const updateRole = async (req: Request, res: TypedResponse<RoleDocument>, next: 
         }
         await doc.updateOne({ $set: req.validatedData }, { new: true });
 
-        const newDoc = await Role.findById(doc._id);
-        res.json({ success: true, data: newDoc! });
+        const role = await Role.findById(doc._id);
+        res.json({ success: true, data: toRoleResponseDto(role!) });
     } catch (e) {
         next(e);
     }

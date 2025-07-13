@@ -2,13 +2,16 @@ import mongoose, { FilterQuery, Query, Schema } from "mongoose";
 import User from "./user.model.js";
 import { IRoleModel, RoleDocument } from "../types/models/role.types.js";
 
-const Role = new Schema<RoleDocument>({
-    name: { type: String, unique: true, required: true },
-    permissions: {
-        type: [String],
-        required: true,
+const Role = new Schema<RoleDocument>(
+    {
+        name: { type: String, unique: true, required: true },
+        permissions: {
+            type: [String],
+            required: true,
+        },
     },
-});
+    { timestamps: true }
+);
 
 Role.statics.checkUniqueName = async function (name: string): Promise<boolean> {
     const exists = await mongoose.model("Role").exists({ name });

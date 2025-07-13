@@ -1,9 +1,10 @@
 import User from "../../models/user.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import { UserDocument } from "../../types/models/user.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
+import { RoleDocument } from "../../types/models/role.types.js";
+import { toUserResponseDto, UserResponseDto } from "../../types/dtos/user.dto.js";
 
-const updateUser = async (req: Request, res: TypedResponse<UserDocument>, next: NextFunction) => {
+const updateUser = async (req: Request, res: TypedResponse<UserResponseDto>, next: NextFunction) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
@@ -20,8 +21,9 @@ const updateUser = async (req: Request, res: TypedResponse<UserDocument>, next: 
             }
         }
         await user.updateOne({ $set: req.validatedData });
-        const doc = await User.findById(user._id);
-        res.json({ success: true, data: doc! });
+
+        const doc = await User.findById(user._id).populate<{ role: RoleDocument }>("role");
+        res.json({ success: true, data: toUserResponseDto(doc!) });
     } catch (e) {
         next(e);
     }
