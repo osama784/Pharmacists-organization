@@ -7,28 +7,31 @@ export const UserStatuses = {
     deleted: "محذوف",
 };
 
-const User = new Schema<UserDocument>({
-    username: { type: String, required: true },
-    email: {
-        type: String,
-        unique: true,
-        required: true,
+const User = new Schema<UserDocument>(
+    {
+        username: { type: String, required: true },
+        email: {
+            type: String,
+            unique: true,
+            required: true,
+        },
+        password: { type: String, required: true },
+        resetPasswordToken: String,
+        phoneNumber: { type: String, required: true },
+        status: {
+            type: String,
+            required: true,
+            enum: Object.values(UserStatuses),
+            default: UserStatuses.active,
+        },
+        role: {
+            type: Schema.Types.ObjectId,
+            ref: "Role",
+            required: true,
+        },
     },
-    password: { type: String, required: true },
-    resetPasswordToken: String,
-    phoneNumber: { type: String, required: true },
-    status: {
-        type: String,
-        required: true,
-        enum: Object.values(UserStatuses),
-        default: UserStatuses.active,
-    },
-    role: {
-        type: Schema.Types.ObjectId,
-        ref: "Role",
-        required: true,
-    },
-});
+    { timestamps: true }
+);
 
 User.path("password").select(false);
 User.path("resetPasswordToken").select(false);

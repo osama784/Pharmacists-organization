@@ -40,6 +40,12 @@ export interface IPharmacist {
     lastName: string;
     fatherName: string;
     motherName: string;
+
+    firstNameEnglish?: string;
+    lastNameEnglish?: string;
+    fatherNameEnglish?: string;
+    motherNameEnglish?: string;
+
     gender: string;
     nationalNumber: number;
     birthDate: Date;
@@ -57,6 +63,7 @@ export interface IPharmacist {
 
     integrity?: string;
     register?: string;
+    oathTakingDate?: Date;
 
     licenses: ILicense[];
     practiceRecords: IPracticeRecord[];
@@ -68,6 +75,9 @@ export interface IPharmacist {
 }
 
 export type PharmacistDocument = HydratedDocument<IPharmacist> & {
+    createdAt: Date;
+    updatedAt: Date;
+} & {
     fullName: string;
     practiceState: string;
     syndicateMembershipStatus: string;

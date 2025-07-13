@@ -11,7 +11,10 @@ interface IUser {
     role: mongoose.Types.ObjectId;
 }
 
-export type UserDocument = HydratedDocument<IUser>;
+export type UserDocument = HydratedDocument<IUser> & {
+    createdAt: Date;
+    updatedAt: Date;
+};
 export type PopulatedUserDocument = Omit<UserDocument, "role"> & {
     role: RoleDocument;
 };

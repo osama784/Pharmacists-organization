@@ -1,6 +1,5 @@
 import mongoose, { HydratedDocument, Model, PopulatedDoc } from "mongoose";
 import { PharmacistDocument } from "./pharmacist.types.js";
-import { PracticeTypeDocument } from "./practiceType.types.js";
 
 export interface IFeeInvoice {
     feeRef: mongoose.Types.ObjectId;
@@ -12,7 +11,7 @@ export interface IFeeInvoice {
 export interface IInvoice {
     pharmacist: mongoose.Types.ObjectId;
     status?: string;
-    practiceType: mongoose.Types.ObjectId;
+    syndicateMembership: string;
     isFinesIncluded?: boolean;
     fees: IFeeInvoice[];
     total: number;
@@ -21,14 +20,8 @@ export interface IInvoice {
 }
 
 export type InvoiceDocument = HydratedDocument<IInvoice>;
-export type PopulatedInvoiceDocument = Omit<InvoiceDocument, "pharmacist | practiceType"> & {
+export type PopulatedInvoiceDocument = Omit<InvoiceDocument, "pharmacist"> & {
     pharmacist: PharmacistDocument;
-    practiceType: PracticeTypeDocument;
 };
-
-// export type PopulatedInvoiceDocument = InvoiceDocument & {
-//     pharmacist: PharmacistDocument;
-//     practiceType: PracticeTypeDocument;
-// };
 
 export interface IInvoiceModel extends Model<InvoiceDocument> {}

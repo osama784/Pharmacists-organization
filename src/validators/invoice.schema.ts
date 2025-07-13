@@ -1,12 +1,12 @@
 import { z } from "zod";
-import PracticeType, { practiceTypes } from "../models/practiceType.model.js";
+import { syndicateMemberships } from "../models/syndicateMembership.model.js";
 import Section from "../models/section.model.js";
 import Fee from "../models/fee.model.js";
 import { DateSchema, EnumSchema, mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 
 const InvoiceSchema = z.object({
-    practiceType: EnumSchema(practiceTypes as [string]),
+    syndicateMembership: EnumSchema(syndicateMemberships as [string]),
 
     createdAt: DateSchema,
     fees: z

@@ -1,4 +1,4 @@
-export const practiceTypesTR = {
+export const syndicateMembershipsTR = {
     affiliation: "انتساب",
     "foreign-affiliation": "انتساب أجانب",
     "practicing-year": "سنة مزاول",
@@ -15,7 +15,7 @@ export const invoiceTR = {
         ready: "جاهزة لللإرسال",
         cancelled: "ملغاة",
     },
-    practiceType: {
+    syndicateMembership: {
         "year of practicing": "سنة مزاول",
         "year of non-practicing": "سنة غير مزاول",
         "two years of non-practicing": "سنتين غير مزاول",
@@ -27,7 +27,7 @@ export const invoiceTR = {
 export const InvoiceModelTR = {
     pharmacist: "اسم الصيدلي",
     status: "حالة الفاتورة",
-    practiceType: "نوع المزاولة",
+    syndicateMembership: "نوع المزاولة",
     paidDate: "تاريخ الدفع",
     createdAt: "تاريخ إنشاء الفاتورة",
     total: "المجموع الكلي",
@@ -36,7 +36,7 @@ export const InvoiceModelTR = {
 export interface IInvoiceModelTR {
     pharmacist: string;
     status: string;
-    practiceType: string;
+    syndicateMembership: string;
     paidDate: string;
     createdAt: string;
     total: string;

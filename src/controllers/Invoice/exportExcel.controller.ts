@@ -3,7 +3,7 @@ import ExcelJS from "exceljs";
 import { IInvoiceModelTR, InvoiceModelTR } from "../../translation/models.ar.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
-import { PracticeTypeDocument } from "../../types/models/practiceType.types.js";
+import { SyndicateMemberShipDocument } from "../../types/models/syndicateMembership.types.js";
 import IInvoiceQueries from "../../types/queries/invoice.query.js";
 import buildInvoiceFilters from "./utils/buildnvoiceFilters.js";
 
@@ -17,8 +17,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
 
         const result = await Invoice.find(filters).select("-fees").skip(skip).limit(limit).populate<{
             pharmacist: PharmacistDocument;
-            practiceType: PracticeTypeDocument;
-        }>("practiceType pharmacist");
+        }>("pharmacist");
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Data Export");
@@ -37,7 +36,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
             worksheet.addRow({
                 ...doc.toObject(),
                 pharmacist: doc.pharmacist.fullName,
-                practiceType: doc.practiceType.name,
+                syndicateMembership: doc.syndicateMembership,
             });
         });
 

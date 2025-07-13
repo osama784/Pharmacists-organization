@@ -30,7 +30,7 @@ export const PasswordSchema = StringSchema.min(4, { message: zodSchemasMessages.
 export const NumberSchema = z.number({ message: zodSchemasMessages.INVALID_NUMBER });
 export const NumberSchemaPositive = NumberSchema.min(0, { message: zodSchemasMessages.INVALID_POSITIVE_NUMBER });
 
-export const EnumSchema = (data: [string]) => z.enum(data, { message: zodSchemasMessages.INVALID_ENUM_VALUE(data) });
+export const EnumSchema = (data: [string, ...string[]]) => z.enum(data, { message: zodSchemasMessages.INVALID_ENUM_VALUE(data) });
 
 export const DateSchema = StringSchema.default(new Date().toISOString())
     .refine(

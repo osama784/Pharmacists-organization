@@ -10,7 +10,7 @@ export const invoiceStatuses = {
 const Invoice = new Schema<InvoiceDocument>({
     pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
     status: String,
-    practiceType: { type: Schema.Types.ObjectId, ref: "PracticeType", required: true },
+    syndicateMembership: { type: String, required: true },
     isFinesIncluded: Boolean,
     fees: [
         {

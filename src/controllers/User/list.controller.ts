@@ -12,7 +12,7 @@ const listUsers = async (req: Request, res: TypedResponse<PopulatedUserDocument[
         const limit = parseInt(queries.limit!) || 10;
         const skip = (page - 1) * limit;
         const filters = await buildUserFilters(queries);
-        const _result = await User.find(filters).skip(skip).limit(limit).populate<{ role: RoleDocument }>("role");
+        const _result = await User.find(filters).sort("-createdAt").skip(skip).limit(limit).populate<{ role: RoleDocument }>("role");
         const result: any[] = [];
         for (const user of _result) {
             let newUser: any = user.toJSON();

@@ -2,7 +2,6 @@ import Pharmacist from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import IPharmacistQueries from "../../types/queries/pharmacist.query.js";
 import buildPharmacistFilters from "./utils/buildPharmacistFilters.js";
-import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import { PharmacistResponseDto, toPharmacistResponseDto } from "../../types/dtos/pharmacist.dto.js";
 
 const listPharmacists = async (req: Request, res: TypedResponse<PharmacistResponseDto[]>, next: NextFunction) => {
@@ -12,8 +11,7 @@ const listPharmacists = async (req: Request, res: TypedResponse<PharmacistRespon
         const limit = parseInt(queries.limit!) || 10;
         const skip = (page - 1) * limit;
         const filters = buildPharmacistFilters(queries);
-
-        const result = await Pharmacist.find(filters).skip(skip).limit(limit);
+        const result = await Pharmacist.find(filters).sort("-createdAt").skip(skip).limit(limit);
 
         const totalItems = await Pharmacist.find(filters).countDocuments();
 

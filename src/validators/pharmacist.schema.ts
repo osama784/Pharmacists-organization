@@ -14,6 +14,12 @@ const PharmacistSchema = z.object({
     lastName: StringSchema,
     motherName: StringSchema,
     fatherName: StringSchema,
+
+    firstNameEnglish: StringSchema.optional(),
+    lastNameEnglish: StringSchema.optional(),
+    fatherNameEnglish: StringSchema.optional(),
+    motherNameEnglish: StringSchema.optional(),
+
     gender: EnumSchema(["ذكر", "أنثى"] as unknown as [string]),
     nationalNumber: StringSchema,
     birthPlace: StringSchema,
@@ -32,6 +38,7 @@ const PharmacistSchema = z.object({
 
     integrity: StringSchema.optional(),
     register: StringSchema.optional(),
+    oathTakingDate: DateSchema.optional(),
 
     licenses: z
         .array(
@@ -80,7 +87,7 @@ const PharmacistSchema = z.object({
         .array(
             z
                 .object({
-                    syndicate: EnumSchema(Object.values(syndicatesRecordsInfo.organization) as [string]),
+                    syndicate: EnumSchema(Object.values(syndicatesRecordsInfo.syndicate) as [string]),
                     startDate: DateSchema,
                     endDate: DateSchema,
                 })

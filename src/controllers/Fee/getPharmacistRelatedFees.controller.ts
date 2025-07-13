@@ -1,7 +1,7 @@
 import Pharmacist from "../../models/pharmacist.model.js";
 import Fee from "../../models/fee.model.js";
 import Section from "../../models/section.model.js";
-import PracticeType from "../../models/practiceType.model.js";
+import SyndicateMembership from "../../models/syndicateMembership.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { IFeeInvoice } from "../../types/models/invoice.types.js";
 import { PopulatedFeeDocument } from "../../types/models/fee.types.js";
@@ -17,7 +17,9 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
         }
 
         // extracting the related pracitceType to add the proper fees to the invoice document
-        const practiceType = await PracticeType.findById(req.validatedData.practiceType).populate<{ fees: PopulatedFeeDocument[] }>({
+        const syndicateMembershipDoc = await SyndicateMembership.findById(req.validatedData.syndicateMembership).populate<{
+            fees: PopulatedFeeDocument[];
+        }>({
             path: "fees",
             populate: {
                 path: "section",
@@ -54,7 +56,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
         let value = 0;
 
         // adding related fees' values
-        practiceType?.fees.forEach((fee) => {
+        syndicateMembershipDoc?.fees.forEach((fee) => {
             if (fee.isMutable) {
                 // summing value depending from last year to current year
                 while (tmpYear != currentYear + 1) {
@@ -78,7 +80,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
             tmpYear = requiredYear;
         });
 
-        if (practiceType?.name == "سنة مزاول") {
+        if (syndicateMembershipDoc?.name == "سنة مزاول") {
             // changing the value of fee 'رسوم سنين سابقة' to the target value
             fees = fees.map((fee) => {
                 if (fee.feeName == "رسوم سنين سابقة") {
@@ -89,7 +91,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 }
                 return fee;
             });
-        } else if (practiceType?.name == "سنة غير مزاول") {
+        } else if (syndicateMembershipDoc?.name == "سنة غير مزاول") {
             // changing the value of fee 'رسوم سنين سابقة' to the target value
             fees = fees.map((fee) => {
                 if (fee.feeName == "رسوم سنين سابقة") {
@@ -100,15 +102,15 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 }
                 return fee;
             });
-        } else if (practiceType?.name == "انتساب" || practiceType?.name == "انتساب أجانب") {
-            // checking if practiceType of type "انتساب" to add fees for "سنة مزاول" and if required other unPracticed practiceType
-            const oneYearPracticedPracticeType = await PracticeType.findOne({ name: "سنة مزاول" }).populate<{
+        } else if (syndicateMembershipDoc?.name == "انتساب" || syndicateMembershipDoc?.name == "انتساب أجانب") {
+            // checking if membership of type "انتساب" to add fees for "سنة مزاول" and if required other unPracticed membership
+            const oneYearPracticedMembership = await SyndicateMembership.findOne({ name: "سنة مزاول" }).populate<{
                 fees: PopulatedFeeDocument[];
             }>({
                 path: "fees",
                 populate: { path: "section" },
             });
-            oneYearPracticedPracticeType?.fees.forEach((fee) => {
+            oneYearPracticedMembership?.fees.forEach((fee) => {
                 // check if fee exists before (prevent duplication)
                 if (excludedIDs.includes(fee._id.toString())) {
                     return;
@@ -139,31 +141,31 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 return fee;
             });
             if (requiredYear != currentYear) {
-                let practiceTypeForPreviousYears = null;
+                let membershipForPreviousYears = null;
                 const numberOfPreviousYears = currentYear - requiredYear;
                 if (numberOfPreviousYears == 1) {
-                    practiceTypeForPreviousYears = await PracticeType.findOne({ name: "سنة غير مزاول" }).populate<{
+                    membershipForPreviousYears = await SyndicateMembership.findOne({ name: "سنة غير مزاول" }).populate<{
                         fees: PopulatedFeeDocument[];
                     }>({
                         path: "fees",
                         populate: { path: "section" },
                     });
                 } else if (numberOfPreviousYears == 2) {
-                    practiceTypeForPreviousYears = await PracticeType.findOne({ name: "سنة غير مزاول" }).populate<{
+                    membershipForPreviousYears = await SyndicateMembership.findOne({ name: "سنة غير مزاول" }).populate<{
                         fees: PopulatedFeeDocument[];
                     }>({
                         path: "fees",
                         populate: { path: "section" },
                     });
                 } else {
-                    practiceTypeForPreviousYears = await PracticeType.findOne({ name: "إعادة قيد غير مزاول" }).populate<{
+                    membershipForPreviousYears = await SyndicateMembership.findOne({ name: "إعادة قيد غير مزاول" }).populate<{
                         fees: PopulatedFeeDocument[];
                     }>({
                         path: "fees",
                         populate: { path: "section" },
                     });
                 }
-                practiceTypeForPreviousYears?.fees.forEach((fee) => {
+                membershipForPreviousYears?.fees.forEach((fee) => {
                     // check if fee exists before (prevent duplication)
                     if (excludedIDs.includes(fee.id)) {
                         return;

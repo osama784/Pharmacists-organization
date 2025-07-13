@@ -1,6 +1,5 @@
 import Invoice from "../../models/invoice.model.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
-import { PracticeTypeDocument } from "../../types/models/practiceType.types.js";
 import IInvoiceQueries from "../../types/queries/invoice.query.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import buildInvoiceFilters from "./utils/buildnvoiceFilters.js";
@@ -15,8 +14,7 @@ const listInvoices = async (req: Request, res: TypedResponse<any[]>, next: NextF
 
         const result = await Invoice.find(filters).select("-fees").skip(skip).limit(limit).populate<{
             pharmacist: PharmacistDocument;
-            practiceType: PracticeTypeDocument;
-        }>("pharmacist practiceType");
+        }>("pharmacist");
 
         const totalItems = await Invoice.find(filters).countDocuments();
 

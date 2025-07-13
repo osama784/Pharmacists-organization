@@ -17,6 +17,12 @@ export type PharmacistResponseDto = {
     lastName: string;
     fatherName: string;
     motherName: string;
+
+    firstNameEnglish?: string;
+    lastNameEnglish?: string;
+    fatherNameEnglish?: string;
+    motherNameEnglish?: string;
+
     gender: string;
     nationalNumber: number;
     birthDate: Date;
@@ -34,6 +40,7 @@ export type PharmacistResponseDto = {
 
     integrity?: string;
     register?: string;
+    oathTakingDate?: Date;
 
     fullName: string;
     syndicateMembershipStatus: string;
@@ -45,6 +52,9 @@ export type PharmacistResponseDto = {
     syndicateRecords: ISyndicateRecord[];
     universityDegrees: IUniversityDegree[];
     penalties: IPenalty[];
+} & {
+    createdAt: Date;
+    updatedAt: Date;
 };
 
 export function toPharmacistResponseDto(data: PharmacistDocument): PharmacistResponseDto;
@@ -54,75 +64,55 @@ export function toPharmacistResponseDto(data: PharmacistDocument | PharmacistDoc
     if (Array.isArray(data)) {
         let result: PharmacistResponseDto[] = [];
         for (const doc of data) {
-            result.push({
-                id: doc._id.toString(),
-                firstName: doc.firstName,
-                lastName: doc.lastName,
-                fatherName: doc.fatherName,
-                motherName: doc.motherName,
-                gender: doc.gender,
-                nationalNumber: doc.nationalNumber,
-                birthDate: doc.birthDate,
-                birthPlace: doc.birthPlace,
-                phoneNumber: doc.phoneNumber,
-                landlineNumber: doc.landlineNumber,
-                address: doc.address,
-                graduationYear: doc.graduationYear,
-                lastTimePaid: doc.lastTimePaid,
-                nationality: doc.nationality,
-                ministerialNumber: doc.ministerialNumber,
-                ministerialRegistrationDate: doc.ministerialRegistrationDate,
-                registrationNumber: doc.registrationNumber,
-                registrationDate: doc.registrationDate,
-                integrity: doc.integrity,
-                register: doc.register,
-
-                fullName: doc.fullName,
-                currentSyndicate: doc.currentSyndicate,
-                practiceState: doc.practiceState,
-                syndicateMembershipStatus: doc.syndicateMembershipStatus,
-
-                licenses: doc.licenses,
-                practiceRecords: doc.practiceRecords,
-                syndicateRecords: doc.syndicateRecords,
-                universityDegrees: doc.universityDegrees,
-                penalties: doc.penalties,
-            });
+            result.push(_toPharmacistResponseDto(doc));
         }
         return result;
     }
+    return _toPharmacistResponseDto(data);
+}
+
+function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDto {
     return {
-        id: data._id.toString(),
-        firstName: data.firstName,
-        lastName: data.lastName,
-        fatherName: data.fatherName,
-        motherName: data.motherName,
-        gender: data.gender,
-        nationalNumber: data.nationalNumber,
-        birthDate: data.birthDate,
-        birthPlace: data.birthPlace,
-        phoneNumber: data.phoneNumber,
-        landlineNumber: data.landlineNumber,
-        address: data.address,
-        graduationYear: data.graduationYear,
-        lastTimePaid: data.lastTimePaid,
-        nationality: data.nationality,
-        ministerialNumber: data.ministerialNumber,
-        ministerialRegistrationDate: data.ministerialRegistrationDate,
-        registrationNumber: data.registrationNumber,
-        registrationDate: data.registrationDate,
-        integrity: data.integrity,
-        register: data.register,
+        id: doc._id.toString(),
+        firstName: doc.firstName,
+        lastName: doc.lastName,
+        fatherName: doc.fatherName,
+        motherName: doc.motherName,
 
-        fullName: data.fullName,
-        currentSyndicate: data.currentSyndicate,
-        practiceState: data.practiceState,
-        syndicateMembershipStatus: data.syndicateMembershipStatus,
+        firstNameEnglish: doc.firstNameEnglish,
+        lastNameEnglish: doc.lastNameEnglish,
+        fatherNameEnglish: doc.fatherNameEnglish,
+        motherNameEnglish: doc.motherNameEnglish,
 
-        licenses: data.licenses,
-        practiceRecords: data.practiceRecords,
-        syndicateRecords: data.syndicateRecords,
-        universityDegrees: data.universityDegrees,
-        penalties: data.penalties,
+        gender: doc.gender,
+        nationalNumber: doc.nationalNumber,
+        birthDate: doc.birthDate,
+        birthPlace: doc.birthPlace,
+        phoneNumber: doc.phoneNumber,
+        landlineNumber: doc.landlineNumber,
+        address: doc.address,
+        graduationYear: doc.graduationYear,
+        lastTimePaid: doc.lastTimePaid,
+        nationality: doc.nationality,
+        ministerialNumber: doc.ministerialNumber,
+        ministerialRegistrationDate: doc.ministerialRegistrationDate,
+        registrationNumber: doc.registrationNumber,
+        registrationDate: doc.registrationDate,
+        integrity: doc.integrity,
+        register: doc.register,
+
+        fullName: doc.fullName,
+        currentSyndicate: doc.currentSyndicate,
+        practiceState: doc.practiceState,
+        syndicateMembershipStatus: doc.syndicateMembershipStatus,
+
+        licenses: doc.licenses,
+        practiceRecords: doc.practiceRecords,
+        syndicateRecords: doc.syndicateRecords,
+        universityDegrees: doc.universityDegrees,
+        penalties: doc.penalties,
+
+        createdAt: doc.createdAt,
+        updatedAt: doc.updatedAt,
     };
 }

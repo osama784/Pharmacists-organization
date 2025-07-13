@@ -5,11 +5,18 @@ export default interface IPharmacistQueries {
     lastName?: string | Object;
     fatherName?: string | Object;
     motherName?: string | Object;
-    nationalNumber?: string | Object;
+
+    firstNameEnglish?: string | Object;
+    lastNameEnglish?: string | Object;
+    fatherNameEnglish?: string | Object;
+    motherNameEnglish?: string | Object;
+
     gender?: string;
+    nationalNumber?: string | Object;
     birthDate?: string | Object;
     birthPlace?: string | Object;
     phoneNumber?: string | Object;
+    landlineNumber?: string | Object;
     address?: string | Object;
     graduationYear?: string | Object;
     lastTimePaid?: string | Object;
@@ -18,4 +25,8 @@ export default interface IPharmacistQueries {
     ministerialRegistrationDate?: string | Object;
     registrationNumber?: string | Object;
     registrationDate?: string | Object;
+
+    integrity?: string | Object;
+    register?: string | Object;
+    oathTakingDate?: string | Object;
 }
