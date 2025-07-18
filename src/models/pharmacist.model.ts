@@ -204,6 +204,15 @@ export const syndicateRecordsInfo = {
 
 Pharmacist.pre("save", function (this: PharmacistDocument, next) {
     this.fullName = `${this.firstName} ${this.fatherName} ${this.lastName}`;
+    if (this.isNew) {
+        this.syndicateRecords = [
+            {
+                syndicate: "نقابة الصيادلة المركزية",
+                startDate: this.registrationDate,
+                registrationNumber: this.registrationNumber,
+            },
+        ];
+    }
     next();
 });
 
