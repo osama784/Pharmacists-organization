@@ -1,17 +1,18 @@
 import { z } from "zod";
 import {
+    ICurrentSyndicate,
+    IDossierStatuses,
     ILicense,
     IPenalty,
-    IPharmacist,
     IPracticeRecord,
     ISyndicateRecord,
     IUniversityDegree,
     PharmacistDocument,
 } from "../models/pharmacist.types.js";
-import PharmacistSchema from "../../validators/pharmacist.schema.js";
+import { CreatePharmacistSchema, UpdatePharmacistSchema } from "../../validators/pharmacist.schema.js";
 
-export type CreatePharmacistDto = z.infer<typeof PharmacistSchema>;
-export type UpdatePharmacistDto = Partial<CreatePharmacistDto>;
+export type CreatePharmacistDto = z.infer<typeof CreatePharmacistSchema>;
+export type UpdatePharmacistDto = z.infer<typeof UpdatePharmacistSchema>;
 
 export type PharmacistResponseDto = {
     id: string;
@@ -20,23 +21,25 @@ export type PharmacistResponseDto = {
     fatherName: string;
     motherName: string;
 
+    fullName: string;
+
     firstNameEnglish?: string;
     lastNameEnglish?: string;
     fatherNameEnglish?: string;
     motherNameEnglish?: string;
 
     gender: string;
-    nationalNumber: number;
+    nationalNumber?: number;
     birthDate: Date;
-    birthPlace: string;
-    phoneNumber: string;
+    birthPlace?: string;
+    phoneNumber?: string;
     landlineNumber?: number;
     address?: string;
     graduationYear: number;
     lastTimePaid?: Date;
     nationality: string;
-    ministerialNumber: number;
-    ministerialRegistrationDate: Date;
+    ministerialNumber?: number;
+    ministerialRegistrationDate?: Date;
     registrationNumber: number;
     registrationDate: Date;
 
@@ -44,19 +47,16 @@ export type PharmacistResponseDto = {
     register?: string;
     oathTakingDate?: Date;
 
-    fullName: string;
     syndicateMembershipStatus: string;
-    currentSyndicate?: string;
+    currentSyndicate: ICurrentSyndicate | null;
     practiceState?: string;
 
     licenses: ILicense[];
+    dossierStatuses: IDossierStatuses[];
     practiceRecords: IPracticeRecord[];
     syndicateRecords: ISyndicateRecord[];
     universityDegrees: IUniversityDegree[];
     penalties: IPenalty[];
-} & {
-    createdAt: Date;
-    updatedAt: Date;
 };
 
 export function toPharmacistResponseDto(data: PharmacistDocument): PharmacistResponseDto;
@@ -75,11 +75,13 @@ export function toPharmacistResponseDto(data: PharmacistDocument | PharmacistDoc
 
 function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDto {
     return {
-        id: doc._id.toString(),
+        id: doc.id,
         firstName: doc.firstName,
         lastName: doc.lastName,
         fatherName: doc.fatherName,
         motherName: doc.motherName,
+
+        fullName: doc.fullName,
 
         firstNameEnglish: doc.firstNameEnglish,
         lastNameEnglish: doc.lastNameEnglish,
@@ -103,18 +105,16 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
         integrity: doc.integrity,
         register: doc.register,
 
-        fullName: doc.fullName,
-        currentSyndicate: doc.currentSyndicate,
         practiceState: doc.practiceState,
         syndicateMembershipStatus: doc.syndicateMembershipStatus,
 
+        currentSyndicate: doc.currentSyndicate,
+
         licenses: doc.licenses,
+        dossierStatuses: doc.dossierStatuses,
         practiceRecords: doc.practiceRecords,
-        syndicateRecords: doc.syndicateRecords,
+        syndicateRecords: doc.syndicateRecords.slice(1),
         universityDegrees: doc.universityDegrees,
         penalties: doc.penalties,
-
-        createdAt: doc.createdAt,
-        updatedAt: doc.updatedAt,
     };
 }

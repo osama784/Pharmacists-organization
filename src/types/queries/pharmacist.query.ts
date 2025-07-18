@@ -6,6 +6,8 @@ export default interface IPharmacistQueries {
     fatherName?: string | Object;
     motherName?: string | Object;
 
+    fullName?: string | Object;
+
     firstNameEnglish?: string | Object;
     lastNameEnglish?: string | Object;
     fatherNameEnglish?: string | Object;

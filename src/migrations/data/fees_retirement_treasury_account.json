@@ -2,7 +2,7 @@
     {
         "name": "انتساب خزانة سوريين",
         "section": "",
-        "isRepeatable": false,
+        "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
@@ -16,7 +16,7 @@
     {
         "name": "عدم المزاولة",
         "section": "",
-        "isRepeatable": false,
+        "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
@@ -37,7 +37,7 @@
     {
         "name": "رسم المزاولة",
         "section": "",
-        "isRepeatable": false,
+        "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
@@ -90,7 +90,7 @@
     {
         "name": "غرامات تأخير خزانة",
         "section": "",
-        "isRepeatable": true,
+        "isRepeatable": false,
         "isMutable": false,
         "value": 0
     },

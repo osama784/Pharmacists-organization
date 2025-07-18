@@ -27,7 +27,7 @@ export function toRoleResponseDto(data: RoleDocument | RoleDocument[]): RoleResp
 
 function _toRoleResponseDto(doc: RoleDocument): RoleResponseDto {
     return {
-        id: doc._id.toString(),
+        id: doc.id,
         name: doc.name,
         permissions: doc.permissions,
     };

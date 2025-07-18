@@ -6,7 +6,14 @@ import { CreatePharmacistDto, PharmacistResponseDto, toPharmacistResponseDto } f
 const createPharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
         const validatedData: CreatePharmacistDto = req.validatedData;
-        const pharmacist = await Pharmacist.create(validatedData);
+        const pharmacist = await Pharmacist.create({
+            ...validatedData,
+            currentSyndicate: {
+                syndicate: "نقابة الصيادلة المركزية",
+                startDate: validatedData.registrationDate,
+                registrationNumber: validatedData.registrationNumber,
+            },
+        });
         res.json({ success: true, data: toPharmacistResponseDto(pharmacist) });
         return;
     } catch (e) {

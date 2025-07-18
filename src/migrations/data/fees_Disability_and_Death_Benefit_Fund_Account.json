@@ -2,7 +2,7 @@
     {
         "name": "انتساب معونة سوريين",
         "section": "",
-        "isRepeatable": false,
+        "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },
@@ -16,7 +16,7 @@
     {
         "name": "سلف التعاون",
         "section": "",
-        "isRepeatable": false,
+        "isRepeatable": true,
         "isMutable": false,
         "value": 0
     },

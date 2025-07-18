@@ -23,4 +23,7 @@ export const zodSchemasMessages = {
         SECTION_NAME_NOT_FOUND: "اسم الصندوق هذا لا ينتمي لأي من الصناديق الموجودة",
         ALL_FEES_SHOULD_EXIST: "يجب أن تشمل القائمة جميع الرسوم",
     },
+    PHARMACIST_SCHEMA: {
+        DUPLICATE_SYNDICATE: "يجب عدم إضافة نقابة جديدة موجودة مسبقاً",
+    },
 };

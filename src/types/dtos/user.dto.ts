@@ -31,7 +31,7 @@ export function toUserResponseDto(data: PopulatedUserDocument | PopulatedUserDoc
 
 function _toUserResponseDto(doc: PopulatedUserDocument): UserResponseDto {
     return {
-        id: doc._id.toString(),
+        id: doc.id,
         username: doc.username,
         email: doc.email,
         phoneNumber: doc.phoneNumber,

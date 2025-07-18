@@ -6,7 +6,7 @@ import Fee from "../../models/fee.model";
 import Section from "../../models/section.model";
 import { AnyBulkWriteOperation } from "mongoose";
 
-export const createFees = async () => {
+const createFees = async () => {
     // const syndicateSectionID = "683ed7fcd8be3402ffb2f839";
     // const RetirementSectionID = "683ed7fcd8be3402ffb2f83a";
     // const disabiltiySectionID = "683ed7fcd8be3402ffb2f83b";
@@ -56,3 +56,5 @@ export const createFees = async () => {
     let result = await Fee.bulkWrite(objects);
     console.log(result);
 };
+
+export default createFees;

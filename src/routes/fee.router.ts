@@ -42,6 +42,6 @@ router.put("/re-registration-date", checkPermission(permissions.updateReRegistra
 
 router.patch("/update-values", checkPermission(permissions.updateFeesValues), validate(updateFeesValuesSchema), updateFeesValues);
 router.get("/list", checkPermission(permissions.listFees), listFees);
-router.get("/get-pharmacist-related-fees/:pharmacistID", checkPermission(permissions.listFees), getPharmacistRelatedFees);
+router.post("/get-pharmacist-related-fees/:pharmacistID", checkPermission(permissions.listFees), getPharmacistRelatedFees);
 
 export default router;

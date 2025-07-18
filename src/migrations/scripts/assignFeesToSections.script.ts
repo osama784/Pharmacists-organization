@@ -2,7 +2,7 @@ import Fee from "../../models/fee.model";
 import Section from "../../models/section.model";
 import sections from "../data/sections.json";
 
-export const assignFeesToSections = async () => {
+const assignFeesToSections = async () => {
     const syndicateSectionDoc = await Section.findOne({ name: "حساب نقابة صيادلة سورية رقم 209999 جاري" });
     const RetirementSectionDoc = await Section.findOne({ name: "حساب خزانة تقاعد صيادلة سورية رقم 203333 جاري" });
     const disabiltiySectionDoc = await Section.findOne({ name: "حساب صندوق إعانة العجز و الوفاة لصيادلة سورية رقم 2077777 جاري" });
@@ -57,3 +57,5 @@ export const assignFeesToSections = async () => {
         console.log(doc);
     });
 };
+
+export default assignFeesToSections;

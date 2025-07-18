@@ -41,7 +41,7 @@
     {
         "name": "غرامات تأخير تكافل",
         "section": "",
-        "isRepeatable": true,
+        "isRepeatable": false,
         "isMutable": false,
         "value": 0
     },

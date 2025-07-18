@@ -8,6 +8,8 @@ export const responseMessages = {
     FEE_CONTROLLERS: {
         MISSING_VALUE_DETAIL: "يجب أن ترسل إما قيمة وحيدة أو ترسل قيم مفصلة على السنين لكل رسم",
         MISSING_VALUE: "يجب أن ترسل قيمة وحيدة من أجل الرسوم الثابتة",
+        MISSING_SYNDICATE_MEMBERSHIP: "يجب عليك أن ترسل نوع رسم مناسب لإتمام حساب الرسوم المطلوبة",
+        PROTECTED_FEES: "لا يمكنك التعديل على الرسوم الثابتة",
     },
     ROLE_CONTROLLERS: {
         UNIQUE_NAME: "يجب أن يكون اسم الدور فريد",

@@ -7,9 +7,16 @@ import { IFeeInvoice } from "../../types/models/invoice.types.js";
 import { PopulatedFeeDocument } from "../../types/models/fee.types.js";
 import { SectionDocument } from "../../types/models/section.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
+import { syndicateMembershipsTR } from "../../translation/models.ar.js";
+import staticData from "../../config/static-data.json";
 
 const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInvoice[]>, next: NextFunction) => {
     try {
+        if (!req.body || !req.body.syndicateMembership || !Object.values(syndicateMembershipsTR).includes(req.body.syndicateMembership)) {
+            res.status(400).json({ success: false, details: [responseMessages.FEE_CONTROLLERS.MISSING_SYNDICATE_MEMBERSHIP] });
+            return;
+        }
+        const validatedData: { syndicateMembership: string } = req.body;
         const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
@@ -17,7 +24,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
         }
 
         // extracting the related pracitceType to add the proper fees to the invoice document
-        const syndicateMembershipDoc = await SyndicateMembership.findById(req.validatedData.syndicateMembership).populate<{
+        const syndicateMembershipDoc = await SyndicateMembership.findOne({ name: validatedData.syndicateMembership }).populate<{
             fees: PopulatedFeeDocument[];
         }>({
             path: "fees",
@@ -32,9 +39,30 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
         let age = currentYear - pharmacist.birthDate.getFullYear();
 
         // finding the required year (the last year he paid at, or the graduation year if he didn't pay before)
+        let syndicateMembershipStatus: string;
         let requiredYear = graduationYear;
         if (lastTimePaidYear) {
-            requiredYear = lastTimePaidYear;
+            requiredYear = lastTimePaidYear + 1;
+            const difference = currentYear - requiredYear + 1;
+            if (difference == 1) {
+                if (validatedData.syndicateMembership.includes("غير مزاول")) {
+                    syndicateMembershipStatus = syndicateMembershipsTR["non-practicing-year"];
+                } else {
+                    syndicateMembershipStatus = syndicateMembershipsTR["practicing-year"];
+                }
+            } else if (difference == 2) {
+                if (validatedData.syndicateMembership.includes("غير مزاول")) {
+                    syndicateMembershipStatus = syndicateMembershipsTR["two-years-of-non-practicing"];
+                } else {
+                    syndicateMembershipStatus = syndicateMembershipsTR["two-years-of-practicing"];
+                }
+            } else {
+                if (validatedData.syndicateMembership.includes("غير مزاول")) {
+                    syndicateMembershipStatus = syndicateMembershipsTR["re-registration-of-non-practitioner"];
+                } else {
+                    syndicateMembershipStatus = syndicateMembershipsTR["re-registration-of-practitioner"];
+                }
+            }
         } else {
             if (age >= 25) {
                 let yearWhenAge25 = pharmacist.birthDate.getFullYear() + 25;
@@ -46,81 +74,42 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
             } else {
                 requiredYear = graduationYear;
             }
+            if (pharmacist.nationality.includes("سوري")) {
+                syndicateMembershipStatus = syndicateMembershipsTR["affiliation"];
+            } else {
+                syndicateMembershipStatus = syndicateMembershipsTR["foreign-affiliation"];
+            }
         }
-        // assigning "requiredYear" to "tmpYear" to use it then with calculating fees' values
-        let tmpYear = requiredYear;
-
         // initiating some variables to track fees and their values
         let fees: IFeeInvoice[] = [];
         let excludedIDs: string[] = [];
         let value = 0;
 
-        // adding related fees' values
-        syndicateMembershipDoc?.fees.forEach((fee) => {
-            if (fee.isMutable) {
-                // summing value depending from last year to current year
-                while (tmpYear != currentYear + 1) {
-                    value += fee.details?.get(`${tmpYear}`)!;
-                    tmpYear += 1;
-                }
-            } else if (fee.isRepeatable) {
-                value = fee.value! * (currentYear - tmpYear + 1);
-            } else {
-                value = fee.value!;
-            }
-
-            fees.push({
-                feeRef: fee._id,
-                feeName: fee.name,
-                sectionName: fee.section.name,
-                value: value,
-            });
-            excludedIDs.push(fee.id);
-            value = 0;
-            tmpYear = requiredYear;
-        });
-
-        if (syndicateMembershipDoc?.name == "سنة مزاول") {
-            // changing the value of fee 'رسوم سنين سابقة' to the target value
-            fees = fees.map((fee) => {
-                if (fee.feeName == "رسوم سنين سابقة") {
-                    return {
-                        ...fee,
-                        value: 20000,
-                    };
-                }
-                return fee;
-            });
-        } else if (syndicateMembershipDoc?.name == "سنة غير مزاول") {
-            // changing the value of fee 'رسوم سنين سابقة' to the target value
-            fees = fees.map((fee) => {
-                if (fee.feeName == "رسوم سنين سابقة") {
-                    return {
-                        ...fee,
-                        value: 60000,
-                    };
-                }
-                return fee;
-            });
-        } else if (syndicateMembershipDoc?.name == "انتساب" || syndicateMembershipDoc?.name == "انتساب أجانب") {
-            // checking if membership of type "انتساب" to add fees for "سنة مزاول" and if required other unPracticed membership
-            const oneYearPracticedMembership = await SyndicateMembership.findOne({ name: "سنة مزاول" }).populate<{
+        if ([syndicateMembershipsTR["foreign-affiliation"], syndicateMembershipsTR["affiliation"]].includes(syndicateMembershipStatus)) {
+            const affiliationSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
                 fees: PopulatedFeeDocument[];
             }>({
                 path: "fees",
-                populate: { path: "section" },
+                populate: {
+                    path: "section",
+                },
             });
-            oneYearPracticedMembership?.fees.forEach((fee) => {
-                // check if fee exists before (prevent duplication)
-                if (excludedIDs.includes(fee._id.toString())) {
-                    return;
-                }
-                // finding the value of the fee
+            // adding related fees' values
+            affiliationSyndicateMembership?.fees.forEach((fee) => {
                 if (fee.isMutable) {
-                    value = fee.details?.get(`${currentYear}`)!;
+                    // summing value depending from last year to current year
+                    let tmpYear = requiredYear;
+                    while (tmpYear != currentYear + 1) {
+                        value += fee.details?.get(`${tmpYear}`)!;
+                        tmpYear += 1;
+                    }
+                    tmpYear = requiredYear;
+                } else if (fee.isRepeatable) {
+                    value = fee.value! * (currentYear - requiredYear + 1);
                 } else {
                     value = fee.value!;
                 }
+
                 fees.push({
                     feeRef: fee._id,
                     feeName: fee.name,
@@ -130,59 +119,84 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 excludedIDs.push(fee.id);
                 value = 0;
             });
-            // changing the value of fee 'رسوم سنين سابقة' to the target value
-            fees = fees.map((fee) => {
-                if (fee.feeName == "رسوم سنين سابقة") {
-                    return {
-                        ...fee,
-                        value: 20000,
-                    };
-                }
-                return fee;
+        } else if (
+            [
+                syndicateMembershipsTR["non-practicing-year"],
+                syndicateMembershipsTR["re-registration-of-non-practitioner"],
+                syndicateMembershipsTR["two-years-of-non-practicing"],
+            ].includes(syndicateMembershipStatus)
+        ) {
+            const nonPracticingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
+                fees: PopulatedFeeDocument[];
+            }>({
+                path: "fees",
+                populate: {
+                    path: "section",
+                },
             });
-            if (requiredYear != currentYear) {
-                let membershipForPreviousYears = null;
-                const numberOfPreviousYears = currentYear - requiredYear;
-                if (numberOfPreviousYears == 1) {
-                    membershipForPreviousYears = await SyndicateMembership.findOne({ name: "سنة غير مزاول" }).populate<{
-                        fees: PopulatedFeeDocument[];
-                    }>({
-                        path: "fees",
-                        populate: { path: "section" },
-                    });
-                } else if (numberOfPreviousYears == 2) {
-                    membershipForPreviousYears = await SyndicateMembership.findOne({ name: "سنة غير مزاول" }).populate<{
-                        fees: PopulatedFeeDocument[];
-                    }>({
-                        path: "fees",
-                        populate: { path: "section" },
-                    });
-                } else {
-                    membershipForPreviousYears = await SyndicateMembership.findOne({ name: "إعادة قيد غير مزاول" }).populate<{
-                        fees: PopulatedFeeDocument[];
-                    }>({
-                        path: "fees",
-                        populate: { path: "section" },
-                    });
-                }
-                membershipForPreviousYears?.fees.forEach((fee) => {
-                    // check if fee exists before (prevent duplication)
-                    if (excludedIDs.includes(fee.id)) {
-                        return;
+            nonPracticingSyndicateMembership?.fees.forEach((fee) => {
+                if (fee.isMutable) {
+                    // summing value depending from last year to current year
+                    let tmpYear = requiredYear;
+                    while (tmpYear != currentYear + 1) {
+                        value += fee.details?.get(`${tmpYear}`)!;
+                        tmpYear += 1;
                     }
-                    // finding the value of the fee
+                    tmpYear = requiredYear;
+                } else if (fee.isRepeatable) {
+                    value = fee.value! * (currentYear - requiredYear + 1);
+                } else {
+                    value = fee.value!;
+                }
+
+                fees.push({
+                    feeRef: fee._id,
+                    feeName: fee.name,
+                    sectionName: fee.section.name,
+                    value: value,
+                });
+                excludedIDs.push(fee.id);
+                value = 0;
+            });
+        } else {
+            let filter;
+            let calculateNonPracticed = true;
+            if (syndicateMembershipsTR["practicing-year"] == syndicateMembershipStatus) {
+                calculateNonPracticed = false;
+            } else if (syndicateMembershipsTR["two-years-of-practicing"] == syndicateMembershipStatus) {
+                filter = {
+                    name: syndicateMembershipsTR["two-years-of-non-practicing"],
+                };
+            } else {
+                filter = {
+                    name: syndicateMembershipsTR["re-registration-of-non-practitioner"],
+                };
+            }
+
+            if (calculateNonPracticed) {
+                const nonPracticingSyndicateMembership = await SyndicateMembership.findOne(filter).populate<{
+                    fees: PopulatedFeeDocument[];
+                }>({
+                    path: "fees",
+                    populate: {
+                        path: "section",
+                    },
+                });
+                nonPracticingSyndicateMembership?.fees.forEach((fee) => {
                     if (fee.isMutable) {
+                        // summing value depending from last year to (current year - 1)
+                        let tmpYear = requiredYear;
                         while (tmpYear != currentYear) {
                             value += fee.details?.get(`${tmpYear}`)!;
                             tmpYear += 1;
                         }
+                        tmpYear = requiredYear;
+                    } else if (fee.isRepeatable) {
+                        value = fee.value! * (currentYear - requiredYear);
                     } else {
-                        if (fee.isRepeatable) {
-                            value = fee.value! * numberOfPreviousYears;
-                        } else {
-                            value = fee.value!;
-                        }
+                        value = fee.value!;
                     }
+
                     fees.push({
                         feeRef: fee._id,
                         feeName: fee.name,
@@ -190,21 +204,50 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                         value: value,
                     });
                     excludedIDs.push(fee.id);
-                    // re-initiating values
                     value = 0;
-                    tmpYear = requiredYear;
-                });
-                // changing the value of fee 'رسوم سنين سابقة' to the target value
-                fees = fees.map((fee) => {
-                    if (fee.feeName == "رسوم سنين سابقة") {
-                        return {
-                            ...fee,
-                            value: 80000,
-                        };
-                    }
-                    return fee;
                 });
             }
+            const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
+                fees: PopulatedFeeDocument[];
+            }>({
+                path: "fees",
+                populate: {
+                    path: "section",
+                },
+            });
+            practicingSyndicateMembership?.fees.forEach((fee) => {
+                if (fee.isMutable) {
+                    // value just for this year
+                    value += fee.details?.get(`${currentYear}`)!;
+                } else {
+                    value = fee.value!;
+                }
+                let existBefore = false;
+                fees.forEach((_fee, index) => {
+                    if (fee._id.equals(_fee.feeRef)) {
+                        existBefore = true;
+                        if (fee.isRepeatable) {
+                            fees[index] = {
+                                feeRef: fee._id,
+                                feeName: fee.name,
+                                sectionName: fee.section.name,
+                                value: fees[index].value + value,
+                            };
+                        }
+                    }
+                });
+                if (!existBefore) {
+                    fees.push({
+                        feeRef: fee._id,
+                        feeName: fee.name,
+                        sectionName: fee.section.name,
+                        value: value,
+                    });
+                    excludedIDs.push(fee.id);
+                }
+
+                value = 0;
+            });
         }
 
         // add fineSummeryFees which related to sections to exculdedIDs
@@ -234,19 +277,30 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
         // handling fee with name "رسم السن"
         fees = fees.map((fee) => {
             if (fee.feeName == "رسم السن") {
-                let valueOfFeeAge = 0;
+                let FeeAgeValue = 0;
                 if (age <= 30) {
-                    valueOfFeeAge = 5000;
+                    FeeAgeValue = 5000;
                 } else if (age >= 31 && age < 40) {
-                    valueOfFeeAge = 10000;
+                    FeeAgeValue = 10000;
                 } else if (age >= 41 && age < 50) {
-                    valueOfFeeAge = 15000;
+                    FeeAgeValue = 15000;
                 } else {
-                    valueOfFeeAge = 20000;
+                    FeeAgeValue = 20000;
                 }
                 return {
                     ...fee,
-                    value: valueOfFeeAge,
+                    value: FeeAgeValue,
+                };
+            }
+            if (
+                fee.feeName == "مطبوعات" &&
+                [syndicateMembershipsTR["affiliation"], syndicateMembershipsTR["foreign-affiliation"]].includes(syndicateMembershipStatus)
+            ) {
+                const prints = staticData["prints"];
+                const value = Object.values(prints).reduce((acc, currentValue) => acc + currentValue, 0);
+                return {
+                    ...fee,
+                    value: value,
                 };
             }
             return fee;

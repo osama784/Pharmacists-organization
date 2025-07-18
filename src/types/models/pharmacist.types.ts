@@ -1,17 +1,20 @@
-import { Document, HydratedDocument, Types } from "mongoose";
-import { IInvoice } from "./invoice.types.js";
+import { HydratedDocument, Types } from "mongoose";
 
 export interface ILicense {
     licenseType: string;
-    startDate: Date;
-    endDate: Date;
+    date: Date;
+    details?: string;
+}
+
+export interface IDossierStatuses {
+    date: Date;
     details: string;
 }
 
 export interface IPracticeRecord {
     syndicate: string;
     startDate: Date;
-    endDate: Date;
+    endDate?: Date;
     sector: string;
     place: string;
     practiceType: string;
@@ -20,6 +23,13 @@ export interface ISyndicateRecord {
     syndicate: string;
     startDate: Date;
     endDate: Date;
+    registrationNumber: number;
+}
+
+export interface ICurrentSyndicate {
+    syndicate: string;
+    startDate: Date;
+    registrationNumber: number;
 }
 
 export interface IUniversityDegree {
@@ -29,10 +39,10 @@ export interface IUniversityDegree {
 }
 
 export interface IPenalty {
-    penaltyType: String;
+    penaltyType: string;
     date: Date;
-    reason: String;
-    details: String;
+    reason?: string;
+    details?: string;
 }
 
 export interface IPharmacist {
@@ -41,23 +51,25 @@ export interface IPharmacist {
     fatherName: string;
     motherName: string;
 
+    fullName: string;
+
     firstNameEnglish?: string;
     lastNameEnglish?: string;
     fatherNameEnglish?: string;
     motherNameEnglish?: string;
 
     gender: string;
-    nationalNumber: number;
+    nationalNumber?: number;
     birthDate: Date;
-    birthPlace: string;
-    phoneNumber: string;
+    birthPlace?: string;
+    phoneNumber?: string;
     landlineNumber?: number;
     address?: string;
     graduationYear: number;
     lastTimePaid?: Date;
     nationality: string;
-    ministerialNumber: number;
-    ministerialRegistrationDate: Date;
+    ministerialNumber?: number;
+    ministerialRegistrationDate?: Date;
     registrationNumber: number;
     registrationDate: Date;
 
@@ -65,7 +77,10 @@ export interface IPharmacist {
     register?: string;
     oathTakingDate?: Date;
 
+    currentSyndicate: ICurrentSyndicate | null;
+
     licenses: ILicense[];
+    dossierStatuses: IDossierStatuses[];
     practiceRecords: IPracticeRecord[];
     syndicateRecords: ISyndicateRecord[];
     universityDegrees: IUniversityDegree[];
@@ -78,8 +93,7 @@ export type PharmacistDocument = HydratedDocument<IPharmacist> & {
     createdAt: Date;
     updatedAt: Date;
 } & {
-    fullName: string;
-    practiceState: string;
     syndicateMembershipStatus: string;
-    currentSyndicate: string;
+    practiceState?: string;
+    // currentSyndicate?: ISyndicateRecord;
 };

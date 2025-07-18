@@ -17,11 +17,11 @@ export const buildStringFilter = (value: string | Record<string, any>) => {
 };
 
 export const buildDateFilter = (value: string | Record<string, any>) => {
-    if (typeof value == "string") {
+    if (typeof value == "string" && !isNaN(Date.parse(value))) {
         return value;
     } else if (typeof value == "object") {
         for (const key in value) {
-            if (typeof value[key] == "object" || !allowedDateOperators.includes(key)) {
+            if (typeof value[key] == "object" || isNaN(Date.parse(value[key])) || !allowedDateOperators.includes(key)) {
                 return undefined;
             }
         }

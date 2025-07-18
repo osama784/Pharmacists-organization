@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { PharmacistDocument } from "../types/models/pharmacist.types.js";
+import { ISyndicateRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
 
 const Pharmacist = new Schema<PharmacistDocument>(
@@ -21,6 +21,8 @@ const Pharmacist = new Schema<PharmacistDocument>(
             required: true,
         },
 
+        fullName: String,
+
         firstNameEnglish: String,
         lastNameEnglish: String,
         fatherNameEnglish: String,
@@ -29,22 +31,13 @@ const Pharmacist = new Schema<PharmacistDocument>(
             type: String,
             required: true,
         },
-        nationalNumber: {
-            type: Number,
-            required: true,
-        },
+        nationalNumber: Number,
         birthDate: {
             type: Date,
             required: true,
         },
-        birthPlace: {
-            type: String,
-            required: true,
-        },
-        phoneNumber: {
-            type: String,
-            required: true,
-        },
+        birthPlace: String,
+        phoneNumber: String,
         landlineNumber: Number,
         address: String,
         graduationYear: {
@@ -57,8 +50,8 @@ const Pharmacist = new Schema<PharmacistDocument>(
             required: true,
         },
 
-        ministerialNumber: { type: Number, required: true },
-        ministerialRegistrationDate: { type: Date, required: true },
+        ministerialNumber: Number,
+        ministerialRegistrationDate: Date,
         registrationNumber: { type: Number, required: true },
         registrationDate: { type: Date, required: true },
 
@@ -66,48 +59,60 @@ const Pharmacist = new Schema<PharmacistDocument>(
         register: String,
         oathTakingDate: Date,
 
+        currentSyndicate: {
+            syndicate: { type: String, required: true },
+            startDate: { type: Date, required: true },
+            registrationNumber: { type: Number, required: true },
+        },
+
         licenses: [
             {
                 _id: false,
-                licenseType: String,
-                startDate: Date,
-                endDate: Date,
+                licenseType: { type: String, required: true },
+                date: { type: Date, required: true },
                 details: String,
             },
         ],
-
+        dossierStatuses: [
+            {
+                _id: false,
+                date: { type: Date, required: true },
+                details: { type: String, required: true },
+            },
+        ],
         practiceRecords: [
             {
                 _id: false,
-                syndicate: String,
-                startDate: Date,
+                syndicate: { type: String, required: true },
+                startDate: { type: Date, required: true },
                 endDate: Date,
-                sector: String,
-                place: String,
-                practiceType: String,
+                sector: { type: String, required: true },
+                place: { type: String, required: true },
+                practiceType: { type: String, required: true },
             },
         ],
         syndicateRecords: [
             {
                 _id: false,
-                syndicate: String,
-                startDate: Date,
+                syndicate: { type: String, required: true },
+                startDate: { type: Date, required: true },
                 endDate: Date,
+                registrationNumber: { type: Number, required: true },
             },
         ],
         universityDegrees: [
             {
                 _id: false,
-                degreeType: String,
-                obtainingDate: Date,
-                university: String,
+                degreeType: { type: String, required: true },
+                obtainingDate: { type: Date, required: true },
+                university: { type: String, required: true },
             },
         ],
         penalties: [
             {
                 _id: false,
-                penaltyType: String,
-                date: Date,
+                penaltyType: { type: String, required: true },
+                date: { type: Date, required: true },
                 reason: String,
                 details: String,
             },
@@ -121,6 +126,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
     { timestamps: true }
 );
 export const licenseTypes = ["دائم", "مؤقت"];
+export const genders = ["ذكر", "أنثى"];
 export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة"];
 export const practiceRecordsInfo = {
     syndicate: [
@@ -181,7 +187,7 @@ export const practiceRecordsInfo = {
 
 export const penaltyTypes = ["something"];
 
-export const syndicatesRecordsInfo = {
+export const syndicateRecordsInfo = {
     syndicate: [
         "نقابة الصيادلة المركزية",
         "نقابة صيادلة دمشق",
@@ -202,8 +208,9 @@ export const syndicatesRecordsInfo = {
     ],
 };
 
-Pharmacist.virtual("fullName").get(function (this: PharmacistDocument): string {
-    return `${this.firstName} ${this.fatherName} ${this.lastName}`;
+Pharmacist.pre("save", function (this: PharmacistDocument, next) {
+    this.fullName = `${this.firstName} ${this.fatherName} ${this.lastName}`;
+    next();
 });
 
 Pharmacist.virtual("syndicateMembershipStatus").get(function (this: PharmacistDocument): string {
@@ -213,53 +220,51 @@ Pharmacist.virtual("syndicateMembershipStatus").get(function (this: PharmacistDo
     }
     const lastTimePaidYear = lastTimePaid.getFullYear();
     const thisYear = new Date().getFullYear();
-    const practiceRecords = this.practiceRecords;
-    if (!practiceRecords || practiceRecords.length == 0) {
-        const difference = thisYear - lastTimePaidYear;
-        if (difference == 1) {
-            return syndicateMembershipsTR["non-practicing-year"];
-        }
-        if (difference == 2) {
-            return syndicateMembershipsTR["two-years-of-non-practicing"];
-        }
+    const difference = thisYear - lastTimePaidYear;
+    if (difference > 2) {
         return syndicateMembershipsTR["re-registration-of-non-practitioner"];
     }
-    let start_year = lastTimePaidYear + 1;
-    let yearsOfPracticing = 0;
-    let yearsOfNonPracticing = 0;
+    return syndicateMembershipsTR["affiliation"];
 
-    while (start_year != thisYear + 1) {
-        const exist = practiceRecords.filter(
-            (value) => value.startDate.getFullYear() <= start_year && value.endDate.getFullYear() >= start_year
-        );
-        if (exist) {
-            yearsOfPracticing += 1;
-        } else {
-            yearsOfNonPracticing += 1;
-        }
-        start_year += 1;
-    }
+    // const practiceRecords = this.practiceRecords;
+    // if (!practiceRecords || practiceRecords.length == 0) {
+    // }
+    // let start_year = lastTimePaidYear + 1;
+    // let yearsOfPracticing = 0;
+    // let yearsOfNonPracticing = 0;
 
-    if (yearsOfPracticing + yearsOfNonPracticing == 1) {
-        if (yearsOfPracticing == 1) {
-            return syndicateMembershipsTR["practicing-year"];
-        } else {
-            return syndicateMembershipsTR["non-practicing-year"];
-        }
-    } else if (yearsOfPracticing + yearsOfNonPracticing == 2) {
-        if (yearsOfPracticing == 2) {
-            return syndicateMembershipsTR["two-years-of-practicing"];
-        } else {
-            return syndicateMembershipsTR["two-years-of-non-practicing"];
-        }
-    } else {
-        // yearsOfPracticing + yearsOfNonPracticing >= 3
-        if (yearsOfNonPracticing != 0) {
-            return syndicateMembershipsTR["re-registration-of-non-practitioner"];
-        } else {
-            return syndicateMembershipsTR["re-registration-of-practitioner"];
-        }
-    }
+    // while (start_year != thisYear + 1) {
+    //     const exist = practiceRecords.filter(
+    //         (value) => value.startDate.getFullYear() <= start_year && value.endDate.getFullYear() >= start_year
+    //     );
+    //     if (exist) {
+    //         yearsOfPracticing += 1;
+    //     } else {
+    //         yearsOfNonPracticing += 1;
+    //     }
+    //     start_year += 1;
+    // }
+
+    // if (yearsOfPracticing + yearsOfNonPracticing == 1) {
+    //     if (yearsOfPracticing == 1) {
+    //         return syndicateMembershipsTR["practicing-year"];
+    //     } else {
+    //         return syndicateMembershipsTR["non-practicing-year"];
+    //     }
+    // } else if (yearsOfPracticing + yearsOfNonPracticing == 2) {
+    //     if (yearsOfPracticing == 2) {
+    //         return syndicateMembershipsTR["two-years-of-practicing"];
+    //     } else {
+    //         return syndicateMembershipsTR["two-years-of-non-practicing"];
+    //     }
+    // } else {
+    //     // yearsOfPracticing + yearsOfNonPracticing >= 3
+    //     if (yearsOfNonPracticing != 0) {
+    //         return syndicateMembershipsTR["re-registration-of-non-practitioner"];
+    //     } else {
+    //         return syndicateMembershipsTR["re-registration-of-practitioner"];
+    //     }
+    // }
 });
 
 Pharmacist.virtual("practiceState").get(function (this: PharmacistDocument) {
@@ -267,17 +272,25 @@ Pharmacist.virtual("practiceState").get(function (this: PharmacistDocument) {
     if (!practiceRecords || practiceRecords.length == 0) {
         return undefined;
     }
-    const lastPracticeRecord = practiceRecords.sort((a, b) => a.startDate.getTime() - b.startDate.getTime())[0];
+    const lastPracticeRecord = practiceRecords.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0];
     return lastPracticeRecord.practiceType;
 });
 
-Pharmacist.virtual("currentSyndicate").get(function (this: PharmacistDocument) {
-    const practiceRecords = this.practiceRecords;
-    if (!practiceRecords || practiceRecords.length == 0) {
-        return undefined;
-    }
-    const lastPracticeRecord = practiceRecords.sort((a, b) => a.startDate.getTime() - b.startDate.getTime())[0];
-    return lastPracticeRecord.syndicate;
-});
+// Pharmacist.virtual("currentSyndicate").get(function (this: PharmacistDocument): ISyndicateRecord | undefined {
+//     const syndicateRecords = this.syndicateRecords;
+//     if (syndicateRecords.length == 0) {
+//         return undefined;
+//     }
+//     if (!syndicateRecords[0].endDate) {
+//         return syndicateRecords[0];
+//     }
+//     return undefined;
+// const practiceRecords = this.practiceRecords;
+// if (!practiceRecords || practiceRecords.length == 0) {
+//     return undefined;
+// }
+// const lastPracticeRecord = practiceRecords.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0];
+// return lastPracticeRecord.syndicate;
+// });
 
 export default mongoose.model<PharmacistDocument>("Pharmacist", Pharmacist, "pharmacists");

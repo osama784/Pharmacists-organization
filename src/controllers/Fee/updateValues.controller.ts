@@ -21,6 +21,10 @@ const updateFeesValues = async (req: Request, res: TypedResponse<FeeDocument[]>,
                 res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
                 return;
             }
+            if (fee.name == "رسم السن" || fee.name == "المطبوعات") {
+                res.status(400).json({ success: false, details: [responseMessages.FEE_CONTROLLERS.PROTECTED_FEES] });
+                return;
+            }
             if (fee.isMutable) {
                 if (!feeObject.details) {
                     const oldDetails = fee.details;
