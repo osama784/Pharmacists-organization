@@ -41,14 +41,6 @@ const PharmacistSchema = z.object({
     register: StringSchema.optional().nullable(),
     oathTakingDate: DateSchema.optional().nullable(),
 
-    currentSyndicate: z
-        .object({
-            syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string]),
-            startDate: DateSchema,
-            registrationNumber: NumberSchema,
-        })
-        .nullable(),
-
     licenses: z
         .array(
             z.object({
@@ -110,7 +102,7 @@ const PharmacistSchema = z.object({
                 .object({
                     syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string]),
                     startDate: DateSchema,
-                    endDate: DateSchema,
+                    endDate: DateSchema.optional().nullable(),
                     registrationNumber: NumberSchema,
                 })
                 .refine(
@@ -128,19 +120,32 @@ const PharmacistSchema = z.object({
         )
         // .refine(
         //     (data) => {
-        //         let exist: Record<string, boolean> = {};
-        //         for (const record of data) {
-        //             if (exist[record.syndicate]) {
-        //                 return false;
-        //             }
-        //             exist[record.syndicate] = true;
-        //         }
-        //         return true;
+
+        //         // let exist: Record<string, boolean> = {};
+        //         // for (const record of data) {
+        //         //     if (exist[record.syndicate]) {
+        //         //         return false;
+        //         //     }
+        //         //     exist[record.syndicate] = true;
+        //         // }
+        //         // return true;
         //     },
         //     { message: zodSchemasMessages.PHARMACIST_SCHEMA.DUPLICATE_SYNDICATE }
         // )
         .transform((data) => {
-            return data.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
+            const sorted = data.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
+            console.log(sorted);
+            sorted.forEach((record, index) => {
+                if (index == 0) return;
+                if (!record.endDate) {
+                    sorted[index] = {
+                        ...record,
+                        endDate: sorted[index - 1].startDate,
+                    };
+                }
+            });
+            console.log(sorted);
+            return sorted;
         })
         .optional(),
 
@@ -157,7 +162,6 @@ const PharmacistSchema = z.object({
 });
 
 export const CreatePharmacistSchema = PharmacistSchema.omit({
-    currentSyndicate: true,
     penalties: true,
     licenses: true,
     syndicateRecords: true,

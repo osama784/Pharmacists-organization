@@ -32,13 +32,11 @@ export const NumberSchemaPositive = NumberSchema.min(0, { message: zodSchemasMes
 
 export const EnumSchema = (data: [string, ...string[]]) => z.enum(data, { message: zodSchemasMessages.INVALID_ENUM_VALUE(data) });
 
-export const DateSchema = StringSchema.default(new Date().toISOString())
-    .refine(
-        (value) => {
-            return !isNaN(Date.parse(value));
-        },
-        { message: zodSchemasMessages.INVALID_DATE }
-    )
-    .transform((value) => {
-        return new Date(value);
-    });
+export const DateSchema = StringSchema.refine(
+    (value) => {
+        return !isNaN(Date.parse(value));
+    },
+    { message: zodSchemasMessages.INVALID_DATE }
+).transform((value) => {
+    return new Date(value);
+});

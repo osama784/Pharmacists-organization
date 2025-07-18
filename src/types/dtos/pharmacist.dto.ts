@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-    ICurrentSyndicate,
     IDossierStatuses,
     ILicense,
     IPenalty,
@@ -23,32 +22,32 @@ export type PharmacistResponseDto = {
 
     fullName: string;
 
-    firstNameEnglish?: string;
-    lastNameEnglish?: string;
-    fatherNameEnglish?: string;
-    motherNameEnglish?: string;
+    firstNameEnglish?: string | null;
+    lastNameEnglish?: string | null;
+    fatherNameEnglish?: string | null;
+    motherNameEnglish?: string | null;
 
     gender: string;
     nationalNumber?: number;
     birthDate: Date;
-    birthPlace?: string;
-    phoneNumber?: string;
-    landlineNumber?: number;
-    address?: string;
+    birthPlace?: string | null;
+    phoneNumber?: string | null;
+    landlineNumber?: number | null;
+    address?: string | null;
     graduationYear: number;
-    lastTimePaid?: Date;
+    lastTimePaid?: Date | null;
     nationality: string;
-    ministerialNumber?: number;
-    ministerialRegistrationDate?: Date;
+    ministerialNumber?: number | null;
+    ministerialRegistrationDate?: Date | null;
     registrationNumber: number;
     registrationDate: Date;
 
-    integrity?: string;
-    register?: string;
-    oathTakingDate?: Date;
+    integrity?: string | null;
+    register?: string | null;
+    oathTakingDate?: Date | null;
 
     syndicateMembershipStatus: string;
-    currentSyndicate: ICurrentSyndicate | null;
+    currentSyndicate: ISyndicateRecord | null;
     practiceState?: string;
 
     licenses: ILicense[];
@@ -107,13 +106,12 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
 
         practiceState: doc.practiceState,
         syndicateMembershipStatus: doc.syndicateMembershipStatus,
-
         currentSyndicate: doc.currentSyndicate,
 
         licenses: doc.licenses,
         dossierStatuses: doc.dossierStatuses,
         practiceRecords: doc.practiceRecords,
-        syndicateRecords: doc.syndicateRecords.slice(1),
+        syndicateRecords: doc.syndicateRecords,
         universityDegrees: doc.universityDegrees,
         penalties: doc.penalties,
     };

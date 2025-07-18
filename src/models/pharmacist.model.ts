@@ -59,12 +59,6 @@ const Pharmacist = new Schema<PharmacistDocument>(
         register: String,
         oathTakingDate: Date,
 
-        currentSyndicate: {
-            syndicate: { type: String, required: true },
-            startDate: { type: Date, required: true },
-            registrationNumber: { type: Number, required: true },
-        },
-
         licenses: [
             {
                 _id: false,
@@ -276,21 +270,15 @@ Pharmacist.virtual("practiceState").get(function (this: PharmacistDocument) {
     return lastPracticeRecord.practiceType;
 });
 
-// Pharmacist.virtual("currentSyndicate").get(function (this: PharmacistDocument): ISyndicateRecord | undefined {
-//     const syndicateRecords = this.syndicateRecords;
-//     if (syndicateRecords.length == 0) {
-//         return undefined;
-//     }
-//     if (!syndicateRecords[0].endDate) {
-//         return syndicateRecords[0];
-//     }
-//     return undefined;
-// const practiceRecords = this.practiceRecords;
-// if (!practiceRecords || practiceRecords.length == 0) {
-//     return undefined;
-// }
-// const lastPracticeRecord = practiceRecords.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0];
-// return lastPracticeRecord.syndicate;
-// });
+Pharmacist.virtual("currentSyndicate").get(function (this: PharmacistDocument): ISyndicateRecord | null {
+    const syndicateRecords = this.syndicateRecords;
+    if (syndicateRecords.length == 0) {
+        return null;
+    }
+    if (!syndicateRecords[0].endDate) {
+        return syndicateRecords[0];
+    }
+    return null;
+});
 
 export default mongoose.model<PharmacistDocument>("Pharmacist", Pharmacist, "pharmacists");

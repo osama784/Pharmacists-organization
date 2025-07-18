@@ -22,13 +22,7 @@ export interface IPracticeRecord {
 export interface ISyndicateRecord {
     syndicate: string;
     startDate: Date;
-    endDate: Date;
-    registrationNumber: number;
-}
-
-export interface ICurrentSyndicate {
-    syndicate: string;
-    startDate: Date;
+    endDate?: Date;
     registrationNumber: number;
 }
 
@@ -77,8 +71,6 @@ export interface IPharmacist {
     register?: string;
     oathTakingDate?: Date;
 
-    currentSyndicate: ICurrentSyndicate | null;
-
     licenses: ILicense[];
     dossierStatuses: IDossierStatuses[];
     practiceRecords: IPracticeRecord[];
@@ -95,5 +87,5 @@ export type PharmacistDocument = HydratedDocument<IPharmacist> & {
 } & {
     syndicateMembershipStatus: string;
     practiceState?: string;
-    // currentSyndicate?: ISyndicateRecord;
+    currentSyndicate: ISyndicateRecord | null;
 };
