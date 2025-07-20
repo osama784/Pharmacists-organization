@@ -63,7 +63,8 @@ const Pharmacist = new Schema<PharmacistDocument>(
             {
                 _id: false,
                 licenseType: { type: String, required: true },
-                date: { type: Date, required: true },
+                startDate: { type: Date, required: true },
+                endDate: Date,
                 details: String,
             },
         ],

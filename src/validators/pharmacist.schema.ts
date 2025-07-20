@@ -22,7 +22,7 @@ const PharmacistSchema = z.object({
     motherNameEnglish: StringSchema.optional().nullable(),
 
     gender: EnumSchema(genders as [string, ...string[]]),
-    nationalNumber: StringSchema.optional().nullable(),
+    nationalNumber: NumberSchema.optional().nullable(),
     birthPlace: StringSchema.optional().nullable(),
     birthDate: DateSchema,
     phoneNumber: StringSchema.optional().nullable(),
@@ -45,7 +45,8 @@ const PharmacistSchema = z.object({
         .array(
             z.object({
                 licenseType: EnumSchema(Object.values(licenseTypes) as [string]),
-                date: DateSchema,
+                startDate: DateSchema,
+                endDate: DateSchema.optional().nullable(),
                 details: StringSchema.optional().nullable(),
             })
         )

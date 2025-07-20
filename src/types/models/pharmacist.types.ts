@@ -2,8 +2,9 @@ import { HydratedDocument, Types } from "mongoose";
 
 export interface ILicense {
     licenseType: string;
-    date: Date;
-    details?: string;
+    startDate: Date;
+    endDate?: Date | null;
+    details?: string | null;
 }
 
 export interface IDossierStatuses {
@@ -14,7 +15,7 @@ export interface IDossierStatuses {
 export interface IPracticeRecord {
     syndicate: string;
     startDate: Date;
-    endDate?: Date;
+    endDate?: Date | null;
     sector: string;
     place: string;
     practiceType: string;
@@ -22,7 +23,7 @@ export interface IPracticeRecord {
 export interface ISyndicateRecord {
     syndicate: string;
     startDate: Date;
-    endDate?: Date;
+    endDate?: Date | null;
     registrationNumber: number;
 }
 
@@ -35,8 +36,8 @@ export interface IUniversityDegree {
 export interface IPenalty {
     penaltyType: string;
     date: Date;
-    reason?: string;
-    details?: string;
+    reason?: string | null;
+    details?: string | null;
 }
 
 export interface IPharmacist {
@@ -47,29 +48,29 @@ export interface IPharmacist {
 
     fullName: string;
 
-    firstNameEnglish?: string;
-    lastNameEnglish?: string;
-    fatherNameEnglish?: string;
-    motherNameEnglish?: string;
+    firstNameEnglish?: string | null;
+    lastNameEnglish?: string | null;
+    fatherNameEnglish?: string | null;
+    motherNameEnglish?: string | null;
 
     gender: string;
-    nationalNumber?: number;
+    nationalNumber?: number | null;
     birthDate: Date;
-    birthPlace?: string;
-    phoneNumber?: string;
-    landlineNumber?: number;
-    address?: string;
+    birthPlace?: string | null;
+    phoneNumber?: string | null;
+    landlineNumber?: number | null;
+    address?: string | null;
     graduationYear: number;
-    lastTimePaid?: Date;
+    lastTimePaid?: Date | null;
     nationality: string;
-    ministerialNumber?: number;
-    ministerialRegistrationDate?: Date;
+    ministerialNumber?: number | null;
+    ministerialRegistrationDate?: Date | null;
     registrationNumber: number;
     registrationDate: Date;
 
-    integrity?: string;
-    register?: string;
-    oathTakingDate?: Date;
+    integrity?: string | null;
+    register?: string | null;
+    oathTakingDate?: Date | null;
 
     licenses: ILicense[];
     dossierStatuses: IDossierStatuses[];

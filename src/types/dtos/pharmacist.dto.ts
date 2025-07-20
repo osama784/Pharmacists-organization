@@ -28,7 +28,7 @@ export type PharmacistResponseDto = {
     motherNameEnglish?: string | null;
 
     gender: string;
-    nationalNumber?: number;
+    nationalNumber?: number | null;
     birthDate: Date;
     birthPlace?: string | null;
     phoneNumber?: string | null;

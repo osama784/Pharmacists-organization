@@ -8,7 +8,6 @@ const validate = (schema: Schema) => async (req: Request, res: TypedResponse<nul
         return;
     }
     const result = await schema.safeParseAsync(req.body);
-
     if (!result.success) {
         const errors = result.error.errors.map((error) => {
             const formattedPath = error.path.reduce((acc, part) => {
