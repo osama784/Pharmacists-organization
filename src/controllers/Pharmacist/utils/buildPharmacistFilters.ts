@@ -7,7 +7,7 @@ const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any
     if (queries.lastName) filters.lastName = buildStringFilter(queries.lastName);
     if (queries.fatherName) filters.fatherName = buildStringFilter(queries.fatherName);
     if (queries.motherName) filters.motherName = buildStringFilter(queries.motherName);
-    if (queries.fullName) filters.fullName == buildStringFilter(queries.fullName);
+    if (queries.fullName) filters.fullName = buildStringFilter(queries.fullName);
     if (queries.firstNameEnglish) filters.firstNameEnglish = buildStringFilter(queries.firstNameEnglish);
     if (queries.lastNameEnglish) filters.lastNameEnglish = buildStringFilter(queries.lastNameEnglish);
     if (queries.fatherNameEnglish) filters.fatherNameEnglish = buildStringFilter(queries.fatherNameEnglish);
