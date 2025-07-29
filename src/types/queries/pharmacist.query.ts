@@ -31,4 +31,8 @@ export default interface IPharmacistQueries {
     integrity?: string | Object;
     register?: string | Object;
     oathTakingDate?: string | Object;
+
+    syndicateMembershipStatus?: string | Object;
+    practiceState?: string | Object;
+    currentSyndicate?: string | Object;
 }

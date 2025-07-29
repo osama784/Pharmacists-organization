@@ -72,12 +72,16 @@ export interface IPharmacist {
     register?: string | null;
     oathTakingDate?: Date | null;
 
-    licenses: ILicense[];
-    dossierStatuses: IDossierStatuses[];
-    practiceRecords: IPracticeRecord[];
-    syndicateRecords: ISyndicateRecord[];
-    universityDegrees: IUniversityDegree[];
-    penalties: IPenalty[];
+    syndicateMembershipStatus?: string;
+    practiceState?: string | null;
+    currentSyndicate?: ISyndicateRecord | null;
+
+    licenses: Types.DocumentArray<ILicense>;
+    dossierStatuses: Types.DocumentArray<IDossierStatuses>;
+    practiceRecords: Types.DocumentArray<IPracticeRecord>;
+    syndicateRecords: Types.DocumentArray<ISyndicateRecord>;
+    universityDegrees: Types.DocumentArray<IUniversityDegree>;
+    penalties: Types.DocumentArray<IPenalty>;
 
     invoices: Types.ObjectId[];
 }
@@ -85,8 +89,4 @@ export interface IPharmacist {
 export type PharmacistDocument = HydratedDocument<IPharmacist> & {
     createdAt: Date;
     updatedAt: Date;
-} & {
-    syndicateMembershipStatus: string;
-    practiceState?: string;
-    currentSyndicate: ISyndicateRecord | null;
 };

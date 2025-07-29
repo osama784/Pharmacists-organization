@@ -1,19 +1,21 @@
-import Pharmacist from "../../models/pharmacist.model.js";
+import Pharmacist, { handlePharmacistFields } from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import { CreatePharmacistDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../types/dtos/pharmacist.dto.js";
 
 const createPharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
         const validatedData: CreatePharmacistDto = req.validatedData;
-        const pharmacist = await Pharmacist.create({
+        const doc = await Pharmacist.create({
             ...validatedData,
-            currentSyndicate: {
-                syndicate: "نقابة الصيادلة المركزية",
-                startDate: validatedData.registrationDate,
-                registrationNumber: validatedData.registrationNumber,
-            },
+            syndicateRecords: [
+                {
+                    syndicate: "نقابة الصيادلة المركزية",
+                    startDate: validatedData.registrationDate,
+                    registrationNumber: validatedData.registrationNumber,
+                },
+            ],
         });
+        const pharmacist = await handlePharmacistFields(doc);
         res.json({ success: true, data: toPharmacistResponseDto(pharmacist) });
         return;
     } catch (e) {

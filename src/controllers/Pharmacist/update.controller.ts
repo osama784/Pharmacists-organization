@@ -1,4 +1,4 @@
-import Pharmacist from "../../models/pharmacist.model.js";
+import Pharmacist, { handlePharmacistFields } from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import { PharmacistResponseDto, toPharmacistResponseDto, UpdatePharmacistDto } from "../../types/dtos/pharmacist.dto.js";
@@ -14,7 +14,9 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
         }
         await pharmacist.updateOne({ $set: validatedData });
         const doc = await Pharmacist.findById(pharmacist._id);
-        res.json({ success: true, data: toPharmacistResponseDto(doc!) });
+        const newDoc = await handlePharmacistFields(doc!);
+
+        res.json({ success: true, data: toPharmacistResponseDto(newDoc!) });
     } catch (e) {
         next(e);
     }

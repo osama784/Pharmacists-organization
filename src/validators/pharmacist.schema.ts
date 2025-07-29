@@ -135,7 +135,6 @@ const PharmacistSchema = z.object({
         // )
         .transform((data) => {
             const sorted = data.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
-            console.log(sorted);
             sorted.forEach((record, index) => {
                 if (index == 0) return;
                 if (!record.endDate) {
@@ -145,7 +144,6 @@ const PharmacistSchema = z.object({
                     };
                 }
             });
-            console.log(sorted);
             return sorted;
         })
         .optional(),
