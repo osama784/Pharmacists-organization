@@ -3,14 +3,13 @@ import Fee from "../../models/fee.model.js";
 import Section from "../../models/section.model.js";
 import SyndicateMembership from "../../models/syndicateMembership.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import { IFeeInvoice } from "../../types/models/invoice.types.js";
-import { PopulatedFeeDocument } from "../../types/models/fee.types.js";
+import { FeeDocument, PopulatedFeeDocument } from "../../types/models/fee.types.js";
 import { SectionDocument } from "../../types/models/section.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
 import { syndicateMembershipsTR } from "../../translation/models.ar.js";
 import staticData from "../../config/static-data.json";
 
-const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInvoice[]>, next: NextFunction) => {
+const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<{ name: string; value: number }[]>, next: NextFunction) => {
     try {
         if (!req.body || !req.body.syndicateMembership || !Object.values(syndicateMembershipsTR).includes(req.body.syndicateMembership)) {
             res.status(400).json({ success: false, details: [responseMessages.FEE_CONTROLLERS.MISSING_SYNDICATE_MEMBERSHIP] });
@@ -24,14 +23,14 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
         }
 
         // extracting the related pracitceType to add the proper fees to the invoice document
-        const syndicateMembershipDoc = await SyndicateMembership.findOne({ name: validatedData.syndicateMembership }).populate<{
-            fees: PopulatedFeeDocument[];
-        }>({
-            path: "fees",
-            populate: {
-                path: "section",
-            },
-        });
+        // const syndicateMembershipDoc = await SyndicateMembership.findOne({ name: validatedData.syndicateMembership }).populate<{
+        //     fees: PopulatedFeeDocument[];
+        // }>({
+        //     path: "fees",
+        //     populate: {
+        //         path: "section",
+        //     },
+        // });
 
         let lastTimePaidYear = pharmacist.lastTimePaid?.getFullYear();
         let graduationYear = pharmacist.graduationYear;
@@ -56,12 +55,24 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 } else {
                     syndicateMembershipStatus = syndicateMembershipsTR["two-years-of-practicing"];
                 }
-            } else {
+            } else if (difference > 2) {
                 if (validatedData.syndicateMembership.includes("غير مزاول")) {
                     syndicateMembershipStatus = syndicateMembershipsTR["re-registration-of-non-practitioner"];
                 } else {
                     syndicateMembershipStatus = syndicateMembershipsTR["re-registration-of-practitioner"];
                 }
+            } else {
+                // this pharmacist has already paid his fees
+                const allFees = await Fee.find();
+                const result: { name: string; value: number }[] = allFees.map((fee) => {
+                    return {
+                        name: fee.name,
+                        value: 0,
+                    };
+                });
+
+                res.json({ success: true, data: result });
+                return;
             }
         } else {
             if (age >= 25) {
@@ -81,8 +92,8 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
             }
         }
         // initiating some variables to track fees and their values
-        let fees: IFeeInvoice[] = [];
-        let excludedIDs: string[] = [];
+        let fees: { name: string; value: number }[] = [];
+        let excludedFees: string[] = [];
         let value = 0;
 
         if ([syndicateMembershipsTR["foreign-affiliation"], syndicateMembershipsTR["affiliation"]].includes(syndicateMembershipStatus)) {
@@ -111,12 +122,10 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 }
 
                 fees.push({
-                    feeRef: fee._id,
-                    feeName: fee.name,
-                    sectionName: fee.section.name,
+                    name: fee.name,
                     value: value,
                 });
-                excludedIDs.push(fee.id);
+                excludedFees.push(fee.name);
                 value = 0;
             });
         } else if (
@@ -150,12 +159,10 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 }
 
                 fees.push({
-                    feeRef: fee._id,
-                    feeName: fee.name,
-                    sectionName: fee.section.name,
+                    name: fee.name,
                     value: value,
                 });
-                excludedIDs.push(fee.id);
+                excludedFees.push(fee.name);
                 value = 0;
             });
         } else {
@@ -198,12 +205,10 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                     }
 
                     fees.push({
-                        feeRef: fee._id,
-                        feeName: fee.name,
-                        sectionName: fee.section.name,
+                        name: fee.name,
                         value: value,
                     });
-                    excludedIDs.push(fee.id);
+                    excludedFees.push(fee.name);
                     value = 0;
                 });
             }
@@ -224,13 +229,11 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 }
                 let existBefore = false;
                 fees.forEach((_fee, index) => {
-                    if (fee._id.equals(_fee.feeRef)) {
+                    if (fee.name == _fee.name) {
                         existBefore = true;
                         if (fee.isRepeatable) {
                             fees[index] = {
-                                feeRef: fee._id,
-                                feeName: fee.name,
-                                sectionName: fee.section.name,
+                                name: fee.name,
                                 value: fees[index].value + value,
                             };
                         }
@@ -238,28 +241,57 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 });
                 if (!existBefore) {
                     fees.push({
-                        feeRef: fee._id,
-                        feeName: fee.name,
-                        sectionName: fee.section.name,
+                        name: fee.name,
                         value: value,
                     });
-                    excludedIDs.push(fee.id);
+                    excludedFees.push(fee.name);
                 }
 
                 value = 0;
             });
         }
-
         // add fineSummeryFees which related to sections to exculdedIDs
-        const sections = await Section.find();
+        const sections = await Section.find().populate<{
+            fineableFees: FeeDocument[];
+            fineSummaryFee: FeeDocument;
+        }>("fineableFees fineSummaryFee");
         sections.forEach((section) => {
-            excludedIDs.push(section.fineSummaryFee.toString());
+            excludedFees.push(section.fineSummaryFee.name);
         });
 
+        // calculate fines
+        const finesDate = new Date(staticData["fines-date"]);
+        let fineSummaryFeeValue = 0;
+        let currentFee = null;
+        let isFinesIncluded = false;
+        if (new Date() >= finesDate) {
+            isFinesIncluded = true;
+            sections.forEach((section) => {
+                section.fineableFees.forEach((fee) => {
+                    currentFee = fees.filter((obj) => obj.name == fee.name)[0];
+                    if (!currentFee) {
+                        return;
+                    }
+                    fineSummaryFeeValue += (currentFee.value * 25) / 100;
+                });
+                fees.push({
+                    name: section.fineSummaryFee.name,
+                    value: fineSummaryFeeValue,
+                });
+                fineSummaryFeeValue = 0;
+            });
+        } else {
+            sections.forEach((section) => {
+                fees.push({
+                    name: section.fineSummaryFee.name,
+                    value: 0,
+                });
+            });
+        }
         // appending other fees that is not related with the practice type with a value of 0.
         const otherFees = await Fee.find({
-            _id: {
-                $nin: excludedIDs,
+            name: {
+                $nin: excludedFees,
             },
         })
             .select("_id name section")
@@ -267,16 +299,14 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
 
         otherFees.forEach((fee) => {
             fees.push({
-                feeRef: fee._id,
-                feeName: fee.name,
-                sectionName: fee.section.name,
+                name: fee.name,
                 value: 0,
             });
         });
 
         // handling fee with name "رسم السن"
         fees = fees.map((fee) => {
-            if (fee.feeName == "رسم السن") {
+            if (fee.name == "رسم السن") {
                 let FeeAgeValue = 0;
                 if (age <= 30) {
                     FeeAgeValue = 5000;
@@ -293,7 +323,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<IFeeInv
                 };
             }
             if (
-                fee.feeName == "مطبوعات" &&
+                fee.name == "مطبوعات" &&
                 [syndicateMembershipsTR["affiliation"], syndicateMembershipsTR["foreign-affiliation"]].includes(syndicateMembershipStatus)
             ) {
                 const prints = staticData["prints"];

@@ -1,54 +1,33 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import Invoice from "../../models/invoice.model.js";
-import Section from "../../models/section.model.js";
-import { InvoiceDocument } from "../../types/models/invoice.types.js";
-import { createInvoiceDto } from "../../types/dtos/invoice.dto.js";
-import { FeeDocument } from "../../types/models/fee.types.js";
+import { createInvoiceDto, InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
 import staticData from "../../config/static-data.json";
+import Pharmacist from "../../models/pharmacist.model.js";
+import { responseMessages } from "../../translation/response.ar.js";
+import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 
-const createInvoice = async (req: Request, res: TypedResponse<InvoiceDocument>, next: NextFunction) => {
+const createInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto>, next: NextFunction) => {
     try {
         // check fines date, adding fines
         const validatedData: createInvoiceDto = req.validatedData;
         const fees = validatedData.fees;
         const finesDate = new Date(staticData["fines-date"]);
 
-        const sections = await Section.find().populate<{
-            fineableFees: FeeDocument[];
-            fineSummaryFee: FeeDocument;
-        }>("fineableFees fineSummaryFee");
+        const pharmacist = await Pharmacist.findById(req.params.id);
+        if (!pharmacist) {
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
+            return;
+        }
 
-        let fineSummaryFeeValue = 0;
-        let currentFee = null;
         let isFinesIncluded = false;
         if (new Date() >= finesDate) {
             isFinesIncluded = true;
-            sections.forEach((section) => {
-                section.fineableFees.forEach((fee) => {
-                    currentFee = fees.filter((obj) => obj.feeRef == fee._id)[0];
-                    fineSummaryFeeValue += (currentFee.value * 25) / 100;
-                });
-                fees.push({
-                    feeRef: section.fineSummaryFee._id,
-                    feeName: section.fineSummaryFee.name,
-                    sectionName: section.name,
-                    value: fineSummaryFeeValue,
-                });
-                fineSummaryFeeValue = 0;
-            });
-        } else {
-            sections.forEach((section) => {
-                fees.push({
-                    feeRef: section.fineSummaryFee._id,
-                    feeName: section.fineSummaryFee.name,
-                    sectionName: section.name,
-                    value: 0,
-                });
-            });
         }
 
-        const invoice = await Invoice.create({ ...req.validatedData, fees, isFinesIncluded });
-        res.json({ success: true, data: invoice });
+        const invoice = await (
+            await Invoice.create({ ...req.validatedData, fees, isFinesIncluded, pharmacist })
+        ).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
+        res.json({ success: true, data: toInvoiceResponseDto(invoice) });
     } catch (e) {
         next(e);
     }

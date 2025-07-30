@@ -27,7 +27,7 @@ const updateInvoiceStatus = async (req: Request, res: TypedResponse<InvoiceDocum
         if (status == invoiceStatuses.paid) {
             updatedFields = {
                 status: status,
-                paidDate: new Date(),
+                paidDate: invoice.createdAt,
             };
         }
         await invoice.updateOne({ $set: updatedFields });

@@ -14,17 +14,12 @@ const Invoice = new Schema<InvoiceDocument>({
     isFinesIncluded: Boolean,
     fees: [
         {
-            feeRef: {
-                type: Schema.Types.ObjectId,
-                ref: "Fee",
-                required: true,
-            },
-            feeName: { type: String, required: true },
-            sectionName: { type: String, required: true },
+            _id: false,
+            name: { type: String, required: true },
             value: { type: Number, required: true },
         },
     ],
-    total: { type: Number, required: true },
+    total: Number,
     paidDate: Date,
     createdAt: { type: Date, required: true },
 });

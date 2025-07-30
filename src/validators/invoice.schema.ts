@@ -1,19 +1,18 @@
 import { z } from "zod";
 import { syndicateMemberships } from "../models/syndicateMembership.model.js";
-import Section from "../models/section.model.js";
 import Fee from "../models/fee.model.js";
-import { DateSchema, EnumSchema, mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { DateSchema, EnumSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
+import toLocalDate from "../utils/toLocalDate.js";
 
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema(syndicateMemberships as [string]),
 
-    createdAt: DateSchema,
+    createdAt: DateSchema.default(toLocalDate(new Date())!.toISOString()),
     fees: z
         .array(
             z.object({
-                feeRef: mongooseIDSchema(Fee),
-                feeName: StringSchema.refine(
+                name: StringSchema.refine(
                     async (value) => {
                         const exists = await Fee.exists({ name: value });
                         if (exists) {
@@ -23,30 +22,19 @@ const InvoiceSchema = z.object({
                     },
                     { message: zodSchemasMessages.INVOICE_SCHEMA.FEE_NAME_NOT_FOUND }
                 ),
-                sectionName: StringSchema.refine(
-                    async (value) => {
-                        const exists = await Section.exists({ name: value });
-                        if (exists) {
-                            return true;
-                        }
-                        return false;
-                    },
-                    { message: zodSchemasMessages.INVOICE_SCHEMA.SECTION_NAME_NOT_FOUND }
-                ),
                 value: NumberSchemaPositive,
             })
         )
         .refine(
             async (fees) => {
+                console.log(fees.length);
                 // check all fees' IDs get sent
-                const sections = await Section.find();
-                const excludedFees = sections.map((section) => section.fineSummaryFee);
-                const allFees = (await Fee.find({ _id: { $nin: excludedFees } })).map((fee) => fee.id);
+                const allFees = (await Fee.find()).map((fee) => fee.name);
                 if (fees.length != allFees.length) {
                     return false;
                 }
 
-                const filteredFees = fees.filter((fee) => !allFees.includes(fee.feeRef.toString()));
+                const filteredFees = fees.filter((fee) => !allFees.includes(fee.name));
 
                 return filteredFees.length == 0;
             },
