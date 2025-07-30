@@ -27,8 +27,11 @@ export const mongooseIDSchema = (model: Model<any>) =>
 
 export const PasswordSchema = StringSchema.min(4, { message: zodSchemasMessages.MIN(4) });
 
-export const NumberSchema = z.number({ message: zodSchemasMessages.INVALID_NUMBER });
-export const NumberSchemaPositive = NumberSchema.min(0, { message: zodSchemasMessages.INVALID_POSITIVE_NUMBER });
+export const NumberSchema = z.number({ message: zodSchemasMessages.INVALID_NUMBER }).transform((value): string => value.toString());
+export const NumberSchemaPositive = z
+    .number({ message: zodSchemasMessages.INVALID_NUMBER })
+    .min(0, { message: zodSchemasMessages.INVALID_POSITIVE_NUMBER })
+    .transform((value): string => value.toString());
 
 export const EnumSchema = (data: [string, ...string[]]) => z.enum(data, { message: zodSchemasMessages.INVALID_ENUM_VALUE(data) });
 

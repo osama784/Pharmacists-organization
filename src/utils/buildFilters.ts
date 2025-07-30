@@ -43,3 +43,10 @@ export const buildNumberFilter = (value: string | Record<string, any>) => {
     }
     return undefined;
 };
+
+export const buildBooleanFilter = (value: string) => {
+    if (typeof value != "string" || (value != "true" && value != "false")) {
+        return undefined;
+    }
+    return value == "true" ? true : false;
+};

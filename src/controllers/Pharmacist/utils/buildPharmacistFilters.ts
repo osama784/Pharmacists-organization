@@ -1,5 +1,5 @@
 import IPharmacistQueries from "../../../types/queries/pharmacist.query.js";
-import { buildDateFilter, buildNumberFilter, buildStringFilter } from "../../../utils/buildFilters.js";
+import { buildDateFilter, buildStringFilter } from "../../../utils/buildFilters.js";
 
 const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any> => {
     let filters: Record<string, any> = {};
@@ -13,19 +13,19 @@ const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any
     if (queries.fatherNameEnglish) filters.fatherNameEnglish = buildStringFilter(queries.fatherNameEnglish);
     if (queries.motherNameEnglish) filters.motherNameEnglish = buildStringFilter(queries.motherNameEnglish);
     if (queries.gender) filters.gender = buildStringFilter(queries.gender);
-    if (queries.nationalNumber) filters.nationalNumber = buildNumberFilter(queries.nationalNumber);
+    if (queries.nationalNumber) filters.nationalNumber = buildStringFilter(queries.nationalNumber);
     if (queries.birthDate) filters.birthDate = buildDateFilter(queries.birthDate);
     if (queries.birthPlace) filters.birthPlace = buildStringFilter(queries.birthPlace);
     if (queries.phoneNumber) filters.phoneNumber = buildStringFilter(queries.phoneNumber);
-    if (queries.landlineNumber) filters.landlineNumber = buildNumberFilter(queries.landlineNumber);
+    if (queries.landlineNumber) filters.landlineNumber = buildStringFilter(queries.landlineNumber);
     if (queries.address) filters.address = buildStringFilter(queries.address);
-    if (queries.graduationYear) filters.graduationYear = buildNumberFilter(queries.graduationYear);
+    if (queries.graduationYear) filters.graduationYear = buildStringFilter(queries.graduationYear);
     if (queries.lastTimePaid) filters.lastTimePaid = buildDateFilter(queries.lastTimePaid);
     if (queries.nationality) filters.nationality = buildStringFilter(queries.nationality);
 
-    if (queries.ministerialNumber) filters.ministerialNumber = buildNumberFilter(queries.ministerialNumber);
+    if (queries.ministerialNumber) filters.ministerialNumber = buildStringFilter(queries.ministerialNumber);
     if (queries.ministerialRegistrationDate) filters.ministerialRegistrationDate = buildDateFilter(queries.ministerialRegistrationDate);
-    if (queries.registrationNumber) filters.registrationNumber = buildNumberFilter(queries.registrationNumber);
+    if (queries.registrationNumber) filters.registrationNumber = buildStringFilter(queries.registrationNumber);
     if (queries.registrationDate) filters.registrationDate = buildDateFilter(queries.registrationDate);
 
     if (queries.integrity) filters.integrity = buildStringFilter(queries.integrity);

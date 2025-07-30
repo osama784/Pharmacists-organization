@@ -7,11 +7,6 @@ export interface ILicense {
     details?: string | null;
 }
 
-export interface IDossierStatuses {
-    date: Date;
-    details: string;
-}
-
 export interface IPracticeRecord {
     syndicate: string;
     startDate: Date;
@@ -24,7 +19,7 @@ export interface ISyndicateRecord {
     syndicate: string;
     startDate: Date;
     endDate?: Date | null;
-    registrationNumber: number;
+    registrationNumber: string;
 }
 
 export interface IUniversityDegree {
@@ -54,18 +49,18 @@ export interface IPharmacist {
     motherNameEnglish?: string | null;
 
     gender: string;
-    nationalNumber?: number | null;
+    nationalNumber?: string | null;
     birthDate: Date;
     birthPlace?: string | null;
     phoneNumber?: string | null;
-    landlineNumber?: number | null;
+    landlineNumber?: string | null;
     address?: string | null;
-    graduationYear: number;
+    graduationYear: string;
     lastTimePaid?: Date | null;
     nationality: string;
-    ministerialNumber?: number | null;
+    ministerialNumber?: string | null;
     ministerialRegistrationDate?: Date | null;
-    registrationNumber: number;
+    registrationNumber: string;
     registrationDate: Date;
 
     integrity?: string | null;
@@ -77,7 +72,6 @@ export interface IPharmacist {
     currentSyndicate?: ISyndicateRecord | null;
 
     licenses: Types.DocumentArray<ILicense>;
-    dossierStatuses: Types.DocumentArray<IDossierStatuses>;
     practiceRecords: Types.DocumentArray<IPracticeRecord>;
     syndicateRecords: Types.DocumentArray<ISyndicateRecord>;
     universityDegrees: Types.DocumentArray<IUniversityDegree>;

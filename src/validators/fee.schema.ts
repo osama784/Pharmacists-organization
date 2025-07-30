@@ -19,7 +19,7 @@ export const updateFeesValuesSchema = z.array(
                     for (const entry of Object.entries(data)) {
                         const keyParsed = parseInt(entry[0]);
                         const valueParsed = entry[1];
-                        if (isNaN(keyParsed) || isNaN(valueParsed)) {
+                        if (isNaN(keyParsed) || isNaN(Number(valueParsed))) {
                             return false;
                         }
 

@@ -1,5 +1,5 @@
-import mongoose, { Schema, Document, Query } from "mongoose";
-import { ISyndicateRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
+import mongoose, { Schema, Types } from "mongoose";
+import { IPracticeRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
 
 const Pharmacist = new Schema<PharmacistDocument>(
@@ -31,17 +31,17 @@ const Pharmacist = new Schema<PharmacistDocument>(
             type: String,
             required: true,
         },
-        nationalNumber: Number,
+        nationalNumber: String,
         birthDate: {
             type: Date,
             required: true,
         },
         birthPlace: String,
         phoneNumber: String,
-        landlineNumber: Number,
+        landlineNumber: String,
         address: String,
         graduationYear: {
-            type: Number,
+            type: String,
             required: true,
         },
         lastTimePaid: Date,
@@ -50,9 +50,9 @@ const Pharmacist = new Schema<PharmacistDocument>(
             required: true,
         },
 
-        ministerialNumber: Number,
+        ministerialNumber: String,
         ministerialRegistrationDate: Date,
-        registrationNumber: { type: Number, required: true },
+        registrationNumber: { type: String, required: true },
         registrationDate: { type: Date, required: true },
 
         integrity: String,
@@ -65,7 +65,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
             syndicate: String,
             startDate: Date,
             endDate: Date,
-            registrationNumber: Number,
+            registrationNumber: String,
         },
 
         licenses: [
@@ -75,13 +75,6 @@ const Pharmacist = new Schema<PharmacistDocument>(
                 startDate: { type: Date, required: true },
                 endDate: Date,
                 details: String,
-            },
-        ],
-        dossierStatuses: [
-            {
-                _id: false,
-                date: { type: Date, required: true },
-                details: { type: String, required: true },
             },
         ],
         practiceRecords: [
@@ -101,7 +94,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
                 syndicate: { type: String, required: true },
                 startDate: { type: Date, required: true },
                 endDate: Date,
-                registrationNumber: { type: Number, required: true },
+                registrationNumber: { type: String, required: true },
             },
         ],
         universityDegrees: [
@@ -189,8 +182,6 @@ export const practiceRecordsInfo = {
     ],
 };
 
-export const penaltyTypes = ["something"];
-
 export const syndicateRecordsInfo = {
     syndicate: [
         "نقابة الصيادلة المركزية",
@@ -234,11 +225,23 @@ export async function handlePharmacistFields(doc: PharmacistDocument): Promise<P
         doc.syndicateMembershipStatus = syndicateMembershipsTR["affiliation"];
     }
 
-    // handling "practiceState"
     const practiceRecords = doc.practiceRecords;
+    // removing practice records that are related to a removed syndicate
+    for (let i = practiceRecords.length - 1; i >= 0; i--) {
+        const exist = doc.syndicateRecords.find((syndicateRecord) => syndicateRecord.syndicate == practiceRecords[i].syndicate);
+        if (!exist) {
+            practiceRecords.splice(i, 1);
+        }
+    }
+
+    // assinging practiceRecords
+    doc.practiceRecords = practiceRecords;
+
+    // handling "practiceState"
     if (!practiceRecords || practiceRecords.length == 0) {
         doc.practiceState = null;
     }
+
     const lastPracticeRecord = practiceRecords.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0];
     if (!lastPracticeRecord) {
         doc.practiceState = null;

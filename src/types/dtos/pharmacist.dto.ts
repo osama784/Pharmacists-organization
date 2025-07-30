@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-    IDossierStatuses,
     ILicense,
     IPenalty,
     IPracticeRecord,
@@ -29,18 +28,18 @@ export type PharmacistResponseDto = {
     motherNameEnglish?: string | null;
 
     gender: string;
-    nationalNumber?: number | null;
+    nationalNumber?: string | null;
     birthDate: Date;
     birthPlace?: string | null;
     phoneNumber?: string | null;
-    landlineNumber?: number | null;
+    landlineNumber?: string | null;
     address?: string | null;
-    graduationYear: number;
+    graduationYear: string;
     lastTimePaid?: Date | null;
     nationality: string;
-    ministerialNumber?: number | null;
+    ministerialNumber?: string | null;
     ministerialRegistrationDate?: Date | null;
-    registrationNumber: number;
+    registrationNumber: string;
     registrationDate: Date;
 
     integrity?: string | null;
@@ -52,7 +51,6 @@ export type PharmacistResponseDto = {
     practiceState?: string | null;
 
     licenses: ILicense[];
-    dossierStatuses: IDossierStatuses[];
     practiceRecords: IPracticeRecord[];
     syndicateRecords: ISyndicateRecord[];
     universityDegrees: IUniversityDegree[];
@@ -75,7 +73,6 @@ export function toPharmacistResponseDto(data: PharmacistDocument | PharmacistDoc
 
 function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDto {
     const licenses: ILicense[] = [];
-    const dossierStatuses: IDossierStatuses[] = [];
     const practiceRecords: IPracticeRecord[] = [];
     const syndicateRecords: ISyndicateRecord[] = [];
     const universityDegrees: IUniversityDegree[] = [];
@@ -85,12 +82,6 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
             ...license.toJSON(),
             startDate: toLocalDate(license.startDate)!,
             endDate: toLocalDate(license.endDate),
-        });
-    }
-    for (const dossierStatus of doc.dossierStatuses) {
-        dossierStatuses.push({
-            ...dossierStatus.toJSON(),
-            date: toLocalDate(dossierStatus.date)!,
         });
     }
     for (const practiceRecord of doc.practiceRecords) {
@@ -166,7 +157,6 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
         currentSyndicate: currentSyndicate,
 
         licenses: licenses,
-        dossierStatuses: dossierStatuses,
         practiceRecords: practiceRecords,
         syndicateRecords: syndicateRecords,
         universityDegrees: universityDegrees,

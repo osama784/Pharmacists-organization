@@ -1,12 +1,5 @@
 import { z } from "zod";
-import {
-    genders,
-    licenseTypes,
-    penaltyTypes,
-    practiceRecordsInfo,
-    syndicateRecordsInfo,
-    universityDegreeTypes,
-} from "../models/pharmacist.model.js";
+import { genders, licenseTypes, practiceRecordsInfo, syndicateRecordsInfo, universityDegreeTypes } from "../models/pharmacist.model.js";
 import { DateSchema, EnumSchema, NumberSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 
@@ -51,16 +44,6 @@ const PharmacistSchema = z.object({
             })
         )
         .optional(),
-
-    dossierStatuses: z
-        .array(
-            z.object({
-                date: DateSchema,
-                details: StringSchema,
-            })
-        )
-        .optional(),
-
     practiceRecords: z
         .array(
             z
@@ -151,7 +134,7 @@ const PharmacistSchema = z.object({
     penalties: z
         .array(
             z.object({
-                penaltyType: EnumSchema(Object.values(penaltyTypes) as [string]),
+                penaltyType: StringSchema,
                 date: DateSchema,
                 reason: StringSchema.optional().nullable(),
                 details: StringSchema.optional().nullable(),
@@ -165,7 +148,6 @@ export const CreatePharmacistSchema = PharmacistSchema.omit({
     licenses: true,
     syndicateRecords: true,
     universityDegrees: true,
-    dossierStatuses: true,
     practiceRecords: true,
 });
 export const UpdatePharmacistSchema = PharmacistSchema.partial();
