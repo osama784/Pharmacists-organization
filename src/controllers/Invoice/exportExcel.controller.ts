@@ -3,9 +3,8 @@ import ExcelJS from "exceljs";
 import { IInvoiceModelTR, InvoiceModelTR } from "../../translation/models.ar.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
-import { SyndicateMemberShipDocument } from "../../types/models/syndicateMembership.types.js";
 import IInvoiceQueries from "../../types/queries/invoice.query.js";
-import buildInvoiceFilters from "./utils/buildnvoiceFilters.js";
+import buildInvoiceFilters from "./utils/buildInvoiceFilters.js";
 
 const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -21,7 +20,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Data Export");
-        const excludedFields = ["fees", "__v", "_id"];
+        const excludedFields = ["isFinesIncluded", "fees", "__v", "_id"];
 
         const headers = Object.keys(Invoice.schema.paths).filter((value) => {
             return !excludedFields.includes(value);

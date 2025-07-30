@@ -2,9 +2,10 @@ import Invoice from "../../models/invoice.model.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import IInvoiceQueries from "../../types/queries/invoice.query.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import buildInvoiceFilters from "./utils/buildnvoiceFilters.js";
+import buildInvoiceFilters from "./utils/buildInvoiceFilters.js";
+import { InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
 
-const listInvoices = async (req: Request, res: TypedResponse<any[]>, next: NextFunction) => {
+const listInvoices = async (req: Request, res: TypedResponse<InvoiceResponseDto[]>, next: NextFunction) => {
     try {
         const queries = req.query as IInvoiceQueries;
         const page = parseInt(queries.page!) || 1;
@@ -20,7 +21,7 @@ const listInvoices = async (req: Request, res: TypedResponse<any[]>, next: NextF
 
         res.json({
             success: true,
-            data: result,
+            data: toInvoiceResponseDto(result),
             meta: {
                 totalItems: totalItems,
                 currentPage: page,

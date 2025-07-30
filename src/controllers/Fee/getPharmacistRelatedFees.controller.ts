@@ -33,7 +33,7 @@ const getPharmacistRelatedFees = async (req: Request, res: TypedResponse<{ name:
         // });
 
         let lastTimePaidYear = pharmacist.lastTimePaid?.getFullYear();
-        let graduationYear = pharmacist.graduationYear;
+        let graduationYear = Number(pharmacist.graduationYear);
         const currentYear = new Date().getFullYear();
         let age = currentYear - pharmacist.birthDate.getFullYear();
 
