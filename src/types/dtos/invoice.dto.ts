@@ -4,11 +4,11 @@ import { PharmacistDocument } from "../models/pharmacist.types.js";
 export type createInvoiceDto = {
     syndicateMembership: string;
     createdAt?: Date;
-    fees: { name: string; value: number }[];
 };
 
 export type updateInvoiceDto = Partial<createInvoiceDto> & {
     status?: string | null;
+    fees?: { name: string; value: number }[];
 };
 
 export type InvoiceResponseDto = {
