@@ -2,16 +2,13 @@ import Invoice, { invoiceStatuses } from "../../models/invoice.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { InvoiceDocument } from "../../types/models/invoice.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
-import { InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
+import { InvoiceResponseDto, toInvoiceResponseDto, updateInvoiceDto } from "../../types/dtos/invoice.dto.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import Pharmacist from "../../models/pharmacist.model.js";
 
-const updateInvoiceStatus = async (req: Request, res: TypedResponse<InvoiceResponseDto>, next: NextFunction) => {
-    const status = req.body.status;
-    if (!status || !Object.values(invoiceStatuses).includes(status)) {
-        res.status(400).json({ success: false, details: [responseMessages.INVOICE_CONTROLLERS.INVALID_STATUS] });
-        return;
-    }
+const updateInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto>, next: NextFunction) => {
+    const validateData: updateInvoiceDto = req.validatedData;
+    const status = validateData.status;
 
     try {
         const invoice = await Invoice.findById(req.params.id);
@@ -19,10 +16,10 @@ const updateInvoiceStatus = async (req: Request, res: TypedResponse<InvoiceRespo
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        let updatedFields: Record<string, any> = { status };
+        let updatedFields: Record<string, any> = validateData;
         if (status == invoiceStatuses.paid) {
             updatedFields = {
-                status: status,
+                ...updatedFields,
                 paidDate: invoice.createdAt,
             };
             // updating "lastTimePaid" for the related pharmacist
@@ -34,7 +31,7 @@ const updateInvoiceStatus = async (req: Request, res: TypedResponse<InvoiceRespo
             );
         } else {
             updatedFields = {
-                status: status,
+                ...updatedFields,
                 paidDate: null,
             };
         }
@@ -49,4 +46,4 @@ const updateInvoiceStatus = async (req: Request, res: TypedResponse<InvoiceRespo
     }
 };
 
-export default updateInvoiceStatus;
+export default updateInvoice;

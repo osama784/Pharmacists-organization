@@ -1,5 +1,5 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import Invoice from "../../models/invoice.model.js";
+import Invoice, { getPharmacistRelatedFees } from "../../models/invoice.model.js";
 import { createInvoiceDto, InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
 import staticData from "../../config/static-data.json";
 import Pharmacist from "../../models/pharmacist.model.js";
@@ -10,7 +10,6 @@ const createInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto
     try {
         // check fines date, adding fines
         const validatedData: createInvoiceDto = req.validatedData;
-        const fees = validatedData.fees;
         const finesDate = new Date(staticData["fines-date"]);
 
         const pharmacist = await Pharmacist.findById(req.params.id);
@@ -18,6 +17,7 @@ const createInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
+        const fees = await getPharmacistRelatedFees(validatedData, pharmacist);
 
         let isFinesIncluded = false;
         if (new Date() >= finesDate) {

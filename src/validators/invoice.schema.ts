@@ -7,7 +7,7 @@ import toLocalDate from "../utils/toLocalDate.js";
 
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema(syndicateMemberships as [string]),
-
+    status: StringSchema.optional().nullable(),
     createdAt: DateSchema.default(toLocalDate(new Date())!.toISOString()),
     fees: z
         .array(
@@ -27,7 +27,6 @@ const InvoiceSchema = z.object({
         )
         .refine(
             async (fees) => {
-                console.log(fees.length);
                 // check all fees' IDs get sent
                 const allFees = (await Fee.find()).map((fee) => fee.name);
                 if (fees.length != allFees.length) {
@@ -42,4 +41,5 @@ const InvoiceSchema = z.object({
         ),
 });
 
-export default InvoiceSchema;
+export const CreateInvoiceSchema = InvoiceSchema.omit({ status: true, fees: true });
+export const UpdateInvoiceSchema = InvoiceSchema.partial();

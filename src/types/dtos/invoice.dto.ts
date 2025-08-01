@@ -1,11 +1,14 @@
-import { Types } from "mongoose";
 import { PopulatedInvoiceDocument } from "../models/invoice.types.js";
 import { PharmacistDocument } from "../models/pharmacist.types.js";
 
 export type createInvoiceDto = {
-    syndicateMembership: Types.ObjectId;
+    syndicateMembership: string;
     createdAt?: Date;
     fees: { name: string; value: number }[];
+};
+
+export type updateInvoiceDto = Partial<createInvoiceDto> & {
+    status?: string | null;
 };
 
 export type InvoiceResponseDto = {

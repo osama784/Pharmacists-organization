@@ -11,7 +11,6 @@ const permissions = {
     createInvoice: "إضافة فاتورة",
     updateInvoice: "تعديل فاتورة",
     deleteInvoice: "حذف فاتورة",
-    updateInvoiceStatus: "تعديل فاتورة",
     listInvoices: "قراءة معلومات فاتورة",
     getInvoice: "قراءة معلومات فاتورة",
 

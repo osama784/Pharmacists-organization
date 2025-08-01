@@ -10,7 +10,6 @@ import permissions from "../utils/permissions.js";
 import passport from "passport";
 import getDetailedPrints from "../controllers/Fee/getDetailedPrints.controller.js";
 import updateDetailedPrints from "../controllers/Fee/updateDetailsPrints.controller.js";
-import getPharmacistRelatedFees from "../controllers/Fee/getPharmacistRelatedFees.controller.js";
 import getReRegistrationDate from "../controllers/Fee/getReRegistrationDate.controller.js";
 import updateReRegistrationDate from "../controllers/Fee/updateReRegistrationDate.controller.js";
 import mongoose from "mongoose";
@@ -42,6 +41,5 @@ router.put("/re-registration-date", checkPermission(permissions.updateReRegistra
 
 router.patch("/update-values", checkPermission(permissions.updateFeesValues), validate(updateFeesValuesSchema), updateFeesValues);
 router.get("/list", checkPermission(permissions.listFees), listFees);
-router.post("/get-pharmacist-related-fees/:pharmacistID", checkPermission(permissions.listFees), getPharmacistRelatedFees);
 
 export default router;
