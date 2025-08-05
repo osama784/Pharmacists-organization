@@ -1,21 +1,28 @@
-import Pharmacist, { handlePharmacistFields } from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
-import { PharmacistResponseDto, toPharmacistResponseDto, UpdatePharmacistDto } from "../../types/dtos/pharmacist.dto.js";
-import { responseMessages } from "../../translation/response.ar.js";
+import Pharmacist from "../../../models/pharmacist.model";
+import { responseMessages } from "../../../translation/response.ar";
+import { UpdateLicenseDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
 import fs from "fs/promises";
+import { processImage } from "../../../utils/images";
 import path from "path";
-import { processImage } from "../../utils/images.js";
 
-const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
+const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: UpdatePharmacistDto = req.validatedData;
-        const pharmacist = await Pharmacist.findById(req.params.id);
+        const validatedData: UpdateLicenseDto = req.validatedData;
+        const pharmacistId = req.params.id;
+        const licenseId = req.params.licenseId;
+        const pharmacist = await Pharmacist.findById(pharmacistId);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
+        const exist = pharmacist.licenses.find((value) => value._id.toString() == licenseId);
+        if (!exist) {
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
+            return;
+        }
         const newImages = validatedData.images;
-        const oldImages = pharmacist.images;
+        const oldImages = exist.images;
         let imagesURLs: string[] = [];
         if (newImages) {
             // check if added a new url to the source array
@@ -28,7 +35,7 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
             // handle deleted images
             const deletedImages = oldImages.filter((image) => !newImages.includes(image));
             for (const image of deletedImages) {
-                const imagePath = path.join(__dirname, "..", "..", "..", "..", image);
+                const imagePath = path.join(__dirname, "..", "..", "..", "..", "..", image);
                 try {
                     await fs.unlink(imagePath);
                 } catch (e) {
@@ -55,14 +62,26 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
                 console.log(e);
             }
         }
-        await pharmacist.updateOne({ $set: { ...validatedData, images: imagesURLs } });
-        const doc = await Pharmacist.findById(pharmacist._id);
-        const newDoc = await handlePharmacistFields(doc!);
 
-        res.json({ success: true, data: toPharmacistResponseDto(newDoc!) });
+        const doc = await Pharmacist.findOneAndUpdate(
+            {
+                _id: pharmacistId,
+                "licenses._id": licenseId,
+            },
+            {
+                $set: {
+                    "licenses.$": { ...validatedData, images: imagesURLs, _id: licenseId },
+                },
+            },
+            {
+                new: true,
+            }
+        );
+
+        res.json({ success: true, data: toPharmacistResponseDto(doc!) });
     } catch (e) {
         next(e);
     }
 };
 
-export default updatePharmacist;
+export default updateLicense;

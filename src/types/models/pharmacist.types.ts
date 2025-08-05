@@ -5,6 +5,7 @@ export interface ILicense {
     startDate: Date;
     endDate?: Date | null;
     details?: string | null;
+    images: string[];
 }
 
 export interface IPracticeRecord {
@@ -26,6 +27,8 @@ export interface IUniversityDegree {
     degreeType: string;
     obtainingDate: Date;
     university: string;
+
+    images: string[];
 }
 
 export interface IPenalty {
@@ -62,6 +65,8 @@ export interface IPharmacist {
     ministerialRegistrationDate?: Date | null;
     registrationNumber: string;
     registrationDate: Date;
+
+    images: string[];
 
     integrity?: string | null;
     register?: string | null;

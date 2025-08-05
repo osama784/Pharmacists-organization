@@ -28,7 +28,7 @@ app.set("query parser", (str: string) =>
 
 app.use(express.json());
 app.use(cors());
-
+app.use("/uploads", express.static("D:\\Coding\\Backend\\Express\\uploads"));
 app.use(passport.initialize());
 
 app.use("/auth", authRouter);

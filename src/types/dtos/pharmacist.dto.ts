@@ -42,6 +42,8 @@ export type PharmacistResponseDto = {
     registrationNumber: string;
     registrationDate: Date;
 
+    images: string[];
+
     integrity?: string | null;
     register?: string | null;
     oathTakingDate?: Date | null;
@@ -149,8 +151,11 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
         ministerialRegistrationDate: toLocalDate(doc.ministerialRegistrationDate),
         registrationNumber: doc.registrationNumber,
         registrationDate: toLocalDate(doc.registrationDate)!,
+
+        images: doc.images,
         integrity: doc.integrity,
         register: doc.register,
+        oathTakingDate: doc.oathTakingDate,
 
         practiceState: doc.practiceState,
         syndicateMembershipStatus: doc.syndicateMembershipStatus,
@@ -163,3 +168,49 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
         penalties: penalties,
     };
 }
+
+// dtos for Pharmacist arrays
+export type CreateLicenseDto = {
+    licenseType: string;
+    startDate: Date;
+    endDate?: Date | null;
+    details?: string | null;
+};
+export type UpdateLicenseDto = CreateLicenseDto & {
+    images?: string[];
+};
+
+export type CreatePenaltyDto = {
+    penaltyType: string;
+    date: Date;
+    reason?: string | null;
+    details?: string | null;
+};
+export type UpdatePenaltyDto = CreatePenaltyDto;
+
+export type CreatePracticeRecordDto = {
+    syndicate: string;
+    startDate: Date;
+    endDate?: Date | null;
+    sector: string;
+    place: string;
+    practiceType: string;
+};
+export type UpdatePracticeRecordDto = CreatePracticeRecordDto;
+
+export type CreateSyndicateRecordDto = {
+    syndicate: string;
+    startDate: Date;
+    endDate?: Date | null;
+    registrationNumber: string;
+};
+export type UpdateSyndicateRecordDto = CreateSyndicateRecordDto;
+
+export type CreateUniversityDegreeDto = {
+    degreeType: string;
+    obtainingDate: Date;
+    university: string;
+};
+export type UpdateUniversityDegreeDto = CreateUniversityDegreeDto & {
+    images?: string[];
+};

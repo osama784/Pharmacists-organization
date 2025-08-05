@@ -30,126 +30,104 @@ const PharmacistSchema = z.object({
     registrationNumber: NumberSchema,
     registrationDate: DateSchema,
 
+    images: z.preprocess((data) => {
+        if (typeof data == "string") {
+            if (data != "") return [data];
+            return [];
+        }
+        return data;
+    }, z.array(StringSchema)),
+
     integrity: StringSchema.optional().nullable(),
     register: StringSchema.optional().nullable(),
     oathTakingDate: DateSchema.optional().nullable(),
-
-    licenses: z
-        .array(
-            z.object({
-                licenseType: EnumSchema(Object.values(licenseTypes) as [string]),
-                startDate: DateSchema,
-                endDate: DateSchema.optional().nullable(),
-                details: StringSchema.optional().nullable(),
-            })
-        )
-        .optional(),
-    practiceRecords: z
-        .array(
-            z
-                .object({
-                    syndicate: EnumSchema(Object.values(practiceRecordsInfo.syndicate) as [string]),
-                    practiceType: EnumSchema(Object.values(practiceRecordsInfo.practiceType) as [string]),
-                    startDate: DateSchema,
-                    endDate: DateSchema.optional().nullable(),
-                    sector: StringSchema,
-                    place: StringSchema,
-                })
-                .refine(
-                    (data) => {
-                        if (!data.endDate) {
-                            return true;
-                        }
-                        if (new Date(data.startDate) > new Date(data.endDate)) {
-                            return false;
-                        }
-                        return true;
-                    },
-                    { message: zodSchemasMessages.START_lt_END_DATE }
-                )
-        )
-        .optional(),
-
-    universityDegrees: z
-        .array(
-            z.object({
-                degreeType: EnumSchema(Object.values(universityDegreeTypes) as [string]),
-                obtainingDate: DateSchema,
-                university: StringSchema,
-            })
-        )
-        .optional(),
-
-    syndicateRecords: z
-        .array(
-            z
-                .object({
-                    syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string]),
-                    startDate: DateSchema,
-                    endDate: DateSchema.optional().nullable(),
-                    registrationNumber: NumberSchema,
-                })
-                .refine(
-                    (data) => {
-                        if (!data.endDate) {
-                            return true;
-                        }
-                        if (new Date(data.startDate) > new Date(data.endDate)) {
-                            return false;
-                        }
-                        return true;
-                    },
-                    { message: zodSchemasMessages.START_lt_END_DATE }
-                )
-        )
-        // .refine(
-        //     (data) => {
-
-        //         // let exist: Record<string, boolean> = {};
-        //         // for (const record of data) {
-        //         //     if (exist[record.syndicate]) {
-        //         //         return false;
-        //         //     }
-        //         //     exist[record.syndicate] = true;
-        //         // }
-        //         // return true;
-        //     },
-        //     { message: zodSchemasMessages.PHARMACIST_SCHEMA.DUPLICATE_SYNDICATE }
-        // )
-        .transform((data) => {
-            const sorted = data.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
-            sorted.forEach((record, index) => {
-                if (index == 0) return;
-                if (!record.endDate) {
-                    sorted[index] = {
-                        ...record,
-                        endDate: sorted[index - 1].startDate,
-                    };
-                }
-            });
-            return sorted;
-        })
-        .optional(),
-
-    penalties: z
-        .array(
-            z.object({
-                penaltyType: StringSchema,
-                date: DateSchema,
-                reason: StringSchema.optional().nullable(),
-                details: StringSchema.optional().nullable(),
-            })
-        )
-        .optional(),
 });
+
+const LicenseSchema = z.object({
+    licenseType: EnumSchema(Object.values(licenseTypes) as [string]),
+    startDate: DateSchema,
+    endDate: DateSchema.optional().nullable(),
+    details: StringSchema.optional().nullable(),
+    images: z.preprocess((data) => {
+        if (typeof data == "string") {
+            if (data != "") return [data];
+            return [];
+        }
+        return data;
+    }, z.array(StringSchema)),
+});
+
+export const CreateLicenseSchema = LicenseSchema.omit({
+    images: true,
+});
+export const UpdateLicenseSchema = LicenseSchema.partial();
+
+export const PracticeRecordSchema = z
+    .object({
+        syndicate: EnumSchema(Object.values(practiceRecordsInfo.syndicate) as [string]),
+        practiceType: EnumSchema(Object.values(practiceRecordsInfo.practiceType) as [string]),
+        startDate: DateSchema,
+        endDate: DateSchema.optional().nullable(),
+        sector: StringSchema,
+        place: StringSchema,
+    })
+    .refine(
+        (data) => {
+            if (!data.endDate) {
+                return true;
+            }
+            if (new Date(data.startDate) > new Date(data.endDate)) {
+                return false;
+            }
+            return true;
+        },
+        { message: zodSchemasMessages.START_lt_END_DATE }
+    );
+
+export const PenaltySchema = z.object({
+    penaltyType: StringSchema,
+    date: DateSchema,
+    reason: StringSchema.optional().nullable(),
+    details: StringSchema.optional().nullable(),
+});
+export const SyndicateRecordSchema = z
+    .object({
+        syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string]),
+        startDate: DateSchema,
+        endDate: DateSchema.optional().nullable(),
+        registrationNumber: NumberSchema,
+    })
+    .refine(
+        (data) => {
+            if (!data.endDate) {
+                return true;
+            }
+            if (new Date(data.startDate) > new Date(data.endDate)) {
+                return false;
+            }
+            return true;
+        },
+        { message: zodSchemasMessages.START_lt_END_DATE }
+    );
+const UniversityDegreeSchema = z.object({
+    degreeType: EnumSchema(Object.values(universityDegreeTypes) as [string]),
+    obtainingDate: DateSchema,
+    university: StringSchema,
+    images: z.preprocess((data) => {
+        if (typeof data == "string") {
+            if (data != "") return [data];
+            return [];
+        }
+
+        return data;
+    }, z.array(StringSchema)),
+});
+export const CreateUniversityDegreeSchema = UniversityDegreeSchema.omit({
+    images: true,
+});
+export const UpdateUniversityDegreeSchema = UniversityDegreeSchema.partial();
 
 export const CreatePharmacistSchema = PharmacistSchema.omit({
-    penalties: true,
-    licenses: true,
-    syndicateRecords: true,
-    universityDegrees: true,
-    practiceRecords: true,
+    images: true,
 });
 export const UpdatePharmacistSchema = PharmacistSchema.partial();
-
-export default PharmacistSchema;

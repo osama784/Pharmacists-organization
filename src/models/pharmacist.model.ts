@@ -55,6 +55,8 @@ const Pharmacist = new Schema<PharmacistDocument>(
         registrationNumber: { type: String, required: true },
         registrationDate: { type: Date, required: true },
 
+        images: [String],
+
         integrity: String,
         register: String,
         oathTakingDate: Date,
@@ -70,16 +72,16 @@ const Pharmacist = new Schema<PharmacistDocument>(
 
         licenses: [
             {
-                _id: false,
                 licenseType: { type: String, required: true },
                 startDate: { type: Date, required: true },
                 endDate: Date,
                 details: String,
+
+                images: [String],
             },
         ],
         practiceRecords: [
             {
-                _id: false,
                 syndicate: { type: String, required: true },
                 startDate: { type: Date, required: true },
                 endDate: Date,
@@ -90,7 +92,6 @@ const Pharmacist = new Schema<PharmacistDocument>(
         ],
         syndicateRecords: [
             {
-                _id: false,
                 syndicate: { type: String, required: true },
                 startDate: { type: Date, required: true },
                 endDate: Date,
@@ -99,15 +100,15 @@ const Pharmacist = new Schema<PharmacistDocument>(
         ],
         universityDegrees: [
             {
-                _id: false,
                 degreeType: { type: String, required: true },
                 obtainingDate: { type: Date, required: true },
                 university: { type: String, required: true },
+
+                images: [String],
             },
         ],
         penalties: [
             {
-                _id: false,
                 penaltyType: { type: String, required: true },
                 date: { type: Date, required: true },
                 reason: String,
@@ -225,140 +226,8 @@ export async function handlePharmacistFields(doc: PharmacistDocument): Promise<P
         doc.syndicateMembershipStatus = syndicateMembershipsTR["affiliation"];
     }
 
-    const practiceRecords = doc.practiceRecords;
-    // removing practice records that are related to a removed syndicate
-    for (let i = practiceRecords.length - 1; i >= 0; i--) {
-        const exist = doc.syndicateRecords.find((syndicateRecord) => syndicateRecord.syndicate == practiceRecords[i].syndicate);
-        if (!exist) {
-            practiceRecords.splice(i, 1);
-        }
-    }
-
-    // assinging practiceRecords
-    doc.practiceRecords = practiceRecords;
-
-    // handling "practiceState"
-    if (!practiceRecords || practiceRecords.length == 0) {
-        doc.practiceState = null;
-    }
-
-    const lastPracticeRecord = practiceRecords.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0];
-    if (!lastPracticeRecord) {
-        doc.practiceState = null;
-    } else {
-        doc.practiceState = lastPracticeRecord.practiceType;
-    }
-
     await doc.save();
     return doc;
 }
-
-// Pharmacist.pre("save", function (this: PharmacistDocument, next) {
-//     handlePharmacistFields(this);
-//     next();
-// });
-
-// Pharmacist.pre(["updateOne", "findOneAndUpdate"], function (this: Query<any, PharmacistDocument>, next) {
-//     const update = this.getUpdate()!;
-//     const isUpdatingName = update.$set?.firstName || update.$set?.lastName;
-
-//     if (isUpdatingName) {
-//         // Use aggregation pipeline to compute fullName from updated/current values
-//         const pipeline = [
-//             {
-//                 $set: {
-//                     fullName: {
-//                         $concat: [
-//                             // Use updated firstName if provided, else existing value
-//                             update.$set?.firstName ? update.$set.firstName : "$firstName",
-//                             " ",
-//                             update.$set?.lastName ? update.$set.lastName : "$lastName",
-//                         ],
-//                     },
-//                 },
-//             },
-//         ];
-//         this.setUpdate(pipeline);
-//     }
-//     next();
-// });
-
-// Pharmacist.virtual("syndicateMembershipStatus").get(function (this: PharmacistDocument): string {
-//     const lastTimePaid = this.lastTimePaid;
-//     if (!lastTimePaid) {
-//         return syndicateMembershipsTR.affiliation;
-//     }
-//     const lastTimePaidYear = lastTimePaid.getFullYear();
-//     const thisYear = new Date().getFullYear();
-//     const difference = thisYear - lastTimePaidYear;
-//     if (difference > 2) {
-//         return syndicateMembershipsTR["re-registration-of-non-practitioner"];
-//     } else if (difference == 2) {
-//         return syndicateMembershipsTR["two-years-of-non-practicing"];
-//     } else if (difference == 1) {
-//         return syndicateMembershipsTR["non-practicing-year"];
-//     }
-//     return syndicateMembershipsTR["affiliation"];
-
-// const practiceRecords = this.practiceRecords;
-// if (!practiceRecords || practiceRecords.length == 0) {
-// }
-// let start_year = lastTimePaidYear + 1;
-// let yearsOfPracticing = 0;
-// let yearsOfNonPracticing = 0;
-
-// while (start_year != thisYear + 1) {
-//     const exist = practiceRecords.filter(
-//         (value) => value.startDate.getFullYear() <= start_year && value.endDate.getFullYear() >= start_year
-//     );
-//     if (exist) {
-//         yearsOfPracticing += 1;
-//     } else {
-//         yearsOfNonPracticing += 1;
-//     }
-//     start_year += 1;
-// }
-
-// if (yearsOfPracticing + yearsOfNonPracticing == 1) {
-//     if (yearsOfPracticing == 1) {
-//         return syndicateMembershipsTR["practicing-year"];
-//     } else {
-//         return syndicateMembershipsTR["non-practicing-year"];
-//     }
-// } else if (yearsOfPracticing + yearsOfNonPracticing == 2) {
-//     if (yearsOfPracticing == 2) {
-//         return syndicateMembershipsTR["two-years-of-practicing"];
-//     } else {
-//         return syndicateMembershipsTR["two-years-of-non-practicing"];
-//     }
-// } else {
-//     // yearsOfPracticing + yearsOfNonPracticing >= 3
-//     if (yearsOfNonPracticing != 0) {
-//         return syndicateMembershipsTR["re-registration-of-non-practitioner"];
-//     } else {
-//         return syndicateMembershipsTR["re-registration-of-practitioner"];
-//     }
-// }
-// });
-
-// Pharmacist.virtual("practiceState").get(function (this: PharmacistDocument) {
-//     const practiceRecords = this.practiceRecords;
-//     if (!practiceRecords || practiceRecords.length == 0) {
-//         return undefined;
-//     }
-//     const lastPracticeRecord = practiceRecords.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0];
-//     return lastPracticeRecord.practiceType;
-// });
-
-// Pharmacist.virtual("currentSyndicate").get(function (this: PharmacistDocument): ISyndicateRecord | null {
-//     const syndicateRecords = this.syndicateRecords;
-//     if (syndicateRecords.length == 0) {
-//         return null;
-//     }
-//     if (!syndicateRecords[0].endDate) {
-//         return syndicateRecords[0];
-//     }
-//     return null;
-// });
 
 export default mongoose.model<PharmacistDocument>("Pharmacist", Pharmacist, "pharmacists");
