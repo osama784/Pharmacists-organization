@@ -3,6 +3,7 @@ import { NextFunction, Request, TypedResponse } from "express";
 import { responseMessages } from "../../translation/response.ar.js";
 import fs from "fs/promises";
 import path from "path";
+import { UPLOADS_DIR } from "../../utils/images.js";
 
 const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -13,7 +14,7 @@ const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: Ne
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const userDir = path.join(__dirname, "..", "..", "..", "..", "uploads", "users", pharmacistId);
+        const userDir = path.join(UPLOADS_DIR, "users", pharmacistId);
         try {
             await fs.access(userDir);
             await fs.rm(userDir, { force: true, recursive: true });

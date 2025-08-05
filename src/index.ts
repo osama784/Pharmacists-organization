@@ -14,6 +14,7 @@ import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
 import { responseMessages } from "./translation/response.ar.js";
+import { UPLOADS_DIR } from "./utils/images.js";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -28,7 +29,7 @@ app.set("query parser", (str: string) =>
 
 app.use(express.json());
 app.use(cors());
-app.use("/uploads", express.static("D:\\Coding\\Backend\\Express\\uploads"));
+app.use("/uploads", express.static(UPLOADS_DIR));
 app.use(passport.initialize());
 
 app.use("/auth", authRouter);

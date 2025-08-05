@@ -3,11 +3,12 @@ import path from "path";
 import fs from "fs/promises";
 import { responseMessages } from "../../translation/response.ar";
 import AdmZip from "adm-zip";
+import { UPLOADS_DIR } from "../../utils/images";
 
 const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const pharmacistId = req.params.id;
-        const userDir = path.join(__dirname, "..", "..", "..", "..", "uploads", "users", pharmacistId);
+        const userDir = path.join(UPLOADS_DIR, "users", pharmacistId);
         try {
             await fs.access(userDir);
         } catch (e) {

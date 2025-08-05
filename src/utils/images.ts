@@ -2,6 +2,8 @@ import path from "path";
 import fs from "fs/promises";
 import sharp from "sharp";
 
+export const UPLOADS_DIR = path.join(__dirname, "..", "..", "..", "uploads");
+
 export const processImage = async (
     file: Express.Multer.File,
     options: { userId: string; supportsWebP: boolean; isLegacyBrowser: boolean }
