@@ -96,11 +96,17 @@ router.use(passport.authenticate("jwt", { session: false }));
 router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);
 router.get("/detail/:id", checkPermission(permissions.getPharmacist), getPharmacist);
 router.get("/export", exportPharmacistsAsExcel);
-router.post("/create", checkPermission(permissions.createPharmacist), upload.any(), validate(CreatePharmacistSchema), createPharmacist);
+router.post(
+    "/create",
+    checkPermission(permissions.createPharmacist),
+    upload.array("file"),
+    validate(CreatePharmacistSchema),
+    createPharmacist
+);
 router.patch(
     "/update/:id",
     checkPermission(permissions.updatePharmacist),
-    upload.any(),
+    upload.array("file"),
     validate(UpdatePharmacistSchema),
     updatePharmacist
 );
@@ -111,14 +117,14 @@ router.get("/download/:id", downloadPharmacistImages);
 router.post(
     "/:id/licenses/create",
     checkPermission(permissions.updatePharmacist),
-    upload.any(),
+    upload.array("file"),
     validate(CreateLicenseSchema),
     createLicense
 );
 router.put(
     "/:id/licenses/update/:licenseId",
     checkPermission(permissions.updatePharmacist),
-    upload.any(),
+    upload.array("file"),
     validate(UpdateLicenseSchema),
     updateLicense
 );
@@ -159,14 +165,14 @@ router.delete("/:id/practice-records/delete/:practiceRecordId", checkPermission(
 router.post(
     "/:id/university-degrees/create",
     checkPermission(permissions.updatePharmacist),
-    upload.any(),
+    upload.array("file"),
     validate(CreateUniversityDegreeSchema),
     createUniversityDegree
 );
 router.put(
     "/:id/university-degrees/update/:universityDegreeId",
     checkPermission(permissions.updatePharmacist),
-    upload.any(),
+    upload.array("file"),
     validate(UpdateUniversityDegreeSchema),
     updateUniversityDegree
 );
