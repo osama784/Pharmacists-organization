@@ -99,14 +99,14 @@ router.get("/export", exportPharmacistsAsExcel);
 router.post(
     "/create",
     checkPermission(permissions.createPharmacist),
-    upload.array("file"),
+    upload.array("files"),
     validate(CreatePharmacistSchema),
     createPharmacist
 );
 router.patch(
     "/update/:id",
     checkPermission(permissions.updatePharmacist),
-    upload.array("file"),
+    upload.array("files"),
     validate(UpdatePharmacistSchema),
     updatePharmacist
 );
@@ -117,14 +117,14 @@ router.get("/download/:id", downloadPharmacistImages);
 router.post(
     "/:id/licenses/create",
     checkPermission(permissions.updatePharmacist),
-    upload.array("file"),
+    upload.array("files"),
     validate(CreateLicenseSchema),
     createLicense
 );
 router.put(
     "/:id/licenses/update/:licenseId",
     checkPermission(permissions.updatePharmacist),
-    upload.array("file"),
+    upload.array("files"),
     validate(UpdateLicenseSchema),
     updateLicense
 );
@@ -165,14 +165,14 @@ router.delete("/:id/practice-records/delete/:practiceRecordId", checkPermission(
 router.post(
     "/:id/university-degrees/create",
     checkPermission(permissions.updatePharmacist),
-    upload.array("file"),
+    upload.array("files"),
     validate(CreateUniversityDegreeSchema),
     createUniversityDegree
 );
 router.put(
     "/:id/university-degrees/update/:universityDegreeId",
     checkPermission(permissions.updatePharmacist),
-    upload.array("file"),
+    upload.array("files"),
     validate(UpdateUniversityDegreeSchema),
     updateUniversityDegree
 );

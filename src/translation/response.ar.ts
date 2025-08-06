@@ -7,6 +7,7 @@ export const responseMessages = {
     SERVER_ERROR: "حدث خطأ ما في السيرفر",
     NO_FILE_UPLOADED: "لم يتم تحميل أي ملف",
     INVALID_FILE_SUFFIX: "لاحقة الملف المرسل ليست لاحقة صورة مناسبة",
+    UNEXPECTED_FIELD_NAME: "يجب أن ترسل أسماء المفاتيح بشكل صحيح",
     FEE_CONTROLLERS: {
         MISSING_VALUE_DETAIL: "يجب أن ترسل إما قيمة وحيدة أو ترسل قيم مفصلة على السنين لكل رسم",
         MISSING_VALUE: "يجب أن ترسل قيمة وحيدة من أجل الرسوم الثابتة",

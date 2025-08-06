@@ -15,6 +15,7 @@ import cors from "cors";
 import AppError from "./utils/AppError.js";
 import { responseMessages } from "./translation/response.ar.js";
 import { UPLOADS_DIR } from "./utils/images.js";
+import { MulterError } from "multer";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -45,6 +46,8 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
             success: false,
             details: [err.message],
         });
+    } else if (err instanceof MulterError) {
+        res.status(400).json({ success: false, details: [responseMessages.UNEXPECTED_FIELD_NAME] });
     } else {
         // logger.error(err.message);
         if (err instanceof Error) {
