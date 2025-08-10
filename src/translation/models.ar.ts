@@ -1,3 +1,16 @@
+import { IInvoice } from "../types/models/invoice.types";
+import { IPharmacist } from "../types/models/pharmacist.types";
+
+type Paths<T> = T extends object
+    ? {
+          [K in keyof T]: K extends string
+              ? T[K] extends object
+                  ? `${K}` | `${K}.${Paths<T[K]>}` // Include parent + nested paths
+                  : K // Include leaf nodes
+              : never;
+      }[keyof T] // Convert to union
+    : never;
+
 export const syndicateMembershipsTR = {
     affiliation: "انتساب",
     "foreign-affiliation": "انتساب أجانب",
@@ -23,8 +36,8 @@ export const invoiceTR = {
         affiliation: "انتساب",
     },
 };
-
-export const InvoiceModelTR = {
+type InvoiceModelTR = Partial<Record<keyof IInvoice, string>>;
+export const InvoiceModelTR: InvoiceModelTR = {
     pharmacist: "اسم الصيدلي",
     status: "حالة الفاتورة",
     syndicateMembership: "نوع المزاولة",
@@ -32,26 +45,26 @@ export const InvoiceModelTR = {
     createdAt: "تاريخ إنشاء الفاتورة",
     total: "المجموع الكلي",
 };
-
-export interface IInvoiceModelTR {
-    pharmacist: string;
-    status: string;
-    syndicateMembership: string;
-    paidDate: string;
-    createdAt: string;
-    total: string;
-}
-
-export const IPharmacistModelTR = {
+type PharmacistModelTR = Record<keyof Omit<IPharmacist, "invoices" | "currentSyndicate">, any>;
+export const PharmacistModelTR: PharmacistModelTR = {
     firstName: "الاسم الأول",
     lastName: "الشهرة",
     fatherName: "اسم الأب",
     motherName: "اسم الأم",
+
+    fullName: "الاسم الكامل",
+
+    firstNameEnglish: "الاسم الأول بالإنجليزي",
+    lastNameEnglish: "الشهرة بالإنجليزي",
+    fatherNameEnglish: "اسم الأب بالإنجليزي",
+    motherNameEnglish: "اسم الأم بالإنجليزي",
+
     gender: "الجنس",
     nationalNumber: "الرقم الوطني",
     birthDate: "تاريخ الولادة",
     birthPlace: "مكان الولادة",
     phoneNumber: "رقم الجوال",
+    landlineNumber: "الرقم الأرضي",
     address: "العنوان",
     graduationYear: "سنة التخرج",
     lastTimePaid: "تاريخ آخر دفع",
@@ -61,27 +74,58 @@ export const IPharmacistModelTR = {
     ministerialRegistrationDate: "تاريخ التسجيل في الوزارة",
     registrationNumber: "الرقم النقابي",
     registrationDate: "تاريخ التسجيل في النقابة",
+
+    integrity: "الأمانة",
+    register: "القيد",
+    oathTakingDate: "تاريخ أداء اليمين",
+
+    syndicateMembershipStatus: "مؤشر العضوية",
+    practiceState: "نوع المزاولة",
+
+    images: "صور عن المعلومات الشخصية",
+
+    licenses: {
+        licenseType: "نوع الترخيص",
+        startDate: "تاريخ بداية الترخيص",
+        endDate: "تاريخ نهاية الترخيص",
+        details: "تفاصيل عن الترخيص",
+
+        images: "صور عن الترخيص",
+    },
+    practiceRecords: {
+        syndicate: "النقابة",
+        startDate: "تاريخ بداية المزاولة",
+        endDate: "تاريخ نهاية المزاولة",
+        sector: "قطاع المزاولة",
+        place: "مكان المزاولة",
+        practiceType: "نوع المزاولة",
+    },
+    syndicateRecords: {
+        syndicate: "النقابة",
+        startDate: "تاريخ بداية السجل النقابي",
+        endDate: "تاريخ نهاية السجل النقابي",
+        registrationNumber: "رقم الانتساب النقابي",
+    },
+    universityDegrees: {
+        degreeType: "نوع الشهادة",
+        obtainingDate: "تاريخ استلام الشهادة",
+        university: "الجامعة المانحة",
+        images: "صور عن الشهادة",
+    },
+    penalties: {
+        penaltyType: "نوع العقوبة",
+        date: "تاريخ العقوبة",
+        reason: "سبب العقوبة",
+        details: "تفاصيل عن العقوبة",
+    },
 };
 
-export interface IIPharmacistModelTR {
-    firstName: string;
-    lastName: string;
-    fatherName: string;
-    motherName: string;
-    gender: string;
-    nationalNumber: number;
-    birthDate: Date;
-    birthPlace: string;
-    phoneNumber: string;
-    address: string;
-    graduationYear: number;
-    lastTimePaid: Date;
-    nationality: string;
+export const modelsTR = {
+    pharmacist: PharmacistModelTR,
+    invoice: InvoiceModelTR,
+};
 
-    ministerialNumber: number;
-    ministerialRegistrationDate: Date;
-    registrationNumber: number;
-    registrationDate: Date;
+export interface IModelsTR {
+    pharmacist: PharmacistModelTR;
+    invoice: InvoiceModelTR;
 }
-
-export const feesTranslation = {};

@@ -5,15 +5,15 @@ import { UserStatuses } from "../models/user.model.js";
 import { EmailSchema, EnumSchema, mongooseIDSchema, PasswordSchema, StringSchema } from "../utils/customSchemas.js";
 
 const UserSchema = z.object({
-    username: StringSchema,
-    email: EmailSchema,
-    password: PasswordSchema.transform(async (value) => {
+    username: StringSchema(),
+    email: EmailSchema(),
+    password: PasswordSchema().transform(async (value) => {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(value, salt);
 
         return hash;
     }),
-    phoneNumber: StringSchema,
+    phoneNumber: StringSchema(),
     status: EnumSchema(Object.values(UserStatuses) as [string]).default(UserStatuses.active),
     role: mongooseIDSchema(Role),
 });

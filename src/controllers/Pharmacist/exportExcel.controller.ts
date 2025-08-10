@@ -1,9 +1,10 @@
 import Pharmacist from "../../models/pharmacist.model.js";
 import ExcelJS from "exceljs";
-import { IIPharmacistModelTR, IPharmacistModelTR } from "../../translation/models.ar.js";
+import { PharmacistModelTR } from "../../translation/models.ar.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import IPharmacistQueries from "../../types/queries/pharmacist.query.js";
 import buildPharmacistFilters from "./utils/buildPharmacistFilters.js";
+import { IPharmacist } from "../../types/models/pharmacist.types.js";
 
 const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -26,7 +27,7 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
             return !excludedFields.includes(value);
         });
         worksheet.columns = headers.map((header) => ({
-            header: IPharmacistModelTR[header as keyof IIPharmacistModelTR],
+            header: PharmacistModelTR[header as keyof Omit<IPharmacist, "invoices" | "currentSyndicate">],
             key: header,
             width: 25,
         }));

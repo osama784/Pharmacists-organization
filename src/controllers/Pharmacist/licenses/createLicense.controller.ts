@@ -15,19 +15,22 @@ const createLicense = async (req: Request, res: TypedResponse<PharmacistResponse
             return;
         }
         const processed: string[] = [];
-        for (const file of req.files as Express.Multer.File[]) {
-            const processedImage = await processImage(file, {
-                userId: req.params.id,
-                supportsWebP: res.locals.supportsWebP,
-                isLegacyBrowser: res.locals.isLegacyBrowser,
-            });
-            processed.push(processedImage.imageURL);
-            try {
-                await fs.unlink(file.path);
-            } catch (e) {
-                console.log(e);
+        if (req.files) {
+            for (const file of req.files as Express.Multer.File[]) {
+                const processedImage = await processImage(file, {
+                    userId: req.params.id,
+                    supportsWebP: res.locals.supportsWebP,
+                    isLegacyBrowser: res.locals.isLegacyBrowser,
+                });
+                processed.push(processedImage.imageURL);
+                try {
+                    await fs.unlink(file.path);
+                } catch (e) {
+                    console.log(e);
+                }
             }
         }
+
         await pharmacist.updateOne({
             $push: {
                 licenses: { ...validatedData, images: processed },

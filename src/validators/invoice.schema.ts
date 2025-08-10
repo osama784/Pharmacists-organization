@@ -7,12 +7,12 @@ import toLocalDate from "../utils/toLocalDate.js";
 
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema(syndicateMemberships as [string]),
-    status: StringSchema.optional().nullable(),
-    createdAt: DateSchema.default(toLocalDate(new Date())!.toISOString()),
+    status: StringSchema().optional().nullable(),
+    createdAt: DateSchema().default(toLocalDate(new Date())!.toISOString()),
     fees: z
         .array(
             z.object({
-                name: StringSchema.refine(
+                name: StringSchema().refine(
                     async (value) => {
                         const exists = await Fee.exists({ name: value });
                         if (exists) {
@@ -22,7 +22,7 @@ const InvoiceSchema = z.object({
                     },
                     { message: zodSchemasMessages.INVOICE_SCHEMA.FEE_NAME_NOT_FOUND }
                 ),
-                value: NumberSchemaPositive,
+                value: NumberSchemaPositive(),
             })
         )
         .refine(

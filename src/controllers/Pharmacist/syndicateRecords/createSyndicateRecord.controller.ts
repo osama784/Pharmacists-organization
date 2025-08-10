@@ -16,6 +16,7 @@ const createSyndicateRecord = async (req: Request, res: TypedResponse<Pharmacist
             $push: {
                 syndicateRecords: validatedData,
             },
+            currentSyndicate: null,
         };
         if (!validatedData.endDate) {
             updatedFields = { ...updatedFields, currentSyndicate: validatedData };

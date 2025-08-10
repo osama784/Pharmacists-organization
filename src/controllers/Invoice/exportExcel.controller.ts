@@ -1,10 +1,11 @@
 import Invoice from "../../models/invoice.model.js";
 import ExcelJS from "exceljs";
-import { IInvoiceModelTR, InvoiceModelTR } from "../../translation/models.ar.js";
+import { InvoiceModelTR } from "../../translation/models.ar.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import IInvoiceQueries from "../../types/queries/invoice.query.js";
 import buildInvoiceFilters from "./utils/buildInvoiceFilters.js";
+import { IInvoice } from "../../types/models/invoice.types.js";
 
 const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -26,7 +27,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
             return !excludedFields.includes(value);
         });
         worksheet.columns = headers.map((header) => ({
-            header: InvoiceModelTR[header as keyof IInvoiceModelTR],
+            header: InvoiceModelTR[header as keyof IInvoice],
             key: header,
             width: 25,
         }));

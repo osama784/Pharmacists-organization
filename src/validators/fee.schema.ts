@@ -7,9 +7,9 @@ import { zodSchemasMessages } from "../translation/zodSchemas.ar";
 export const updateFeesValuesSchema = z.array(
     z.object({
         id: mongooseIDSchema(Fee),
-        value: NumberSchemaPositive.optional(),
+        value: NumberSchemaPositive().optional(),
         details: z
-            .record(StringSchema, NumberSchemaPositive)
+            .record(StringSchema(), NumberSchemaPositive())
             .refine(
                 (data) => {
                     // check if all years exist, 0 index => 1996 year
@@ -47,13 +47,13 @@ export const updateFeesValuesSchema = z.array(
 );
 
 export const updateDetailedPrintsSchema = z.object({
-    "سجل الأدوية العادية/صيدليات": NumberSchemaPositive,
-    "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive,
-    "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive,
-    "بطاقة الالتزام بالأسعار": NumberSchemaPositive,
-    "كشف صرفيات مخدرات": NumberSchemaPositive,
-    "حالات سريرية قيمة مطبوعات": NumberSchemaPositive,
-    "قانون المخدرات": NumberSchemaPositive,
-    "التراكيب الدوائية": NumberSchemaPositive,
-    "مجموعة الأنظمة والقوانين": NumberSchemaPositive,
+    "سجل الأدوية العادية/صيدليات": NumberSchemaPositive(),
+    "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive(),
+    "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive(),
+    "بطاقة الالتزام بالأسعار": NumberSchemaPositive(),
+    "كشف صرفيات مخدرات": NumberSchemaPositive(),
+    "حالات سريرية قيمة مطبوعات": NumberSchemaPositive(),
+    "قانون المخدرات": NumberSchemaPositive(),
+    "التراكيب الدوائية": NumberSchemaPositive(),
+    "مجموعة الأنظمة والقوانين": NumberSchemaPositive(),
 });

@@ -1,4 +1,4 @@
-import { HydratedDocument, Types } from "mongoose";
+import { HydratedDocument, Model, Types } from "mongoose";
 
 export interface ILicense {
     licenseType: string;
@@ -89,3 +89,5 @@ export type PharmacistDocument = HydratedDocument<IPharmacist> & {
     createdAt: Date;
     updatedAt: Date;
 };
+
+export interface IPharmacistModel extends Model<PharmacistDocument> {}

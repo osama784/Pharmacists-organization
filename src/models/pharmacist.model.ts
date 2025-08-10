@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { IPracticeRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
+import { IPharmacistModel, IPracticeRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
 
 const Pharmacist = new Schema<PharmacistDocument>(
@@ -230,4 +230,4 @@ export async function handlePharmacistFields(doc: PharmacistDocument): Promise<P
     return doc;
 }
 
-export default mongoose.model<PharmacistDocument>("Pharmacist", Pharmacist, "pharmacists");
+export default mongoose.model<PharmacistDocument, IPharmacistModel>("Pharmacist", Pharmacist, "pharmacists");

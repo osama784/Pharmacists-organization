@@ -40,21 +40,24 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
             imagesURLs = oldImages;
         }
         // handle uploaded images
-        for (const file of req.files as Express.Multer.File[]) {
-            const processedImage = await processImage(file, {
-                userId: req.params.id,
-                supportsWebP: res.locals.supportsWebP,
-                isLegacyBrowser: res.locals.isLegacyBrowser,
-            });
-            if (!imagesURLs.includes(processedImage.imageURL)) {
-                imagesURLs.push(processedImage.imageURL);
-            }
-            try {
-                await fs.unlink(file.path);
-            } catch (e) {
-                console.log(e);
+        if (req.files) {
+            for (const file of req.files as Express.Multer.File[]) {
+                const processedImage = await processImage(file, {
+                    userId: req.params.id,
+                    supportsWebP: res.locals.supportsWebP,
+                    isLegacyBrowser: res.locals.isLegacyBrowser,
+                });
+                if (!imagesURLs.includes(processedImage.imageURL)) {
+                    imagesURLs.push(processedImage.imageURL);
+                }
+                try {
+                    await fs.unlink(file.path);
+                } catch (e) {
+                    console.log(e);
+                }
             }
         }
+
         await pharmacist.updateOne({ $set: { ...validatedData, images: imagesURLs } });
         const doc = await Pharmacist.findById(pharmacist._id);
         const newDoc = await handlePharmacistFields(doc!);
