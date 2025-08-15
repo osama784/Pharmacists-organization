@@ -58,7 +58,7 @@ export interface IPharmacist {
     phoneNumber?: string | null;
     landlineNumber?: string | null;
     address?: string | null;
-    graduationYear: string;
+    graduationYear: Date;
     lastTimePaid?: Date | null;
     nationality: string;
     ministerialNumber?: string | null;

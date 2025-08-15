@@ -22,7 +22,7 @@ const PharmacistSchema = z.object({
     phoneNumber: EmptyStringSchema(PharmacistModelTR.phoneNumber).optional().nullable(),
     landlineNumber: EmptyStringSchema(PharmacistModelTR.landlineNumber).optional().nullable(),
     address: EmptyStringSchema(PharmacistModelTR.address).optional().nullable(),
-    graduationYear: NumberSchemaPositive(PharmacistModelTR.graduationYear),
+    graduationYear: DateSchema(PharmacistModelTR.graduationYear),
     lastTimePaid: DateSchema(PharmacistModelTR.lastTimePaid).optional().nullable(),
     nationality: StringSchema(PharmacistModelTR.nationality),
 

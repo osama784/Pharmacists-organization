@@ -34,7 +34,7 @@ export type PharmacistResponseDto = {
     phoneNumber?: string | null;
     landlineNumber?: string | null;
     address?: string | null;
-    graduationYear: string;
+    graduationYear: Date;
     lastTimePaid?: Date | null;
     nationality: string;
     ministerialNumber?: string | null;
@@ -144,7 +144,7 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
         phoneNumber: doc.phoneNumber,
         landlineNumber: doc.landlineNumber,
         address: doc.address,
-        graduationYear: doc.graduationYear,
+        graduationYear: toLocalDate(doc.graduationYear)!,
         lastTimePaid: toLocalDate(doc.lastTimePaid),
         nationality: doc.nationality,
         ministerialNumber: doc.ministerialNumber,

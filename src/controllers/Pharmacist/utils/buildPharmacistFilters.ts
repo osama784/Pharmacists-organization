@@ -19,7 +19,7 @@ const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any
     if (queries.phoneNumber) filters.phoneNumber = buildStringFilter(queries.phoneNumber);
     if (queries.landlineNumber) filters.landlineNumber = buildStringFilter(queries.landlineNumber);
     if (queries.address) filters.address = buildStringFilter(queries.address);
-    if (queries.graduationYear) filters.graduationYear = buildStringFilter(queries.graduationYear);
+    if (queries.graduationYear) filters.graduationYear = buildDateFilter(queries.graduationYear);
     if (queries.lastTimePaid) filters.lastTimePaid = buildDateFilter(queries.lastTimePaid);
     if (queries.nationality) filters.nationality = buildStringFilter(queries.nationality);
 

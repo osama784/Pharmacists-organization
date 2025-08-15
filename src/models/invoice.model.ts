@@ -45,7 +45,7 @@ export const getPharmacistRelatedFees = async (
     pharmacist: PharmacistDocument
 ): Promise<{ name: string; value: number }[]> => {
     let lastTimePaidYear = pharmacist.lastTimePaid?.getFullYear();
-    let graduationYear = Number(pharmacist.graduationYear);
+    const graduationYear = pharmacist.graduationYear.getFullYear();
     const currentYear = new Date().getFullYear();
     let age = currentYear - pharmacist.birthDate.getFullYear();
 

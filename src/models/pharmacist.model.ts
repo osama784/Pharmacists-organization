@@ -41,7 +41,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
         landlineNumber: String,
         address: String,
         graduationYear: {
-            type: String,
+            type: Date,
             required: true,
         },
         lastTimePaid: Date,
