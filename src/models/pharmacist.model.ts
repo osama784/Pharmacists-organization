@@ -212,18 +212,19 @@ export async function handlePharmacistFields(doc: PharmacistDocument): Promise<P
     const lastTimePaid = doc.lastTimePaid;
     if (!lastTimePaid) {
         doc.syndicateMembershipStatus = syndicateMembershipsTR.affiliation;
-    }
-    const lastTimePaidYear = lastTimePaid!.getFullYear();
-    const thisYear = new Date().getFullYear();
-    const difference = thisYear - lastTimePaidYear;
-    if (difference > 2) {
-        doc.syndicateMembershipStatus = syndicateMembershipsTR["re-registration-of-non-practitioner"];
-    } else if (difference == 2) {
-        doc.syndicateMembershipStatus = syndicateMembershipsTR["two-years-of-non-practicing"];
-    } else if (difference == 1) {
-        doc.syndicateMembershipStatus = syndicateMembershipsTR["non-practicing-year"];
     } else {
-        doc.syndicateMembershipStatus = syndicateMembershipsTR["affiliation"];
+        const lastTimePaidYear = lastTimePaid!.getFullYear();
+        const thisYear = new Date().getFullYear();
+        const difference = thisYear - lastTimePaidYear;
+        if (difference > 2) {
+            doc.syndicateMembershipStatus = syndicateMembershipsTR["re-registration-of-non-practitioner"];
+        } else if (difference == 2) {
+            doc.syndicateMembershipStatus = syndicateMembershipsTR["two-years-of-non-practicing"];
+        } else if (difference == 1) {
+            doc.syndicateMembershipStatus = syndicateMembershipsTR["non-practicing-year"];
+        } else {
+            doc.syndicateMembershipStatus = syndicateMembershipsTR["affiliation"];
+        }
     }
 
     await doc.save();
