@@ -12,6 +12,13 @@ export const StringSchema = (keyName: string | undefined = undefined) => {
     return z.string({ message: zodSchemasMessages.INVALID_STRING }).nonempty({ message: zodSchemasMessages.EMPTY_STRING }).trim();
 };
 
+export const EmptyStringSchema = (keyName: string | undefined = undefined) => {
+    if (keyName) {
+        return z.string({ message: `${keyName}: ${zodSchemasMessages.INVALID_STRING}` }).trim();
+    }
+    return z.string({ message: zodSchemasMessages.INVALID_STRING }).trim();
+};
+
 export const EmailSchema = (keyName: string | undefined = undefined) => {
     let message: string = "";
     if (keyName) {
