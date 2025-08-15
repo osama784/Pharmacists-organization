@@ -47,6 +47,7 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
             details: [err.message],
         });
     } else if (err instanceof MulterError) {
+        console.log(err.message);
         res.status(400).json({ success: false, details: [responseMessages.UNEXPECTED_FIELD_NAME] });
     } else {
         // logger.error(err.message);

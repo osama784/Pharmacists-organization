@@ -1,3 +1,4 @@
+import { IFee } from "../types/models/fee.types";
 import { IInvoice } from "../types/models/invoice.types";
 import { IPharmacist } from "../types/models/pharmacist.types";
 
@@ -118,6 +119,14 @@ export const PharmacistModelTR: PharmacistModelTR = {
         reason: "سبب العقوبة",
         details: "تفاصيل عن العقوبة",
     },
+};
+
+type FeeModelTR = Partial<Record<keyof IFee, string>>;
+export const FeeModelTR: FeeModelTR = {
+    name: "اسم الرسم",
+    section: "الصندوق",
+    details: "تفاصيل قيم الرسم",
+    value: "قيمة الرسم",
 };
 
 export const modelsTR = {

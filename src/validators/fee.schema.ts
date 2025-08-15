@@ -3,13 +3,14 @@ import { z } from "zod";
 import { mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas";
 import Fee from "../models/fee.model";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar";
+import { FeeModelTR } from "../translation/models.ar";
 
 export const updateFeesValuesSchema = z.array(
     z.object({
         id: mongooseIDSchema(Fee),
-        value: NumberSchemaPositive().optional(),
+        value: NumberSchemaPositive(FeeModelTR.value).optional(),
         details: z
-            .record(StringSchema(), NumberSchemaPositive())
+            .record(StringSchema(FeeModelTR.details), NumberSchemaPositive(FeeModelTR.details))
             .refine(
                 (data) => {
                     // check if all years exist, 0 index => 1996 year
@@ -47,13 +48,13 @@ export const updateFeesValuesSchema = z.array(
 );
 
 export const updateDetailedPrintsSchema = z.object({
-    "سجل الأدوية العادية/صيدليات": NumberSchemaPositive(),
-    "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive(),
-    "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive(),
-    "بطاقة الالتزام بالأسعار": NumberSchemaPositive(),
-    "كشف صرفيات مخدرات": NumberSchemaPositive(),
-    "حالات سريرية قيمة مطبوعات": NumberSchemaPositive(),
-    "قانون المخدرات": NumberSchemaPositive(),
-    "التراكيب الدوائية": NumberSchemaPositive(),
-    "مجموعة الأنظمة والقوانين": NumberSchemaPositive(),
+    "سجل الأدوية العادية/صيدليات": NumberSchemaPositive(FeeModelTR.value),
+    "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive(FeeModelTR.value),
+    "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive(FeeModelTR.value),
+    "بطاقة الالتزام بالأسعار": NumberSchemaPositive(FeeModelTR.value),
+    "كشف صرفيات مخدرات": NumberSchemaPositive(FeeModelTR.value),
+    "حالات سريرية قيمة مطبوعات": NumberSchemaPositive(FeeModelTR.value),
+    "قانون المخدرات": NumberSchemaPositive(FeeModelTR.value),
+    "التراكيب الدوائية": NumberSchemaPositive(FeeModelTR.value),
+    "مجموعة الأنظمة والقوانين": NumberSchemaPositive(FeeModelTR.value),
 });

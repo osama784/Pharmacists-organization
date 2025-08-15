@@ -1,7 +1,6 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import { Schema } from "zod";
 import { responseMessages } from "../translation/response.ar";
-import { IModelsTR, modelsTR } from "../translation/models.ar";
 
 const validate = (schema: Schema) => async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     if (!req.body) {

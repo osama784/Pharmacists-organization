@@ -1,7 +1,7 @@
 import { HydratedDocument, Model, PopulatedDoc, Types } from "mongoose";
 import { SectionDocument } from "./section.types.js";
 
-interface IFee {
+export interface IFee {
     name: string;
     section: Types.ObjectId;
     details?: Map<string, number>;
