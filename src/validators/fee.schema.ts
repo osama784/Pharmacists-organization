@@ -7,7 +7,7 @@ import { FeeModelTR } from "../translation/models.ar";
 
 export const updateFeesValuesSchema = z.array(
     z.object({
-        id: mongooseIDSchema(Fee),
+        id: mongooseIDSchema(Fee, FeeModelTR.id),
         value: NumberSchemaPositive(FeeModelTR.value).optional(),
         details: z
             .record(StringSchema(FeeModelTR.details), NumberSchemaPositive(FeeModelTR.details))

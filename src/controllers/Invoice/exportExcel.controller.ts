@@ -27,7 +27,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
             return !excludedFields.includes(value);
         });
         worksheet.columns = headers.map((header) => ({
-            header: InvoiceModelTR[header as keyof IInvoice],
+            header: InvoiceModelTR[header as keyof Omit<IInvoice, "isFinesIncluded">],
             key: header,
             width: 25,
         }));

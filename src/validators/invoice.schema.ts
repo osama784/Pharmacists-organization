@@ -1,18 +1,19 @@
 import { z } from "zod";
 import { syndicateMemberships } from "../models/syndicateMembership.model.js";
 import Fee from "../models/fee.model.js";
-import { DateSchema, EnumSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { DateSchema, EmptyStringSchema, EnumSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 import toLocalDate from "../utils/toLocalDate.js";
+import { InvoiceModelTR } from "../translation/models.ar.js";
 
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema(syndicateMemberships as [string]),
-    status: StringSchema().optional().nullable(),
-    createdAt: DateSchema().default(toLocalDate(new Date())!.toISOString()),
+    status: EmptyStringSchema(InvoiceModelTR.status).optional().nullable(),
+    createdAt: DateSchema(InvoiceModelTR.createdAt).default(toLocalDate(new Date())!.toISOString()),
     fees: z
         .array(
             z.object({
-                name: StringSchema().refine(
+                name: StringSchema(InvoiceModelTR.fees.name).refine(
                     async (value) => {
                         const exists = await Fee.exists({ name: value });
                         if (exists) {
@@ -22,7 +23,7 @@ const InvoiceSchema = z.object({
                     },
                     { message: zodSchemasMessages.INVOICE_SCHEMA.FEE_NAME_NOT_FOUND }
                 ),
-                value: NumberSchemaPositive(),
+                value: NumberSchemaPositive(InvoiceModelTR.fees.value),
             })
         )
         .refine(

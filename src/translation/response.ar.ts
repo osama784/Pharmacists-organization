@@ -29,7 +29,7 @@ export const responseMessages = {
     },
     PHARMACIST_CONTROLLERS: {
         NO_IMAGES_FOUND: "لا يوجد صور لهذا الصيدلي بعد",
-        INVALID_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
+        PREVENT_ADDING_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
         NO_SYNICATE_FOUND: "لا يوجد نقابة كهذه في السجل النقابي",
     },
 };

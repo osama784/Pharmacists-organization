@@ -1,6 +1,8 @@
 import { IFee } from "../types/models/fee.types";
 import { IInvoice } from "../types/models/invoice.types";
 import { IPharmacist } from "../types/models/pharmacist.types";
+import { IRole } from "../types/models/role.types";
+import { IUser } from "../types/models/user.types";
 
 type Paths<T> = T extends object
     ? {
@@ -37,7 +39,7 @@ export const invoiceTR = {
         affiliation: "انتساب",
     },
 };
-type InvoiceModelTR = Partial<Record<keyof IInvoice, string>>;
+type InvoiceModelTR = Record<keyof Omit<IInvoice, "isFinesIncluded">, any>;
 export const InvoiceModelTR: InvoiceModelTR = {
     pharmacist: "اسم الصيدلي",
     status: "حالة الفاتورة",
@@ -45,6 +47,10 @@ export const InvoiceModelTR: InvoiceModelTR = {
     paidDate: "تاريخ الدفع",
     createdAt: "تاريخ إنشاء الفاتورة",
     total: "المجموع الكلي",
+    fees: {
+        name: "اسم الرسم",
+        value: "قيمة الرسم",
+    },
 };
 type PharmacistModelTR = Record<keyof Omit<IPharmacist, "invoices" | "currentSyndicate">, any>;
 export const PharmacistModelTR: PharmacistModelTR = {
@@ -121,12 +127,36 @@ export const PharmacistModelTR: PharmacistModelTR = {
     },
 };
 
-type FeeModelTR = Partial<Record<keyof IFee, string>>;
+type FeeModelTR = Record<keyof Omit<IFee, "isMutable" | "isRepeatable">, string> & { id: string };
 export const FeeModelTR: FeeModelTR = {
+    id: "رقم تعريف الرسم",
     name: "اسم الرسم",
     section: "الصندوق",
     details: "تفاصيل قيم الرسم",
     value: "قيمة الرسم",
+};
+
+type RoleModelTR = Record<keyof IRole, any>;
+export const RoleModelTR: RoleModelTR = {
+    name: "اسم الدور",
+    permissions: "أسماء الأذونات",
+};
+
+type UserModelTR = Record<keyof IUser, any>;
+export const UserModelTR: UserModelTR = {
+    username: "اسم المستخدم",
+    email: "الإيميل",
+    password: "كلمة المرور",
+    role: "دور المستخدم",
+    status: "حالة المستخدم",
+    phoneNumber: "رقم الجوال",
+    resetPasswordToken: "رمز التحقق",
+};
+
+export const AuthTR = {
+    email: "الإيميل",
+    password: "كلمة المرور",
+    resetToken: "رمز التحقق",
 };
 
 export const modelsTR = {

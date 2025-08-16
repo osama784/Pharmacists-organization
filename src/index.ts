@@ -15,7 +15,9 @@ import cors from "cors";
 import AppError from "./utils/AppError.js";
 import { responseMessages } from "./translation/response.ar.js";
 import { UPLOADS_DIR } from "./utils/images.js";
-import { MulterError } from "multer";
+import multer, { MulterError } from "multer";
+import { logger } from "./middlewares/logger.middleware.js";
+import { MulterErrorTranslator } from "./translation/utils.ar.js";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -46,20 +48,20 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
             success: false,
             details: [err.message],
         });
-    } else if (err instanceof MulterError) {
-        console.log(err.message);
-        console.log(err.name);
-        console.log(err);
-        res.status(400).json({ success: false, details: [responseMessages.UNEXPECTED_FIELD_NAME] });
     } else {
-        // logger.error(err.message);
-        if (err instanceof Error) {
-            console.log(err.stack);
+        console.log(err);
+        if (err instanceof MulterError) {
+            res.status(400).json({ success: false, details: [MulterErrorTranslator(err.code)] });
+        } else {
+            logger.error(err.message);
+            if (err instanceof Error) {
+                console.log(err.stack);
+            }
+            res.status(500).json({
+                success: false,
+                details: [responseMessages.SERVER_ERROR],
+            });
         }
-        res.status(500).json({
-            success: false,
-            details: [responseMessages.SERVER_ERROR],
-        });
     }
 });
 

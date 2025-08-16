@@ -1,7 +1,7 @@
 import mongoose, { HydratedDocument, Model } from "mongoose";
 import { RoleDocument } from "./role.types.js";
 
-interface IUser {
+export interface IUser {
     username: string;
     email: string;
     password: string;

@@ -18,9 +18,7 @@ const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: Ne
         try {
             await fs.access(userDir);
             await fs.rm(userDir, { force: true, recursive: true });
-        } catch (e) {
-            console.log(e);
-        }
+        } catch (e) {}
 
         await pharmacist.deleteOne();
 

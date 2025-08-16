@@ -17,17 +17,17 @@ const PharmacistSchema = z.object({
 
     gender: EnumSchema(genders as [string, ...string[]], PharmacistModelTR.gender),
     nationalNumber: EmptyStringSchema(PharmacistModelTR.nationalNumber).optional().nullable(),
-    birthPlace: StringSchema(PharmacistModelTR.birthPlace).optional().nullable(),
+    birthPlace: EmptyStringSchema(PharmacistModelTR.birthPlace).optional().nullable(),
     birthDate: DateSchema(PharmacistModelTR.birthDate),
     phoneNumber: EmptyStringSchema(PharmacistModelTR.phoneNumber).optional().nullable(),
     landlineNumber: EmptyStringSchema(PharmacistModelTR.landlineNumber).optional().nullable(),
     address: EmptyStringSchema(PharmacistModelTR.address).optional().nullable(),
     graduationYear: DateSchema(PharmacistModelTR.graduationYear),
-    lastTimePaid: DateSchema(PharmacistModelTR.lastTimePaid).optional().nullable(),
+    lastTimePaid: DateSchema(PharmacistModelTR.lastTimePaid, true).optional().nullable(),
     nationality: StringSchema(PharmacistModelTR.nationality),
 
     ministerialNumber: EmptyStringSchema(PharmacistModelTR.ministerialNumber).optional().nullable(),
-    ministerialRegistrationDate: DateSchema(PharmacistModelTR.ministerialRegistrationDate).optional().nullable(),
+    ministerialRegistrationDate: DateSchema(PharmacistModelTR.ministerialRegistrationDate, true).optional().nullable(),
     registrationNumber: StringSchema(PharmacistModelTR.registrationNumber),
     registrationDate: DateSchema(PharmacistModelTR.registrationNumber),
 
@@ -41,13 +41,13 @@ const PharmacistSchema = z.object({
 
     integrity: EmptyStringSchema(PharmacistModelTR.integrity).optional().nullable(),
     register: EmptyStringSchema(PharmacistModelTR.register).optional().nullable(),
-    oathTakingDate: DateSchema(PharmacistModelTR.oathTakingDate).optional().nullable(),
+    oathTakingDate: DateSchema(PharmacistModelTR.oathTakingDate, true).optional().nullable(),
 });
 
 const LicenseSchema = z.object({
     licenseType: EnumSchema(Object.values(licenseTypes) as [string], PharmacistModelTR.licenses.licenseType),
     startDate: DateSchema(PharmacistModelTR.licenses.startDate),
-    endDate: DateSchema(PharmacistModelTR.licenses.endDate).optional().nullable(),
+    endDate: DateSchema(PharmacistModelTR.licenses.endDate, true).optional().nullable(),
     details: EmptyStringSchema(PharmacistModelTR.licenses.details).optional().nullable(),
     images: z.preprocess((data) => {
         if (typeof data == "string") {
@@ -71,7 +71,7 @@ export const PracticeRecordSchema = z
             PharmacistModelTR.practiceRecords.practiceType
         ),
         startDate: DateSchema(PharmacistModelTR.practiceRecords.startDate),
-        endDate: DateSchema(PharmacistModelTR.practiceRecords.endDate).optional().nullable(),
+        endDate: DateSchema(PharmacistModelTR.practiceRecords.endDate, true).optional().nullable(),
         sector: StringSchema(PharmacistModelTR.practiceRecords.sector),
         place: StringSchema(PharmacistModelTR.practiceRecords.place),
     })
@@ -80,7 +80,7 @@ export const PracticeRecordSchema = z
             if (!data.endDate) {
                 return true;
             }
-            if (new Date(data.startDate) > new Date(data.endDate)) {
+            if (new Date(data.startDate!) > new Date(data.endDate)) {
                 return false;
             }
             return true;
@@ -98,7 +98,7 @@ export const SyndicateRecordSchema = z
     .object({
         syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string], PharmacistModelTR.syndicateRecords.syndicate),
         startDate: DateSchema(PharmacistModelTR.syndicateRecords.startDate),
-        endDate: DateSchema(PharmacistModelTR.syndicateRecords.endDate).optional().nullable(),
+        endDate: DateSchema(PharmacistModelTR.syndicateRecords.endDate, true).optional().nullable(),
         registrationNumber: StringSchema(PharmacistModelTR.syndicateRecords.registrationNumber),
     })
     .refine(
@@ -106,7 +106,7 @@ export const SyndicateRecordSchema = z
             if (!data.endDate) {
                 return true;
             }
-            if (new Date(data.startDate) > new Date(data.endDate)) {
+            if (new Date(data.startDate!) > new Date(data.endDate)) {
                 return false;
             }
             return true;

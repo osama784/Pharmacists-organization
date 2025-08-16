@@ -21,7 +21,7 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
             // check if added a new url to the source array
             for (const image of newImages) {
                 if (!oldImages.includes(image)) {
-                    res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.INVALID_IMAGES_URLS] });
+                    res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.PREVENT_ADDING_IMAGES_URLS] });
                     return;
                 }
             }

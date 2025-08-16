@@ -1,6 +1,6 @@
 import { HydratedDocument, Model } from "mongoose";
 
-interface IRole {
+export interface IRole {
     name: string;
     permissions: string[];
 }

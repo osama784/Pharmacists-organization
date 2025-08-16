@@ -6,7 +6,7 @@ export const StringSchema = (keyName: string | undefined = undefined) => {
     if (keyName) {
         return z
             .string({ message: `${keyName}: ${zodSchemasMessages.INVALID_STRING}` })
-            .nonempty({ message: zodSchemasMessages.EMPTY_STRING })
+            .nonempty({ message: `${keyName}: ${zodSchemasMessages.EMPTY_STRING}` })
             .trim();
     }
     return z.string({ message: zodSchemasMessages.INVALID_STRING }).nonempty({ message: zodSchemasMessages.EMPTY_STRING }).trim();
@@ -59,7 +59,7 @@ export const PasswordSchema = (keyName: string | undefined = undefined) => {
     } else {
         message = zodSchemasMessages.MIN(4);
     }
-    return StringSchema().min(4, { message });
+    return StringSchema(keyName).min(4, { message });
 };
 
 export const NumberSchema = (keyName: string | undefined = undefined) => {
@@ -95,12 +95,26 @@ export const EnumSchema = (data: [string, ...string[]], keyName: string | undefi
     return z.enum(data, { message });
 };
 
-export const DateSchema = (keyName: string | undefined = undefined) => {
+export const DateSchema = (keyName: string | undefined = undefined, optional: boolean = false) => {
     let message: string = "";
     if (keyName) {
         message = `${keyName} :${zodSchemasMessages.INVALID_DATE}`;
     } else {
         message = zodSchemasMessages.INVALID_DATE;
+    }
+    if (optional) {
+        return EmptyStringSchema(keyName)
+            .refine(
+                (value) => {
+                    if (value == "") return true;
+                    return !isNaN(Date.parse(value));
+                },
+                { message }
+            )
+            .transform((value) => {
+                if (value == "") return null;
+                return new Date(value);
+            });
     }
     return StringSchema(keyName)
         .refine(
