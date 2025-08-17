@@ -8,15 +8,19 @@ const updateSyndicateRecord = async (req: Request, res: TypedResponse<Pharmacist
         const validatedData: UpdateSyndicateRecordDto = req.validatedData;
         const pharmacistId = req.params.id;
         const syndicateRecordId = req.params.syndicateRecordId;
+        const updatedFields: Record<any, any> = {};
+        for (const key of Object.keys(validatedData)) {
+            updatedFields[`syndicateRecords.$.${key}`] = validatedData[key as keyof UpdateSyndicateRecordDto];
+        }
+
+        updatedFields["syndicateRecords.$._id"] = syndicateRecordId;
         const pharmacist = await Pharmacist.findOneAndUpdate(
             {
                 _id: pharmacistId,
                 "syndicateRecords._id": syndicateRecordId,
             },
             {
-                $set: {
-                    "syndicateRecords.$": validatedData,
-                },
+                $set: updatedFields,
             },
             {
                 new: true,

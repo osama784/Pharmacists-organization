@@ -4,6 +4,7 @@ import { responseMessages } from "../../translation/response.ar.js";
 import fs from "fs/promises";
 import path from "path";
 import { UPLOADS_DIR } from "../../utils/images.js";
+import Invoice from "../../models/invoice.model.js";
 
 const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -21,6 +22,10 @@ const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: Ne
         } catch (e) {}
 
         await pharmacist.deleteOne();
+        // delete all related invoices
+        for (const invoice of pharmacist.invoices) {
+            await Invoice.deleteOne({ _id: invoice });
+        }
 
         res.sendStatus(204);
     } catch (e) {

@@ -8,15 +8,18 @@ const updatePenalty = async (req: Request, res: TypedResponse<PharmacistResponse
         const validatedData: UpdatePenaltyDto = req.validatedData;
         const pharmacistId = req.params.id;
         const penaltyId = req.params.penaltyId;
+        const updatedFields: Record<any, any> = {};
+        for (const key of Object.keys(validatedData)) {
+            updatedFields[`penalties.$.${key}`] = validatedData[key as keyof UpdatePenaltyDto];
+        }
+        updatedFields["penalties.$._id"] = penaltyId;
         const pharmacist = await Pharmacist.findOneAndUpdate(
             {
                 _id: pharmacistId,
                 "penalties._id": penaltyId,
             },
             {
-                $set: {
-                    "penalties.$": validatedData,
-                },
+                $set: updatedFields,
             },
             {
                 new: true,

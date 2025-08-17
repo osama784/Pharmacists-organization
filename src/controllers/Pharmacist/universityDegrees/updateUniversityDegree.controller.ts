@@ -64,6 +64,12 @@ const updateUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
                 }
             }
         }
+        const updatedFields: Record<any, any> = {};
+        for (const key of Object.keys(validatedData)) {
+            updatedFields[`universityDegrees.$.${key}`] = validatedData[key as keyof UpdateUniversityDegreeDto];
+        }
+        updatedFields["universityDegrees.$.images"] = imagesURLs;
+        updatedFields["universityDegrees.$._id"] = universityDegreeId;
 
         const doc = await Pharmacist.findOneAndUpdate(
             {
@@ -71,9 +77,7 @@ const updateUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
                 "universityDegrees._id": universityDegreeId,
             },
             {
-                $set: {
-                    "universityDegrees.$": { ...validatedData, images: imagesURLs, _id: universityDegreeId },
-                },
+                $set: updatedFields,
             },
             {
                 new: true,

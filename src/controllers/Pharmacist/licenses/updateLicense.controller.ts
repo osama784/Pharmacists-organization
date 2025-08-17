@@ -64,16 +64,19 @@ const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponse
                 }
             }
         }
-
+        const updatedFields: Record<any, any> = {};
+        for (const key of Object.keys(validatedData)) {
+            updatedFields[`licenses.$.${key}`] = validatedData[key as keyof UpdateLicenseDto];
+        }
+        updatedFields["licenses.$.images"] = imagesURLs;
+        updatedFields["licenses.$._id"] = licenseId;
         const doc = await Pharmacist.findOneAndUpdate(
             {
                 _id: pharmacistId,
                 "licenses._id": licenseId,
             },
             {
-                $set: {
-                    "licenses.$": { ...validatedData, images: imagesURLs, _id: licenseId },
-                },
+                $set: updatedFields,
             },
             {
                 new: true,

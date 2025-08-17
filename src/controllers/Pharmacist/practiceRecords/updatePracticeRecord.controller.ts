@@ -18,15 +18,18 @@ const updatePracticeRecord = async (req: Request, res: TypedResponse<PharmacistR
             res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_SYNICATE_FOUND] });
             return;
         }
+        const updatedFields: Record<any, any> = {};
+        for (const key of Object.keys(validatedData)) {
+            updatedFields[`practiceRecords.$.${key}`] = validatedData[key as keyof UpdatePracticeRecordDto];
+        }
+        updatedFields["practiceRecords.$._id"] = practiceRecordId;
         const doc = await Pharmacist.findOneAndUpdate(
             {
                 _id: pharmacistId,
                 "practiceRecords._id": practiceRecordId,
             },
             {
-                $set: {
-                    "practiceRecords.$": validatedData,
-                },
+                $set: updatedFields,
             },
             {
                 new: true,

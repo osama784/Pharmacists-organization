@@ -19,7 +19,7 @@ const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, 
         const zip = new AdmZip();
         const files = await fs.readdir(userDir);
         if (files.length == 0) {
-            res.status(200).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_IMAGES_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_IMAGES_FOUND] });
             return;
         }
 
