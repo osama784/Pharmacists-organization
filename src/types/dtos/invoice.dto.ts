@@ -1,5 +1,7 @@
-import { PopulatedInvoiceDocument } from "../models/invoice.types.js";
+import mongoose from "mongoose";
+import { InvoiceDocument, PopulatedInvoiceDocument } from "../models/invoice.types.js";
 import { PharmacistDocument } from "../models/pharmacist.types.js";
+import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto.js";
 
 export type createInvoiceDto = {
     syndicateMembership: string;
@@ -13,7 +15,7 @@ export type updateInvoiceDto = Partial<createInvoiceDto> & {
 
 export type InvoiceResponseDto = {
     id: string;
-    pharmacist: PharmacistDocument;
+    pharmacist: PharmacistResponseDto | mongoose.Types.ObjectId;
     status?: string;
     syndicateMembership: string;
     total: number;
@@ -22,11 +24,11 @@ export type InvoiceResponseDto = {
     fees?: { name: string; value: number }[];
 };
 
-export function toInvoiceResponseDto(data: PopulatedInvoiceDocument): InvoiceResponseDto;
-export function toInvoiceResponseDto(data: PopulatedInvoiceDocument[]): InvoiceResponseDto[];
+export function toInvoiceResponseDto(data: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto;
+export function toInvoiceResponseDto(data: PopulatedInvoiceDocument[] | InvoiceDocument[]): InvoiceResponseDto[];
 
 export function toInvoiceResponseDto(
-    data: PopulatedInvoiceDocument | PopulatedInvoiceDocument[]
+    data: PopulatedInvoiceDocument | InvoiceDocument | PopulatedInvoiceDocument[] | InvoiceDocument[]
 ): InvoiceResponseDto | InvoiceResponseDto[] {
     if (Array.isArray(data)) {
         const result: InvoiceResponseDto[] = [];
@@ -38,10 +40,17 @@ export function toInvoiceResponseDto(
     return _toInvoiceResponseDto(data);
 }
 
-function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument): InvoiceResponseDto {
+function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto {
+    let pharmacist: mongoose.Types.ObjectId | PharmacistResponseDto;
+    if ("__v" in doc.pharmacist) {
+        pharmacist = toPharmacistResponseDto(doc.pharmacist as PharmacistDocument);
+    } else {
+        pharmacist = doc.pharmacist;
+    }
+
     return {
         id: doc.id,
-        pharmacist: doc.pharmacist,
+        pharmacist: pharmacist,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,
         total: doc.total,
@@ -50,10 +59,16 @@ function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument): InvoiceResponseDt
         fees: doc.fees,
     };
 }
-function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument): InvoiceResponseDto {
+function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto {
+    let pharmacist: mongoose.Types.ObjectId | PharmacistResponseDto;
+    if (doc.pharmacist && "__v" in doc.pharmacist) {
+        pharmacist = toPharmacistResponseDto(doc.pharmacist as PharmacistDocument);
+    } else {
+        pharmacist = doc.pharmacist;
+    }
     return {
         id: doc.id,
-        pharmacist: doc.pharmacist,
+        pharmacist: pharmacist,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,
         total: doc.total,

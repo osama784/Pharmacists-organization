@@ -13,9 +13,9 @@ const main = async () => {
     // await createSections();
     // await createFees();
     // await assignFeesToSections();
-    await createSyndicateMemberships();
+    // await createSyndicateMemberships();
     // await createSuperUser();
-    // await createSuperAdminRole();
+    await createSuperAdminRole();
     // await createEmptyRole();
     // await custom();
 };

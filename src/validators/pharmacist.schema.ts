@@ -63,56 +63,82 @@ export const CreateLicenseSchema = LicenseSchema.omit({
 });
 export const UpdateLicenseSchema = LicenseSchema.partial();
 
-export const PracticeRecordSchema = z
-    .object({
-        syndicate: EnumSchema(Object.values(practiceRecordsInfo.syndicate) as [string], PharmacistModelTR.practiceRecords.syndicate),
-        practiceType: EnumSchema(
-            Object.values(practiceRecordsInfo.practiceType) as [string],
-            PharmacistModelTR.practiceRecords.practiceType
-        ),
-        startDate: DateSchema(PharmacistModelTR.practiceRecords.startDate),
-        endDate: DateSchema(PharmacistModelTR.practiceRecords.endDate, true).optional().nullable(),
-        sector: StringSchema(PharmacistModelTR.practiceRecords.sector),
-        place: StringSchema(PharmacistModelTR.practiceRecords.place),
-    })
-    .refine(
-        (data) => {
-            if (!data.endDate) {
-                return true;
-            }
-            if (new Date(data.startDate!) > new Date(data.endDate)) {
-                return false;
-            }
-            return true;
-        },
-        { message: `${PharmacistModelTR.practiceRecords.startDate} : ${zodSchemasMessages.START_lt_END_DATE}` }
-    );
+const PracticeRecordSchema = z.object({
+    syndicate: EnumSchema(Object.values(practiceRecordsInfo.syndicate) as [string], PharmacistModelTR.practiceRecords.syndicate),
+    practiceType: EnumSchema(Object.values(practiceRecordsInfo.practiceType) as [string], PharmacistModelTR.practiceRecords.practiceType),
+    startDate: DateSchema(PharmacistModelTR.practiceRecords.startDate),
+    endDate: DateSchema(PharmacistModelTR.practiceRecords.endDate, true).optional().nullable(),
+    sector: StringSchema(PharmacistModelTR.practiceRecords.sector),
+    place: StringSchema(PharmacistModelTR.practiceRecords.place),
+});
 
-export const PenaltySchema = z.object({
+export const CreatePracticeRecordSchema = PracticeRecordSchema.refine(
+    (data) => {
+        if (!data.endDate) {
+            return true;
+        }
+        if (new Date(data.startDate!) > new Date(data.endDate)) {
+            return false;
+        }
+        return true;
+    },
+    { message: `${PharmacistModelTR.practiceRecords.startDate} : ${zodSchemasMessages.START_lt_END_DATE}` }
+);
+export const UpdatePracticeRecordSchema = PracticeRecordSchema.partial().refine(
+    (data) => {
+        if (!data.startDate || !data.endDate) {
+            return true;
+        }
+        if (new Date(data.startDate!) > new Date(data.endDate)) {
+            return false;
+        }
+        return true;
+    },
+    { message: `${PharmacistModelTR.practiceRecords.startDate} : ${zodSchemasMessages.START_lt_END_DATE}` }
+);
+
+const PenaltySchema = z.object({
     penaltyType: StringSchema(PharmacistModelTR.penalties.penaltyType),
     date: DateSchema(PharmacistModelTR.penalties.date),
     reason: EmptyStringSchema(PharmacistModelTR.penalties.reason).optional().nullable(),
     details: EmptyStringSchema(PharmacistModelTR.penalties.details).optional().nullable(),
 });
-export const SyndicateRecordSchema = z
-    .object({
-        syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string], PharmacistModelTR.syndicateRecords.syndicate),
-        startDate: DateSchema(PharmacistModelTR.syndicateRecords.startDate),
-        endDate: DateSchema(PharmacistModelTR.syndicateRecords.endDate, true).optional().nullable(),
-        registrationNumber: StringSchema(PharmacistModelTR.syndicateRecords.registrationNumber),
-    })
-    .refine(
-        (data) => {
-            if (!data.endDate) {
-                return true;
-            }
-            if (new Date(data.startDate!) > new Date(data.endDate)) {
-                return false;
-            }
+
+export const CreatePenaltySchema = PenaltySchema;
+export const UpdatePenaltySchema = PenaltySchema.partial();
+
+const SyndicateRecordSchema = z.object({
+    syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string], PharmacistModelTR.syndicateRecords.syndicate),
+    startDate: DateSchema(PharmacistModelTR.syndicateRecords.startDate),
+    endDate: DateSchema(PharmacistModelTR.syndicateRecords.endDate, true).optional().nullable(),
+    registrationNumber: StringSchema(PharmacistModelTR.syndicateRecords.registrationNumber),
+});
+
+export const CreateSyndicateRecordSchema = SyndicateRecordSchema.refine(
+    (data) => {
+        if (!data.endDate) {
             return true;
-        },
-        { message: `${PharmacistModelTR.syndicateRecords.startDate}: ${zodSchemasMessages.START_lt_END_DATE}` }
-    );
+        }
+        if (new Date(data.startDate!) > new Date(data.endDate)) {
+            return false;
+        }
+        return true;
+    },
+    { message: `${PharmacistModelTR.syndicateRecords.startDate}: ${zodSchemasMessages.START_lt_END_DATE}` }
+);
+export const UpdateSyndicateRecordSchema = SyndicateRecordSchema.partial().refine(
+    (data) => {
+        if (!data.startDate || !data.endDate) {
+            return true;
+        }
+        if (new Date(data.startDate!) > new Date(data.endDate)) {
+            return false;
+        }
+        return true;
+    },
+    { message: `${PharmacistModelTR.syndicateRecords.startDate}: ${zodSchemasMessages.START_lt_END_DATE}` }
+);
+
 const UniversityDegreeSchema = z.object({
     degreeType: EnumSchema(Object.values(universityDegreeTypes) as [string], PharmacistModelTR.universityDegrees.degreeType),
     obtainingDate: DateSchema(PharmacistModelTR.universityDegrees.obtainingDate),

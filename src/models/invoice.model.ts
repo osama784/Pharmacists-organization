@@ -33,12 +33,12 @@ const Invoice = new Schema<InvoiceDocument>({
     createdAt: { type: Date, required: true },
 });
 
-Invoice.pre("save", async function () {
-    if (this.isModified("fees")) {
-        const doc = await this.populate("fees");
-        this.total = doc.fees.reduce((sum, fee) => sum + fee.value, 0);
-    }
-});
+// Invoice.pre("save", async function () {
+//     if (this.isModified("fees")) {
+//         const doc = await this.populate("fees");
+//         this.total = doc.fees.reduce((sum, fee) => sum + fee.value, 0);
+//     }
+// });
 
 export const getPharmacistRelatedFees = async (
     validatedData: createInvoiceDto,

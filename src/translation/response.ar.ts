@@ -8,6 +8,7 @@ export const responseMessages = {
     NO_FILE_UPLOADED: "لم يتم تحميل أي ملف",
     INVALID_FILE_SUFFIX: "لاحقة الملف المرسل ليست لاحقة صورة مناسبة",
     UNEXPECTED_FIELD_NAME: "يجب أن ترسل أسماء المفاتيح بشكل صحيح",
+    BIG_SIZE_FILE: "حجم الملف أكبر من الحد المناسب",
     FEE_CONTROLLERS: {
         MISSING_VALUE_DETAIL: "يجب أن ترسل إما قيمة وحيدة أو ترسل قيم مفصلة على السنين لكل رسم",
         MISSING_VALUE: "يجب أن ترسل قيمة وحيدة من أجل الرسوم الثابتة",
@@ -31,5 +32,10 @@ export const responseMessages = {
         NO_IMAGES_FOUND: "لا يوجد صور لهذا الصيدلي بعد",
         PREVENT_ADDING_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
         NO_SYNICATE_FOUND: "لا يوجد نقابة كهذه في السجل النقابي",
+    },
+    REPORTS_CONTOLLERS: {
+        MISSING_VALUES: "يجب عليك أن ترسل المعلومات الكاملة لإتمام إرسال التقارير المطلوبة",
+        BAD_VALUES: "يجب عليك أن ترسل المعلومات بشكل صحيح لإتمام إرسال التقارير المطلوبة",
+        SECTION_NOT_FOUND: "لم يتم إيجاد الصندوق الذي تبحث عنه",
     },
 };

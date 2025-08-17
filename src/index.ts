@@ -10,6 +10,7 @@ import InvoiceRouter from "./routes/invoice.router.js";
 import FeeRouter from "./routes/fee.router.js";
 import UserRouter from "./routes/user.router.js";
 import RoleRouter from "./routes/role.router.js";
+import ReportsRouter from "./routes/reports.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
@@ -41,6 +42,7 @@ app.use("/invoices", InvoiceRouter);
 app.use("/fees", FeeRouter);
 app.use("/users", UserRouter);
 app.use("/users/roles", RoleRouter);
+app.use("/reports", ReportsRouter);
 
 app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: NextFunction) => {
     if (err instanceof AppError) {
@@ -49,11 +51,11 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
             details: [err.message],
         });
     } else {
-        console.log(err);
+        console.error(`${err.name}: ${err.message}`);
         if (err instanceof MulterError) {
             res.status(400).json({ success: false, details: [MulterErrorTranslator(err.code)] });
         } else {
-            logger.error(err.message);
+            // logger.error(err.message);
             if (err instanceof Error) {
                 console.log(err.stack);
             }

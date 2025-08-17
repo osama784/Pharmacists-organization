@@ -13,12 +13,15 @@ import {
     CreatePharmacistSchema,
     CreateLicenseSchema,
     UpdateLicenseSchema,
-    PenaltySchema,
-    PracticeRecordSchema,
-    SyndicateRecordSchema,
     CreateUniversityDegreeSchema,
     UpdateUniversityDegreeSchema,
     UpdatePharmacistSchema,
+    CreateSyndicateRecordSchema,
+    UpdateSyndicateRecordSchema,
+    CreatePracticeRecordSchema,
+    UpdatePracticeRecordSchema,
+    CreatePenaltySchema,
+    UpdatePenaltySchema,
 } from "../validators/pharmacist.schema.js";
 import getPharmacist from "../controllers/Pharmacist/get.controller.js";
 import exportPharmacistsAsExcel from "../controllers/Pharmacist/exportExcel.controller.js";
@@ -95,7 +98,7 @@ router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);
 router.get("/detail/:id", checkPermission(permissions.getPharmacist), getPharmacist);
-router.get("/export", exportPharmacistsAsExcel);
+router.get("/export", checkPermission(permissions.listPharmacists), exportPharmacistsAsExcel);
 router.post(
     "/create",
     checkPermission(permissions.createPharmacist),
@@ -112,7 +115,7 @@ router.patch(
 );
 router.delete("/delete/:id", checkPermission(permissions.deletePharmacist), deletePharmacist);
 
-router.get("/download/:id", downloadPharmacistImages);
+router.get("/download/:id", checkPermission(permissions.downloadPharmacistImages), downloadPharmacistImages);
 
 router.post(
     "/:id/licenses/create",
@@ -130,20 +133,20 @@ router.put(
 );
 router.delete("/:id/licenses/delete/:licenseId", checkPermission(permissions.updatePharmacist), deleteLicense);
 
-router.post("/:id/penalties/create", checkPermission(permissions.updatePharmacist), validate(PenaltySchema), createPenalty);
-router.put("/:id/penalties/update/:penaltyId", checkPermission(permissions.updatePharmacist), validate(PenaltySchema), updatePenalty);
+router.post("/:id/penalties/create", checkPermission(permissions.updatePharmacist), validate(CreatePenaltySchema), createPenalty);
+router.put("/:id/penalties/update/:penaltyId", checkPermission(permissions.updatePharmacist), validate(UpdatePenaltySchema), updatePenalty);
 router.delete("/:id/penalties/delete/:penaltyId", checkPermission(permissions.updatePharmacist), deletePenalty);
 
 router.post(
     "/:id/syndicate-records/create",
     checkPermission(permissions.updatePharmacist),
-    validate(SyndicateRecordSchema),
+    validate(CreateSyndicateRecordSchema),
     createSyndicateRecord
 );
 router.put(
     "/:id/syndicate-records/update/:syndicateRecordId",
     checkPermission(permissions.updatePharmacist),
-    validate(SyndicateRecordSchema),
+    validate(UpdateSyndicateRecordSchema),
     updateSyndicateRecord
 );
 router.delete("/:id/syndicate-records/delete/:syndicateRecordId", checkPermission(permissions.updatePharmacist), deleteSyndicateRecord);
@@ -151,13 +154,13 @@ router.delete("/:id/syndicate-records/delete/:syndicateRecordId", checkPermissio
 router.post(
     "/:id/practice-records/create",
     checkPermission(permissions.updatePharmacist),
-    validate(PracticeRecordSchema),
+    validate(CreatePracticeRecordSchema),
     createPracticeRecord
 );
 router.put(
     "/:id/practice-records/update/:practiceRecordId",
     checkPermission(permissions.updatePharmacist),
-    validate(PracticeRecordSchema),
+    validate(UpdatePracticeRecordSchema),
     updatePracticeRecord
 );
 router.delete("/:id/practice-records/delete/:practiceRecordId", checkPermission(permissions.updatePharmacist), deletePracticeRecord);

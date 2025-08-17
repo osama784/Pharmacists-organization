@@ -18,14 +18,14 @@ const createInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto
             return;
         }
         const fees = await getPharmacistRelatedFees(validatedData, pharmacist);
-
+        const total = fees.reduce((sum, fee) => sum + fee.value, 0);
         let isFinesIncluded = false;
         if (new Date() >= finesDate) {
             isFinesIncluded = true;
         }
 
         const invoice = await (
-            await Invoice.create({ ...req.validatedData, fees, isFinesIncluded, pharmacist })
+            await Invoice.create({ ...req.validatedData, fees, isFinesIncluded, pharmacist, total })
         ).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         res.json({ success: true, data: toInvoiceResponseDto(invoice) });
     } catch (e) {

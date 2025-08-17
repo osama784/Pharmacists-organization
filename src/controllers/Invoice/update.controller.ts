@@ -16,7 +16,16 @@ const updateInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        let updatedFields: Record<string, any> = validateData;
+        let updatedFields: Record<string, any> = { ...validateData };
+        // update "total" filed if "fees" field gets changed
+        if (validateData.fees) {
+            const total = validateData.fees.reduce((sum, fee) => sum + Number(fee.value), 0);
+            updatedFields = {
+                ...updatedFields,
+                total: total,
+            };
+        }
+
         if (status == invoiceStatuses.paid) {
             updatedFields = {
                 ...updatedFields,

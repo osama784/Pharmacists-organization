@@ -9,36 +9,34 @@ const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         const destiationFolder = path.join(__dirname, "..", "..", "..", "tmp");
         try {
-            try {
-                await fs.access(destiationFolder);
-            } catch (e) {
-                await fs.mkdir(destiationFolder);
-            }
-
-            cb(null, destiationFolder);
+            await fs.access(destiationFolder);
         } catch (e) {
-            cb(new Error((e as Error).message), destiationFolder);
+            await fs.mkdir(destiationFolder);
         }
+
+        cb(null, destiationFolder);
     },
     filename: (req, file, cb) => {
         const filename = path.parse(file.originalname).name;
-        cb(null, filename);
+        cb(null, `${filename}-${Date.now()}`);
     },
 });
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mime = allowedTypes.test(file.mimetype);
-
-        if (ext && mime) {
-            cb(null, true);
-        } else {
-            cb(new AppError(responseMessages.INVALID_FILE_SUFFIX, 400));
+        if (file.size >= 10 * 1024 * 1024) {
+            cb(new AppError(`${file.originalname}: ${responseMessages.BIG_SIZE_FILE}`, 400));
+            return;
         }
+        if (!ext || !mime) {
+            cb(new AppError(`${file.originalname}: ${responseMessages.INVALID_FILE_SUFFIX}`, 400));
+            return;
+        }
+        cb(null, true);
     },
 });
 
