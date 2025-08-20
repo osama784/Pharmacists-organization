@@ -26,11 +26,13 @@ const Invoice = new Schema<InvoiceDocument>({
             _id: false,
             name: { type: String, required: true },
             value: { type: Number, required: true },
+            numOfYears: { type: Number, required: true },
         },
     ],
     total: Number,
     paidDate: Date,
     createdAt: { type: Date, required: true },
+    updatedAt: { type: Date, required: true },
 });
 
 // Invoice.pre("save", async function () {
@@ -43,11 +45,12 @@ const Invoice = new Schema<InvoiceDocument>({
 export const getPharmacistRelatedFees = async (
     validatedData: createInvoiceDto,
     pharmacist: PharmacistDocument
-): Promise<{ name: string; value: number }[]> => {
+): Promise<{ name: string; value: number; numOfYears: number }[]> => {
     let lastTimePaidYear = pharmacist.lastTimePaid?.getFullYear();
     const graduationYear = pharmacist.graduationYear.getFullYear();
     const currentYear = new Date().getFullYear();
     let age = currentYear - pharmacist.birthDate.getFullYear();
+    const _fees: any[] = [];
 
     // finding the required year (the last year he paid at, or the graduation year if he didn't pay before)
     let syndicateMembershipStatus: string;
@@ -76,10 +79,11 @@ export const getPharmacistRelatedFees = async (
         } else {
             // this pharmacist has already paid his fees
             const allFees = await Fee.find();
-            const result: { name: string; value: number }[] = allFees.map((fee) => {
+            const result: { name: string; value: number; numOfYears: number }[] = allFees.map((fee) => {
                 return {
                     name: fee.name,
                     value: 0,
+                    numOfYears: 0,
                 };
             });
 
@@ -103,9 +107,10 @@ export const getPharmacistRelatedFees = async (
         }
     }
     // initiating some variables to track fees and their values
-    let fees: { name: string; value: number }[] = [];
+    let fees: { name: string; value: number; numOfYears: number }[] = [];
     let excludedFees: string[] = [];
     let value = 0;
+    let numOfYears = 0;
 
     if ([syndicateMembershipsTR["foreign-affiliation"], syndicateMembershipsTR["affiliation"]].includes(syndicateMembershipStatus)) {
         const affiliationSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
@@ -121,6 +126,7 @@ export const getPharmacistRelatedFees = async (
             if (fee.isMutable) {
                 // summing value depending from last year to current year
                 let tmpYear = requiredYear;
+                numOfYears = currentYear - requiredYear + 1;
                 while (tmpYear != currentYear + 1) {
                     value += fee.details?.get(`${tmpYear}`)!;
                     tmpYear += 1;
@@ -128,16 +134,20 @@ export const getPharmacistRelatedFees = async (
                 tmpYear = requiredYear;
             } else if (fee.isRepeatable) {
                 value = fee.value! * (currentYear - requiredYear + 1);
+                numOfYears = currentYear - requiredYear + 1;
             } else {
                 value = fee.value!;
+                numOfYears = 1;
             }
 
             fees.push({
                 name: fee.name,
                 value: value,
+                numOfYears,
             });
             excludedFees.push(fee.name);
             value = 0;
+            numOfYears = 0;
         });
     } else if (
         [
@@ -158,6 +168,7 @@ export const getPharmacistRelatedFees = async (
             if (fee.isMutable) {
                 // summing value depending from last year to current year
                 let tmpYear = requiredYear;
+                numOfYears = currentYear - requiredYear + 1;
                 while (tmpYear != currentYear + 1) {
                     value += fee.details?.get(`${tmpYear}`)!;
                     tmpYear += 1;
@@ -165,16 +176,20 @@ export const getPharmacistRelatedFees = async (
                 tmpYear = requiredYear;
             } else if (fee.isRepeatable) {
                 value = fee.value! * (currentYear - requiredYear + 1);
+                numOfYears = currentYear - requiredYear + 1;
             } else {
                 value = fee.value!;
+                numOfYears = 1;
             }
 
             fees.push({
                 name: fee.name,
                 value: value,
+                numOfYears,
             });
             excludedFees.push(fee.name);
             value = 0;
+            numOfYears = 0;
         });
     } else {
         let filter;
@@ -204,6 +219,7 @@ export const getPharmacistRelatedFees = async (
                 if (fee.isMutable) {
                     // summing value depending from last year to (current year - 1)
                     let tmpYear = requiredYear;
+                    numOfYears = currentYear - requiredYear;
                     while (tmpYear != currentYear) {
                         value += fee.details?.get(`${tmpYear}`)!;
                         tmpYear += 1;
@@ -211,16 +227,20 @@ export const getPharmacistRelatedFees = async (
                     tmpYear = requiredYear;
                 } else if (fee.isRepeatable) {
                     value = fee.value! * (currentYear - requiredYear);
+                    numOfYears = currentYear - requiredYear;
                 } else {
                     value = fee.value!;
+                    numOfYears = 1;
                 }
 
                 fees.push({
                     name: fee.name,
                     value: value,
+                    numOfYears,
                 });
                 excludedFees.push(fee.name);
                 value = 0;
+                numOfYears = 0;
             });
         }
         const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
@@ -246,6 +266,7 @@ export const getPharmacistRelatedFees = async (
                         fees[index] = {
                             name: fee.name,
                             value: fees[index].value + value,
+                            numOfYears: fees[index].numOfYears + 1,
                         };
                     }
                 }
@@ -254,6 +275,7 @@ export const getPharmacistRelatedFees = async (
                 fees.push({
                     name: fee.name,
                     value: value,
+                    numOfYears: 1,
                 });
                 excludedFees.push(fee.name);
             }
@@ -275,7 +297,7 @@ export const getPharmacistRelatedFees = async (
     let fineSummaryFeeValue = 0;
     let currentFee = null;
     let isFinesIncluded = false;
-    if (new Date() >= finesDate) {
+    if (new Date() >= finesDate && validatedData.calculateFees != undefined && validatedData.calculateFees == true) {
         isFinesIncluded = true;
         sections.forEach((section) => {
             section.fineableFees.forEach((fee) => {
@@ -288,6 +310,7 @@ export const getPharmacistRelatedFees = async (
             fees.push({
                 name: section.fineSummaryFee.name,
                 value: fineSummaryFeeValue,
+                numOfYears: 1,
             });
             fineSummaryFeeValue = 0;
         });
@@ -296,6 +319,7 @@ export const getPharmacistRelatedFees = async (
             fees.push({
                 name: section.fineSummaryFee.name,
                 value: 0,
+                numOfYears: 1,
             });
         });
     }
@@ -312,6 +336,7 @@ export const getPharmacistRelatedFees = async (
         fees.push({
             name: fee.name,
             value: 0,
+            numOfYears: 0,
         });
     });
 

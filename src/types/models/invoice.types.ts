@@ -6,10 +6,11 @@ export interface IInvoice {
     status?: string;
     syndicateMembership: string;
     isFinesIncluded?: boolean;
-    fees: { name: string; value: number }[];
+    fees: { name: string; value: number; numOfYears: number }[];
     total: number;
     paidDate?: Date;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 export type InvoiceDocument = HydratedDocument<IInvoice>;

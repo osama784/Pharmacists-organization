@@ -1,7 +1,7 @@
 export default interface IPharmacistQueries {
     page?: string;
     limit?: string;
-    fisrtName?: string | Object;
+    firstName?: string | Object;
     lastName?: string | Object;
     fatherName?: string | Object;
     motherName?: string | Object;

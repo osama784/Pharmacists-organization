@@ -11,9 +11,9 @@ const listInvoices = async (req: Request, res: TypedResponse<InvoiceResponseDto[
         const page = parseInt(queries.page!) || 1;
         const limit = parseInt(queries.limit!) || 10;
         const skip = (page - 1) * limit;
-        const filters = buildInvoiceFilters(queries);
+        const filters = await buildInvoiceFilters(queries);
 
-        const result = await Invoice.find(filters).select("-fees").skip(skip).limit(limit).populate<{
+        const result = await Invoice.find(filters).select("-fees").sort("-updatedAt").skip(skip).limit(limit).populate<{
             pharmacist: PharmacistDocument;
         }>("pharmacist");
 

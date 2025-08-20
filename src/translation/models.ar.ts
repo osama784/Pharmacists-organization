@@ -46,10 +46,12 @@ export const InvoiceModelTR: InvoiceModelTR = {
     syndicateMembership: "نوع المزاولة",
     paidDate: "تاريخ الدفع",
     createdAt: "تاريخ إنشاء الفاتورة",
+    updatedAt: "تاريخ تعديل الفاتورة",
     total: "المجموع الكلي",
     fees: {
         name: "اسم الرسم",
         value: "قيمة الرسم",
+        numOfYears: "عدد السنوات",
     },
 };
 type PharmacistModelTR = Record<keyof Omit<IPharmacist, "invoices" | "currentSyndicate">, any>;

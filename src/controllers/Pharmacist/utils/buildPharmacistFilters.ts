@@ -3,7 +3,7 @@ import { buildDateFilter, buildStringFilter } from "../../../utils/buildFilters.
 
 const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any> => {
     let filters: Record<string, any> = {};
-    if (queries.fisrtName) filters.fisrtName = buildStringFilter(queries.fisrtName);
+    if (queries.firstName) filters.firstName = buildStringFilter(queries.firstName);
     if (queries.lastName) filters.lastName = buildStringFilter(queries.lastName);
     if (queries.fatherName) filters.fatherName = buildStringFilter(queries.fatherName);
     if (queries.motherName) filters.motherName = buildStringFilter(queries.motherName);

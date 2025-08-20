@@ -1,12 +1,18 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import Invoice, { getPharmacistRelatedFees } from "../../models/invoice.model.js";
+import Invoice, { getPharmacistRelatedFees, invoiceStatuses } from "../../models/invoice.model.js";
 import { createInvoiceDto, InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
 import staticData from "../../config/static-data.json";
 import Pharmacist from "../../models/pharmacist.model.js";
 import { responseMessages } from "../../translation/response.ar.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
+import Section from "../../models/section.model.js";
+import { FeeDocument } from "../../types/models/fee.types.js";
 
-const createInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto>, next: NextFunction) => {
+const createInvoice = async (
+    req: Request,
+    res: TypedResponse<Omit<InvoiceResponseDto, "fees"> & { fees: Record<string, any> }>,
+    next: NextFunction
+) => {
     try {
         // check fines date, adding fines
         const validatedData: createInvoiceDto = req.validatedData;
@@ -25,9 +31,40 @@ const createInvoice = async (req: Request, res: TypedResponse<InvoiceResponseDto
         }
 
         const invoice = await (
-            await Invoice.create({ ...req.validatedData, fees, isFinesIncluded, pharmacist, total })
+            await Invoice.create({
+                ...req.validatedData,
+                fees,
+                isFinesIncluded,
+                pharmacist,
+                total,
+                status: invoiceStatuses.ready,
+                updatedAt: Date.now(),
+            })
         ).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
-        res.json({ success: true, data: toInvoiceResponseDto(invoice) });
+        let serializedDoc = toInvoiceResponseDto(invoice);
+        const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
+        let serializedFees: Record<string, any> = {};
+
+        for (const section of sections) {
+            let sectionTotalFeesValue = 0;
+            const sectionFees = section.fees.map((fee) => {
+                const currentFee = fees.find((element) => element.name == fee.name);
+                if (!currentFee) {
+                    return;
+                }
+                sectionTotalFeesValue += Number(currentFee.value);
+                return {
+                    name: fee.name,
+                    value: currentFee.value,
+                    numOfYears: currentFee.numOfYears,
+                };
+            });
+            serializedFees[section.name] = {};
+            serializedFees[section.name]["fees"] = sectionFees;
+            serializedFees[section.name]["total"] = sectionTotalFeesValue;
+        }
+
+        res.json({ success: true, data: { ...serializedDoc, fees: serializedFees } });
     } catch (e) {
         next(e);
     }

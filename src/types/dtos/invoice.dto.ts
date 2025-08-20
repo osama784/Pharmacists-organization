@@ -6,11 +6,12 @@ import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto
 export type createInvoiceDto = {
     syndicateMembership: string;
     createdAt?: Date;
+    calculateFees?: boolean;
 };
 
-export type updateInvoiceDto = Partial<createInvoiceDto> & {
+export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFees">> & {
     status?: string | null;
-    fees?: { name: string; value: number }[];
+    fees?: { name: string; value: number; numOfYears: number }[];
 };
 
 export type InvoiceResponseDto = {
@@ -21,7 +22,7 @@ export type InvoiceResponseDto = {
     total: number;
     paidDate?: Date;
     createdAt: Date;
-    fees?: { name: string; value: number }[];
+    fees?: { name: string; value: number; numOfYears: number }[];
 };
 
 export function toInvoiceResponseDto(data: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto;
@@ -47,7 +48,6 @@ function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument):
     } else {
         pharmacist = doc.pharmacist;
     }
-
     return {
         id: doc.id,
         pharmacist: pharmacist,

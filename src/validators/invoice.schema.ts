@@ -5,10 +5,13 @@ import { DateSchema, EmptyStringSchema, EnumSchema, NumberSchemaPositive, String
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 import toLocalDate from "../utils/toLocalDate.js";
 import { InvoiceModelTR } from "../translation/models.ar.js";
+import { invoiceStatuses } from "../models/invoice.model.js";
 
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema(syndicateMemberships as [string]),
-    status: EmptyStringSchema(InvoiceModelTR.status).optional().nullable(),
+    status: EnumSchema(Object.values(invoiceStatuses) as [string, ...string[]], InvoiceModelTR.status)
+        .optional()
+        .nullable(),
     createdAt: DateSchema(InvoiceModelTR.createdAt).default(toLocalDate(new Date())!.toISOString()),
     fees: z
         .array(
@@ -24,6 +27,7 @@ const InvoiceSchema = z.object({
                     { message: zodSchemasMessages.INVOICE_SCHEMA.FEE_NAME_NOT_FOUND }
                 ),
                 value: NumberSchemaPositive(InvoiceModelTR.fees.value),
+                numOfYears: NumberSchemaPositive(InvoiceModelTR.fees.numOfYears),
             })
         )
         .refine(
@@ -42,5 +46,7 @@ const InvoiceSchema = z.object({
         ),
 });
 
-export const CreateInvoiceSchema = InvoiceSchema.omit({ status: true, fees: true });
+export const CreateInvoiceSchema = InvoiceSchema.extend({
+    calculateFees: z.boolean().optional(),
+}).omit({ status: true, fees: true });
 export const UpdateInvoiceSchema = InvoiceSchema.partial();
