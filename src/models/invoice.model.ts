@@ -297,7 +297,7 @@ export const getPharmacistRelatedFees = async (
     let fineSummaryFeeValue = 0;
     let currentFee = null;
     let isFinesIncluded = false;
-    if (new Date() >= finesDate && validatedData.calculateFees != undefined && validatedData.calculateFees == true) {
+    if (new Date() >= finesDate && validatedData.calculateFines != undefined && validatedData.calculateFines == true) {
         isFinesIncluded = true;
         sections.forEach((section) => {
             section.fineableFees.forEach((fee) => {

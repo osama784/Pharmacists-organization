@@ -6,7 +6,7 @@ import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto
 export type createInvoiceDto = {
     syndicateMembership: string;
     createdAt?: Date;
-    calculateFees?: boolean;
+    calculateFines?: boolean;
 };
 
 export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFees">> & {

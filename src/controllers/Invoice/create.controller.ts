@@ -26,7 +26,7 @@ const createInvoice = async (
         const fees = await getPharmacistRelatedFees(validatedData, pharmacist);
         const total = fees.reduce((sum, fee) => sum + fee.value, 0);
         let isFinesIncluded = false;
-        if (new Date() >= finesDate) {
+        if (new Date() >= finesDate && validatedData.calculateFines != undefined && validatedData.calculateFines == true) {
             isFinesIncluded = true;
         }
 
