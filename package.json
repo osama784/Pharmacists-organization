@@ -27,6 +27,7 @@
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
         "passport-local": "^1.0.0",
+        "puppeteer-core": "^24.17.0",
         "sharp": "^0.34.3",
         "winston": "^3.17.0",
         "zod": "^3.24.1"

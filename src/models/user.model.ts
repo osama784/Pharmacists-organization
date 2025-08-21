@@ -21,8 +21,6 @@ const User = new Schema<UserDocument>(
         status: {
             type: String,
             required: true,
-            enum: Object.values(UserStatuses),
-            default: UserStatuses.active,
         },
         role: {
             type: Schema.Types.ObjectId,
