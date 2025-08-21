@@ -17,7 +17,7 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
             return;
         }
 
-        let invoiceHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "invoice.html")), {
+        let invoiceHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "templates", "invoice.html")), {
             encoding: "utf-8",
         });
 

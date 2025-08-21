@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 // Password reset email function
 export const sendPasswordResetEmail = async (email: string, info: { username: string; resetToken: string }) => {
     // Read HTML template
-    const templatePath = path.join(__dirname, "..", "templates", "password-reset.html");
+    const templatePath = path.join(__dirname, "..", "..", "templates", "password-reset.html");
     let html = await fs.readFile(templatePath, "utf8");
 
     // Replace placeholders
