@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 16px;
             line-height: 1.4;
             color: #000;
             padding: 20px;
@@ -26,20 +26,13 @@
             padding-bottom: 10px;
         }
 
-        .header-icon {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
         .header-center {
             text-align: center;
             flex: 1;
         }
 
         .header-title-en {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 5px;
             direction: ltr;
@@ -52,7 +45,7 @@
         }
 
         .header-details {
-            font-size: 10px;
+            font-size: 14px;
         }
 
         .bank-info {
@@ -68,7 +61,7 @@
             width: 100%;
             border-collapse: collapse;
             border: 1px solid #000;
-            font-size: 11px;
+            font-size: 14px;
             margin-bottom: 10px;
         }
 
@@ -101,12 +94,12 @@
         }
 
         .small-text {
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .table-header {
             background-color: #f0f0f0;
-            font-size: 9px;
+            font-size: 12px;
             text-align: center;
         }
 
@@ -118,7 +111,7 @@
         .contact-info {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 12px;
             border-top: 1px solid #000;
             padding-top: 10px;
             direction: ltr;
@@ -129,9 +122,6 @@
 <body>
     <!-- Header Section -->
     <div class="header">
-        <div class="header-icon">
-            <div>⚕</div>
-        </div>
         <div class="header-center">
             <div class="header-title-en">ASSOCIATION OF SYRIAN PHARMACISTS</div>
             <div class="header-title-ar">نقابة صيادلة سورية</div>
@@ -178,23 +168,23 @@
             <tbody>
                 <tr>
                     <td>حساب نقابة صيادلة سورية رقم 209999 جاري</td>
-                    <td class="center-align">30000</td>
+                    <td class="center-align" data-section="صندوق النقابة" data-section-total="true"></td>
                 </tr>
                 <tr>
                     <td>حساب خزانة تقاعد صيادلة سورية رقم 203333 جاري</td>
-                    <td class="center-align">443000</td>
+                    <td class="center-align" data-section="خزانة التقاعد" data-section-total="true"></td>
                 </tr>
                 <tr>
                     <td>حساب صندوق اعانة العجز والرفاة اصيادلة سورية رقم 207777 جاري</td>
-                    <td class="center-align">394000</td>
+                    <td class="center-align" data-section="صندوق إعانة العجز و الوفاة" data-section-total="true"></td>
                 </tr>
                 <tr>
                     <td>حساب التكافل الصحي لصيادلة سورية رقم 205550 جاري</td>
-                    <td class="center-align">50000</td>
+                    <td class="center-align" data-section="خزانة التكافل الصحي" data-section-total="true"></td>
                 </tr>
                 <tr>
                     <td>المجموع النهائي:</td>
-                    <td class="center-align">917000</td>
+                    <td class="center-align" data-total-all-sections="true"></td>
                 </tr>
             </tbody>
         </table>

@@ -55,10 +55,11 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
 
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let feeOrder = 1;
+        let sectionTotal = 0;
         let total = 0;
         for (const section of sections) {
             feeOrder = 1;
-            total = 0;
+            sectionTotal = 0;
             for (const fee of section.fees) {
                 const invoiceFee = invoice.fees.find((value) => value.name == fee.name);
                 const searchFeeName = `<th class="table-header" data-section="${section.name}" data-number="${feeOrder}"></th>`;
@@ -70,15 +71,23 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
                 }" data-value="true" data-number="${feeOrder}">${invoiceFee?.value!}</td>`;
 
                 feeOrder++;
-                total += invoiceFee?.value!;
+                sectionTotal += invoiceFee?.value!;
                 invoiceHTML = invoiceHTML.replace(searchFeeName, resultFeeName);
                 invoiceHTML = invoiceHTML.replace(searchFeeValue, resultFeeValue);
             }
-            const searchTotal = `<td class="center-align" data-section="${section.name}" data-final="true"></td>`;
-            const resultTotal = `<td class="center-align" data-section="${section.name}" data-final="true">${total}</td>`;
+            total += sectionTotal;
+            const searchSectionTotal = `<td class="center-align" data-section="${section.name}" data-final="true"></td>`;
+            const resultSectionTotal = `<td class="center-align" data-section="${section.name}" data-final="true">${sectionTotal}</td>`;
 
-            invoiceHTML = invoiceHTML.replace(searchTotal, resultTotal);
+            const searchSectionTotal2 = `<td class="center-align" data-section="${section.name}" data-section-total="true"></td>`;
+            const resultSectionTotal2 = `<td class="center-align" data-section="${section.name}" data-section-total="true">${sectionTotal}</td>`;
+
+            invoiceHTML = invoiceHTML.replace(searchSectionTotal, resultSectionTotal);
+            invoiceHTML = invoiceHTML.replace(searchSectionTotal2, resultSectionTotal2);
         }
+        const searchTotal = `<td class="center-align" data-total-all-sections="true"></td>`;
+        const resultTotal = `<td class="center-align" data-total-all-sections="true">${total}</td>`;
+        invoiceHTML = invoiceHTML.replace(searchTotal, resultTotal);
 
         const browser = await puppeteer.launch({
             executablePath: getChromePath(), // Function to get Chrome path
