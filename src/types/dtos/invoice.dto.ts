@@ -9,7 +9,7 @@ export type createInvoiceDto = {
     calculateFines?: boolean;
 };
 
-export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFees">> & {
+export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines">> & {
     status?: string | null;
     fees?: { name: string; value: number; numOfYears: number }[];
 };
@@ -17,7 +17,7 @@ export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFees">> 
 export type InvoiceResponseDto = {
     id: string;
     pharmacist: PharmacistResponseDto | mongoose.Types.ObjectId;
-    status?: string;
+    status: string;
     syndicateMembership: string;
     total: number;
     paidDate?: Date;

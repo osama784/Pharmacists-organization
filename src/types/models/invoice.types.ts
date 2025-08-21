@@ -3,7 +3,7 @@ import { PharmacistDocument } from "./pharmacist.types.js";
 
 export interface IInvoice {
     pharmacist: mongoose.Types.ObjectId;
-    status?: string;
+    status: string;
     syndicateMembership: string;
     isFinesIncluded?: boolean;
     fees: { name: string; value: number; numOfYears: number }[];

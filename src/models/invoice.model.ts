@@ -12,13 +12,13 @@ import { SectionDocument } from "../types/models/section.types.js";
 
 export const invoiceStatuses = {
     paid: "مدفوع",
-    ready: "جاهزة لللإرسال",
+    ready: "جاهزة للإرسال",
     cancelled: "ملغاة",
 };
 
 const Invoice = new Schema<InvoiceDocument>({
     pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
-    status: String,
+    status: { type: String, required: true },
     syndicateMembership: { type: String, required: true },
     isFinesIncluded: Boolean,
     fees: [

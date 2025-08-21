@@ -13,7 +13,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
         const page = parseInt(queries.page!) || 1;
         const limit = parseInt(queries.limit!) || 10;
         const skip = (page - 1) * limit;
-        const filters = buildInvoiceFilters(queries);
+        const filters = await buildInvoiceFilters(queries);
 
         const result = await Invoice.find(filters).select("-fees").skip(skip).limit(limit).populate<{
             pharmacist: PharmacistDocument;
@@ -27,7 +27,7 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
             return !excludedFields.includes(value);
         });
         worksheet.columns = headers.map((header) => ({
-            header: InvoiceModelTR[header as keyof Omit<IInvoice, "isFinesIncluded">],
+            header: InvoiceModelTR[header as keyof Omit<IInvoice, "isFinesIncluded" | "fees">],
             key: header,
             width: 25,
         }));

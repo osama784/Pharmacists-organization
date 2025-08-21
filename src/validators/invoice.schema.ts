@@ -9,9 +9,7 @@ import { invoiceStatuses } from "../models/invoice.model.js";
 
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema(syndicateMemberships as [string]),
-    status: EnumSchema(Object.values(invoiceStatuses) as [string, ...string[]], InvoiceModelTR.status)
-        .optional()
-        .nullable(),
+    status: EnumSchema(Object.values(invoiceStatuses) as [string, ...string[]], InvoiceModelTR.status),
     createdAt: DateSchema(InvoiceModelTR.createdAt).default(toLocalDate(new Date())!.toISOString()),
     fees: z
         .array(
