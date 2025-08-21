@@ -13,6 +13,7 @@ import deleteInvoice from "../controllers/Invoice/delete.controller.js";
 import exportInvoicesAsExcel from "../controllers/Invoice/exportExcel.controller.js";
 import AppError from "../utils/AppError.js";
 import { responseMessages } from "../translation/response.ar.js";
+import printInvoice from "../controllers/Invoice/printInvoice.controller.js";
 
 const router = Router();
 
@@ -31,7 +32,7 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-// router.use(passport.authenticate("jwt", { session: false }));
+router.use(passport.authenticate("jwt", { session: false }));
 
 router.post("/create/:id", checkPermission(permissions.createInvoice), validate(CreateInvoiceSchema), createInvoice);
 router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);
@@ -39,5 +40,6 @@ router.patch("/update/:id", checkPermission(permissions.updateInvoice), validate
 router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
 router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
 router.get("/export", exportInvoicesAsExcel);
+router.get("/print/:id", printInvoice);
 
 export default router;

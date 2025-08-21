@@ -8,9 +8,9 @@ import { toUserResponseDto, UserResponseDto } from "../../types/dtos/user.dto.js
 const listUsers = async (req: Request, res: TypedResponse<UserResponseDto[]>, next: NextFunction) => {
     try {
         const queries = req.query as IUserQuery;
-        const page = parseInt(queries.page!) || 1;
+        const page = parseInt(queries.page!) || 0;
         const limit = parseInt(queries.limit!) || 10;
-        const skip = (page - 1) * limit;
+        const skip = page * limit;
         const filters = await buildUserFilters(queries);
         const result = await User.find(filters).sort("-createdAt").skip(skip).limit(limit).populate<{ role: RoleDocument }>("role");
 

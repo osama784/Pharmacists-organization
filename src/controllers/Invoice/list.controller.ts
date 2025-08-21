@@ -8,9 +8,9 @@ import { InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoi
 const listInvoices = async (req: Request, res: TypedResponse<InvoiceResponseDto[]>, next: NextFunction) => {
     try {
         const queries = req.query as IInvoiceQueries;
-        const page = parseInt(queries.page!) || 1;
+        const page = parseInt(queries.page!) || 0;
         const limit = parseInt(queries.limit!) || 10;
-        const skip = (page - 1) * limit;
+        const skip = page * limit;
         const filters = await buildInvoiceFilters(queries);
 
         const result = await Invoice.find(filters).select("-fees").sort("-updatedAt").skip(skip).limit(limit).populate<{

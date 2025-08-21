@@ -9,9 +9,9 @@ import { IPharmacist } from "../../types/models/pharmacist.types.js";
 const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const queries = req.query as IPharmacistQueries;
-        const page = parseInt(queries.page!) || 1;
+        const page = parseInt(queries.page!) || 0;
         const limit = parseInt(queries.limit!) || 10;
-        const skip = (page - 1) * limit;
+        const skip = page * limit;
         const filters = buildPharmacistFilters(queries);
 
         const result = await Pharmacist.find(filters)

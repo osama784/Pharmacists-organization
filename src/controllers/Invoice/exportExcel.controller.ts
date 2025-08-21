@@ -10,9 +10,9 @@ import { IInvoice } from "../../types/models/invoice.types.js";
 const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const queries = req.query as IInvoiceQueries;
-        const page = parseInt(queries.page!) || 1;
+        const page = parseInt(queries.page!) || 0;
         const limit = parseInt(queries.limit!) || 10;
-        const skip = (page - 1) * limit;
+        const skip = page * limit;
         const filters = await buildInvoiceFilters(queries);
 
         const result = await Invoice.find(filters).select("-fees").skip(skip).limit(limit).populate<{
