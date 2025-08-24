@@ -4,7 +4,7 @@ import { responseMessages } from "../../translation/response.ar.js";
 
 const deleteInvoice = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const result = await Invoice.deleteOne({ _id: req.params.id });
+        const result = await Invoice.deleteOne({ serialID: req.params.id });
         if (result.deletedCount != 1) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;

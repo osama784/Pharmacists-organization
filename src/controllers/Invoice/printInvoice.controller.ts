@@ -11,7 +11,7 @@ import puppeteer from "puppeteer-core";
 
 const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const invoice = await Invoice.findById(req.params.id).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
+        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
@@ -33,10 +33,14 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
             "{{birthDate}}",
             `${invoice.pharmacist.birthDate.getFullYear()}/${invoice.pharmacist.birthDate.getMonth()}/${invoice.pharmacist.birthDate.getDate()}`
         );
-        invoiceHTML = invoiceHTML.replace("{{birthPlace}}", `${invoice.pharmacist.birthPlace}`);
+        if (invoice.pharmacist.birthPlace) {
+            invoiceHTML = invoiceHTML.replace("{{birthPlace}}", `${invoice.pharmacist.birthPlace}`);
+        } else {
+            invoiceHTML = invoiceHTML.replace("{{birthPlace}}", "لا يوجد");
+        }
+
         invoiceHTML = invoiceHTML.replace("{{fatherName}}", `${invoice.pharmacist.fatherName}`);
         invoiceHTML = invoiceHTML.replace("{{motherName}}", `${invoice.pharmacist.motherName}`);
-        invoiceHTML = invoiceHTML.replace("{{lastName}}", `${invoice.pharmacist.motherName}`);
         invoiceHTML = invoiceHTML.replace("{{lastName}}", `${invoice.pharmacist.lastName}`);
         invoiceHTML = invoiceHTML.replace("{{gender}}", `${invoice.pharmacist.gender}`);
 
@@ -47,10 +51,12 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
                 "{{lastTimePaid}}",
                 `${invoice.pharmacist.lastTimePaid.getFullYear()}/${invoice.pharmacist.lastTimePaid.getMonth()}/${invoice.pharmacist.lastTimePaid.getDate()}`
             );
+        } else {
+            invoiceHTML = invoiceHTML.replace("{{lastTimePaid}}", "لا يوجد");
         }
         invoiceHTML = invoiceHTML.replace("{{syndicateMembership}}", `${invoice.syndicateMembership}`);
         invoiceHTML = invoiceHTML.replace("{{syndicateMembership}}", `${invoice.syndicateMembership}`);
-        invoiceHTML = invoiceHTML.replace("{{fullName}}", `${invoice.pharmacist.fullName}`);
+        invoiceHTML = invoiceHTML.replace("{{firstName}}", `${invoice.pharmacist.firstName}`);
         invoiceHTML = invoiceHTML.replace("{{fullName}}", `${invoice.pharmacist.fullName}`);
 
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");

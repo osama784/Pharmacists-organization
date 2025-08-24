@@ -49,7 +49,7 @@ function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument):
         pharmacist = doc.pharmacist;
     }
     return {
-        id: doc.id,
+        id: doc.serialID,
         pharmacist: pharmacist,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,
@@ -67,7 +67,7 @@ function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocume
         pharmacist = doc.pharmacist;
     }
     return {
-        id: doc.id,
+        id: doc.serialID,
         pharmacist: pharmacist,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,

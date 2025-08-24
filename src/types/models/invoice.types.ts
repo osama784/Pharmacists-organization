@@ -2,6 +2,7 @@ import mongoose, { HydratedDocument, Model, PopulatedDoc } from "mongoose";
 import { PharmacistDocument } from "./pharmacist.types.js";
 
 export interface IInvoice {
+    serialID: string;
     pharmacist: mongoose.Types.ObjectId;
     status: string;
     syndicateMembership: string;

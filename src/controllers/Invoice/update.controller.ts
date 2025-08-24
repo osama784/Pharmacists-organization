@@ -16,7 +16,7 @@ const updateInvoice = async (
     const status = validateData.status;
 
     try {
-        const invoice = await Invoice.findById(req.params.id);
+        const invoice = await Invoice.findOne({ serialID: req.params.id });
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
@@ -72,7 +72,7 @@ const updateInvoice = async (
                 };
             });
             serializedFees[section.name] = {};
-            serializedFees[section.name]["fees"] = sectionFees;
+            serializedFees[section.name]["fees"] = sectionFees.sort((a, b) => a?.name!.localeCompare(b?.name!)!);
             serializedFees[section.name]["total"] = sectionTotalFeesValue;
         }
 

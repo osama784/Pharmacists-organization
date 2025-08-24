@@ -18,7 +18,7 @@ import printInvoice from "../controllers/Invoice/printInvoice.controller.js";
 const router = Router();
 
 router.param("id", (req, res, next, value, name) => {
-    if (!mongoose.Types.ObjectId.isValid(value)) {
+    if (isNaN(Number(value))) {
         next(new AppError(responseMessages.NOT_FOUND, 400));
         return;
     }
@@ -32,7 +32,7 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-router.use(passport.authenticate("jwt", { session: false }));
+// router.use(passport.authenticate("jwt", { session: false }));
 
 router.post("/create/:id", checkPermission(permissions.createInvoice), validate(CreateInvoiceSchema), createInvoice);
 router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);

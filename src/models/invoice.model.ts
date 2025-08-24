@@ -9,6 +9,7 @@ import SyndicateMembership from "./syndicateMembership.model.js";
 import Section from "./section.model.js";
 import staticData from "../config/static-data.json";
 import { SectionDocument } from "../types/models/section.types.js";
+import Counter from "./counter.model.js";
 
 export const invoiceStatuses = {
     paid: "مدفوع",
@@ -17,6 +18,7 @@ export const invoiceStatuses = {
 };
 
 const Invoice = new Schema<InvoiceDocument>({
+    serialID: { type: String, unique: true },
     pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
     status: { type: String, required: true },
     syndicateMembership: { type: String, required: true },
@@ -35,12 +37,19 @@ const Invoice = new Schema<InvoiceDocument>({
     updatedAt: { type: Date, required: true },
 });
 
-// Invoice.pre("save", async function () {
-//     if (this.isModified("fees")) {
-//         const doc = await this.populate("fees");
-//         this.total = doc.fees.reduce((sum, fee) => sum + fee.value, 0);
-//     }
-// });
+Invoice.pre("save", async function (next) {
+    if (this.isNew) {
+        try {
+            const counter = await Counter.findOneAndUpdate({ name: "invoice" }, { $inc: { value: 1 } }, { new: true, upsert: true });
+            this.serialID = counter.value.toString();
+            next();
+        } catch (e) {
+            next(e as Error);
+        }
+    } else {
+        next();
+    }
+});
 
 export const getPharmacistRelatedFees = async (
     validatedData: createInvoiceDto,

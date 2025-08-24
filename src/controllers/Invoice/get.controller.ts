@@ -13,15 +13,15 @@ const getInvoice = async (
     next: NextFunction
 ) => {
     try {
-        const invoice = await Invoice.findById(req.params.id).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
+        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
 
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         let serializedDoc = toInvoiceResponseDto(invoice);
-        const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let serializedFees: Record<string, any> = {};
+        const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
 
         for (const section of sections) {
             let sectionTotalFeesValue = 0;
@@ -38,7 +38,7 @@ const getInvoice = async (
                 };
             });
             serializedFees[section.name] = {};
-            serializedFees[section.name]["fees"] = sectionFees;
+            serializedFees[section.name]["fees"] = sectionFees.sort((a, b) => a?.name!.localeCompare(b?.name!)!);
             serializedFees[section.name]["total"] = sectionTotalFeesValue;
         }
 
