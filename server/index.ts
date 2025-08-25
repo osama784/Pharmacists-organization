@@ -19,6 +19,7 @@ import { UPLOADS_DIR } from "./utils/images.js";
 import multer, { MulterError } from "multer";
 import { logger } from "./middlewares/logger.middleware.js";
 import { MulterErrorTranslator } from "./translation/utils.ar.js";
+import path from "path";
 config();
 
 const PORT = process.env.PORT || 3000;
@@ -34,15 +35,20 @@ app.set("query parser", (str: string) =>
 app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static(UPLOADS_DIR));
+app.use(express.static(path.join(__dirname, "..", "front")));
 app.use(passport.initialize());
 
-app.use("/auth", authRouter);
-app.use("/pharmacists", PharmacistsRouter);
-app.use("/invoices", InvoiceRouter);
-app.use("/fees", FeeRouter);
-app.use("/users", UserRouter);
-app.use("/users/roles", RoleRouter);
-app.use("/reports", ReportsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/pharmacists", PharmacistsRouter);
+app.use("/api/invoices", InvoiceRouter);
+app.use("/api/fees", FeeRouter);
+app.use("/api/users", UserRouter);
+app.use("/api/users/roles", RoleRouter);
+app.use("/api/reports", ReportsRouter);
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "front", "index.html"));
+});
 
 app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: NextFunction) => {
     if (err instanceof AppError) {

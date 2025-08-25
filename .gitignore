@@ -1,7 +1,7 @@
 logs/
 node_modules/
 load/
-dist/
+/dist/
 try.js
 TODO.txt
 notes.txt
