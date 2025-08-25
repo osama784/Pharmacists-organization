@@ -18,7 +18,7 @@ const createInvoice = async (
         const validatedData: createInvoiceDto = req.validatedData;
         const finesDate = new Date(staticData["fines-date"]);
 
-        const pharmacist = await Pharmacist.findById(req.params.id);
+        const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
