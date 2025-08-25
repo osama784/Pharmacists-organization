@@ -1,1 +1,0 @@
-import{N as t}from"./index-Ba1r5UNg.js";const l=()=>{const{users:{select_status_dropdown:e}}=t;return[{label:e.all,value:"ALL"},{label:e.active,value:"مفعل"},{label:e.pending,value:"معلق"},{label:e.deleted,value:"محذوف"}]},n=()=>{const{users:{select_status_dropdown:e}}=t;return{مفعل:e.active,معلق:e.pending,محذوف:e.deleted}};export{n as g,l as s};

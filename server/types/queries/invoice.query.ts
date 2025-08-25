@@ -2,6 +2,7 @@ export default interface IInvoiceQueries {
     page?: string;
     limit?: string;
     id?: string;
+    receiptNumber?: string | Object;
     pharmacist?: Object;
     status?: string | Object;
     syndicateMembership?: string | Object;

@@ -31,7 +31,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
             type: String,
             required: true,
         },
-        nationalNumber: String,
+        nationalNumber: { type: String, required: true },
         birthDate: {
             type: Date,
             required: true,

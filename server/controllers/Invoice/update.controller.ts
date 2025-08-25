@@ -6,6 +6,7 @@ import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import Pharmacist from "../../models/pharmacist.model.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
+import Counter from "../../models/counter.model.js";
 
 const updateInvoice = async (
     req: Request,
@@ -32,8 +33,14 @@ const updateInvoice = async (
         }
 
         if (status == invoiceStatuses.paid) {
+            const receiptNumber = await Counter.findOneAndUpdate(
+                { name: "invoiceReceiptNumber" },
+                { $inc: { value: 1 } },
+                { new: true, upsert: true }
+            );
             updatedFields = {
                 ...updatedFields,
+                receiptNumber: receiptNumber.value.toString(),
                 paidDate: invoice.createdAt,
             };
             // updating "lastTimePaid" for the related pharmacist

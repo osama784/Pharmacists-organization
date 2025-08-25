@@ -6,6 +6,7 @@ import Pharmacist from "../../../models/pharmacist.model.js";
 const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<string, any>> => {
     let filters: Record<string, any> = {};
     if (queries.id) filters.serialID = buildStringFilter(queries.id);
+    if (queries.receiptNumber) filters.receiptNumber = buildStringFilter(queries.receiptNumber);
     if (queries.total) filters.total = buildNumberFilter(queries.total);
     if (queries.status) filters.status = buildStringFilter(queries.status);
     if (queries.syndicateMembership) filters.syndicateMembership = buildStringFilter(queries.syndicateMembership);

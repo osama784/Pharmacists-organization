@@ -52,7 +52,7 @@ export interface IPharmacist {
     motherNameEnglish?: string | null;
 
     gender: string;
-    nationalNumber?: string | null;
+    nationalNumber: string;
     birthDate: Date;
     birthPlace?: string | null;
     phoneNumber?: string | null;

@@ -16,6 +16,7 @@ export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines">>
 
 export type InvoiceResponseDto = {
     id: string;
+    receiptNumber?: string;
     pharmacist: PharmacistResponseDto | mongoose.Types.ObjectId;
     status: string;
     syndicateMembership: string;
@@ -50,6 +51,7 @@ function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument):
     }
     return {
         id: doc.serialID,
+        receiptNumber: doc.receiptNumber,
         pharmacist: pharmacist,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,
@@ -68,6 +70,7 @@ function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocume
     }
     return {
         id: doc.serialID,
+        receiptNumber: doc.receiptNumber,
         pharmacist: pharmacist,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,

@@ -19,6 +19,7 @@ export const invoiceStatuses = {
 
 const Invoice = new Schema<InvoiceDocument>({
     serialID: { type: String, unique: true },
+    receiptNumber: String,
     pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
     status: { type: String, required: true },
     syndicateMembership: { type: String, required: true },

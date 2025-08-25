@@ -42,6 +42,7 @@ export const invoiceTR = {
 type InvoiceModelTR = Record<keyof Omit<IInvoice, "isFinesIncluded">, any>;
 export const InvoiceModelTR: InvoiceModelTR = {
     serialID: "رقم تعريف الفاتورة",
+    receiptNumber: "رقم الإيصال",
     pharmacist: "اسم الصيدلي",
     status: "حالة الفاتورة",
     syndicateMembership: "نوع المزاولة",

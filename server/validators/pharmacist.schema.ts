@@ -16,7 +16,7 @@ const PharmacistSchema = z.object({
     motherNameEnglish: EmptyStringSchema(PharmacistModelTR.motherNameEnglish).optional().nullable(),
 
     gender: EnumSchema(genders as [string, ...string[]], PharmacistModelTR.gender),
-    nationalNumber: EmptyStringSchema(PharmacistModelTR.nationalNumber).optional().nullable(),
+    nationalNumber: StringSchema(PharmacistModelTR.nationalNumber),
     birthPlace: EmptyStringSchema(PharmacistModelTR.birthPlace).optional().nullable(),
     birthDate: DateSchema(PharmacistModelTR.birthDate),
     phoneNumber: EmptyStringSchema(PharmacistModelTR.phoneNumber).optional().nullable(),
