@@ -5,7 +5,6 @@ import Section from "../../models/section.model";
 import { FeeDocument } from "../../types/models/fee.types";
 import Invoice from "../../models/invoice.model";
 import { responseMessages } from "../../translation/response.ar";
-import toLocalDate from "../../utils/toLocalDate";
 import { PharmacistDocument } from "../../types/models/pharmacist.types";
 import puppeteer from "puppeteer-core";
 
@@ -20,6 +19,8 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
         let invoiceHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "templates", "invoice.html")), {
             encoding: "utf-8",
         });
+        invoiceHTML = invoiceHTML.replace("{{invoiceID}}", invoice.serialID);
+        invoiceHTML = invoiceHTML.replace("{{status}}", invoice.status);
 
         invoiceHTML = invoiceHTML.replace(
             "{{createdAt}}",

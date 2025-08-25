@@ -34,7 +34,7 @@ router.param("pharmacistID", (req, res, next, value, name) => {
 
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.post("/create/:id", checkPermission(permissions.createInvoice), validate(CreateInvoiceSchema), createInvoice);
+router.post("/create/:pharmacistID", checkPermission(permissions.createInvoice), validate(CreateInvoiceSchema), createInvoice);
 router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);
 router.patch("/update/:id", checkPermission(permissions.updateInvoice), validate(UpdateInvoiceSchema), updateInvoice);
 router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
