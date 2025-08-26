@@ -3,7 +3,7 @@ import Fee from "../../models/fee.model";
 import syndicateMemberships from "../data/syndicateMemberships.json";
 
 const createSyndicateMembership = async () => {
-    await syndicateMemberships.forEach(async (obj) => {
+    syndicateMemberships.forEach(async (obj) => {
         const fees = obj.fees.map(async (fee) => {
             const doc = await Fee.findOne({ name: fee });
             if (!doc) {

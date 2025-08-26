@@ -16,10 +16,10 @@ const createFees = async () => {
     // const disabiltiySectionID = "68455a82dd77a9fedcbdbfb3";
     // const healthSectionID = "68455a82dd77a9fedcbdbfb4";
 
-    const syndicateSectionDoc = await Section.findOne({ name: "حساب نقابة صيادلة سورية رقم 209999 جاري" });
-    const RetirementSectionDoc = await Section.findOne({ name: "حساب خزانة تقاعد صيادلة سورية رقم 203333 جاري" });
-    const disabiltiySectionDoc = await Section.findOne({ name: "حساب صندوق إعانة العجز و الوفاة لصيادلة سورية رقم 2077777 جاري" });
-    const healthSectionDoc = await Section.findOne({ name: "حساب التكافل الصحي لصيادلة سورية رقم 205550 جاري" });
+    const syndicateSectionDoc = await Section.findOne({ name: "صندوق النقابة" });
+    const RetirementSectionDoc = await Section.findOne({ name: "خزانة التقاعد" });
+    const disabiltiySectionDoc = await Section.findOne({ name: "صندوق إعانة العجز و الوفاة" });
+    const healthSectionDoc = await Section.findOne({ name: "خزانة التكافل الصحي" });
     if (!syndicateSectionDoc || !RetirementSectionDoc || !disabiltiySectionDoc || !healthSectionDoc) {
         throw new Error("some sections are missing");
     }
