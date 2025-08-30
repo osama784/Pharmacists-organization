@@ -21,12 +21,9 @@ const updateFeesValues = async (req: Request, res: TypedResponse<FeeDocument[]>,
                 res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
                 return;
             }
-            if (fee.name == "رسم السن" || fee.name == "المطبوعات") {
-                res.status(400).json({ success: false, details: [responseMessages.FEE_CONTROLLERS.PROTECTED_FEES] });
-                return;
-            }
             if (fee.isMutable) {
                 if (!feeObject.details) {
+                    // set the sent value to the currentYear
                     const oldDetails = fee.details;
                     oldDetails?.set(`${new Date().getFullYear()}`, feeObject.value!);
                     await fee.updateOne({

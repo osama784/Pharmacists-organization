@@ -24,4 +24,6 @@ const Fee = new Schema<FeeDocument>({
 //
 // !Note: "isMutable" = true => "isRepeatble" = true
 
+export const REREGISTRATION_FEES = ["إعادة قيد نقابة", "رسم الهوية", "نشر اسم بجدول لاحق", "رسوم متنوعة", "إعادة قيد معونة", "سلف التعاون"];
+
 export default mongoose.model<FeeDocument, IFeeModel>("Fee", Fee, "fees");

@@ -1,4 +1,4 @@
-import User from "../../models/user.model.js";
+import User, { UserStatuses } from "../../models/user.model.js";
 import Role from "../../models/role.model.js";
 import bcrypt from "bcryptjs";
 import createSuperAdminRole from "./createSuperAdminRole.js";
@@ -18,6 +18,7 @@ const createUser = async () => {
         password: hash,
         phoneNumber: "32132",
         role: role,
+        status: UserStatuses.active,
     });
     console.log(user);
     const users = await User.find();

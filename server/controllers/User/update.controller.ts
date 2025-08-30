@@ -2,10 +2,12 @@ import User from "../../models/user.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { responseMessages } from "../../translation/response.ar.js";
 import { RoleDocument } from "../../types/models/role.types.js";
-import { toUserResponseDto, UserResponseDto } from "../../types/dtos/user.dto.js";
+import { toUserResponseDto, UpdateUserDto, UserResponseDto } from "../../types/dtos/user.dto.js";
+import Role from "../../models/role.model.js";
 
 const updateUser = async (req: Request, res: TypedResponse<UserResponseDto>, next: NextFunction) => {
     try {
+        const validatedData: UpdateUserDto = req.validatedData;
         const user = await User.findById(req.params.id);
         if (!user) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
@@ -20,6 +22,14 @@ const updateUser = async (req: Request, res: TypedResponse<UserResponseDto>, nex
                 return;
             }
         }
+        if (validatedData.role) {
+            const role = await Role.findById(validatedData.role);
+            if (!role) {
+                res.status(400).json({ success: false, details: [responseMessages.USER_CONTROLLERS.ROLE_NOT_FOUND] });
+                return;
+            }
+        }
+
         await user.updateOne({ $set: req.validatedData });
 
         const doc = await User.findById(user._id).populate<{ role: RoleDocument }>("role");

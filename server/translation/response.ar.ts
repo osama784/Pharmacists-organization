@@ -21,6 +21,7 @@ export const responseMessages = {
     },
     USER_CONTROLLERS: {
         UNIQUE_EMAIL: "يجب أن يكون الإيميل فريد",
+        ROLE_NOT_FOUND: "لم يتم إيجاد دور برقم التعريف المعطى",
     },
     INVOICE_CONTROLLERS: {
         INVALID_STATUS: "قيمة حالة الفاتورة غير فعالة",

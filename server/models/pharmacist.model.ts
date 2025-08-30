@@ -37,7 +37,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
             required: true,
         },
         birthPlace: String,
-        phoneNumber: String,
+        phoneNumber: { type: String, required: true },
         landlineNumber: String,
         address: String,
         graduationYear: {
@@ -125,7 +125,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
 );
 export const licenseTypes = ["دائم", "مؤقت"];
 export const genders = ["ذكر", "أنثى"];
-export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة"];
+export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة", "بورد"];
 export const practiceRecordsInfo = {
     syndicate: [
         "نقابة الصيادلة المركزية",
