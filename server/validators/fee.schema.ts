@@ -7,10 +7,10 @@ import { FeeModelTR } from "../translation/models.ar";
 
 export const updateFeesValuesSchema = z.array(
     z.object({
-        id: mongooseIDSchema(Fee, FeeModelTR.id),
-        value: NumberSchemaPositive(FeeModelTR.value).optional(),
+        id: mongooseIDSchema({ keyName: FeeModelTR.id }),
+        value: NumberSchemaPositive({ keyName: FeeModelTR.value }).optional(),
         details: z
-            .record(StringSchema(FeeModelTR.details), NumberSchemaPositive(FeeModelTR.details))
+            .record(StringSchema({ keyName: FeeModelTR.details }), NumberSchemaPositive({ keyName: FeeModelTR.details }))
             .refine(
                 (data) => {
                     // check if all years exist, 0 index => 1996 year
@@ -48,13 +48,13 @@ export const updateFeesValuesSchema = z.array(
 );
 
 export const updateDetailedPrintsSchema = z.object({
-    "سجل الأدوية العادية/صيدليات": NumberSchemaPositive(FeeModelTR.value),
-    "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive(FeeModelTR.value),
-    "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive(FeeModelTR.value),
-    "بطاقة الالتزام بالأسعار": NumberSchemaPositive(FeeModelTR.value),
-    "كشف صرفيات مخدرات": NumberSchemaPositive(FeeModelTR.value),
-    "حالات سريرية قيمة مطبوعات": NumberSchemaPositive(FeeModelTR.value),
-    "قانون المخدرات": NumberSchemaPositive(FeeModelTR.value),
-    "التراكيب الدوائية": NumberSchemaPositive(FeeModelTR.value),
-    "مجموعة الأنظمة والقوانين": NumberSchemaPositive(FeeModelTR.value),
+    "سجل الأدوية العادية/صيدليات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "بطاقة الالتزام بالأسعار": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "كشف صرفيات مخدرات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "حالات سريرية قيمة مطبوعات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "قانون المخدرات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "التراكيب الدوائية": NumberSchemaPositive({ keyName: FeeModelTR.value }),
+    "مجموعة الأنظمة والقوانين": NumberSchemaPositive({ keyName: FeeModelTR.value }),
 });

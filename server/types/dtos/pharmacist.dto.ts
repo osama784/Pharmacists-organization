@@ -31,7 +31,7 @@ export type PharmacistResponseDto = {
     nationalNumber: string;
     birthDate: Date;
     birthPlace?: string | null;
-    phoneNumber?: string | null;
+    phoneNumber: string;
     landlineNumber?: string | null;
     address?: string | null;
     graduationYear: Date;

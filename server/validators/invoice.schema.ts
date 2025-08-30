@@ -1,20 +1,18 @@
 import { z } from "zod";
 import { syndicateMemberships } from "../models/syndicateMembership.model.js";
 import Fee from "../models/fee.model.js";
-import { DateSchema, EmptyStringSchema, EnumSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { EnumSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
-import toLocalDate from "../utils/toLocalDate.js";
 import { InvoiceModelTR } from "../translation/models.ar.js";
 import { invoiceStatuses } from "../models/invoice.model.js";
 
 const InvoiceSchema = z.object({
-    syndicateMembership: EnumSchema(syndicateMemberships as [string]),
-    status: EnumSchema(Object.values(invoiceStatuses) as [string, ...string[]], InvoiceModelTR.status),
-    createdAt: DateSchema(InvoiceModelTR.createdAt).default(toLocalDate(new Date())!.toISOString()),
+    syndicateMembership: EnumSchema({ data: syndicateMemberships as [string], keyName: InvoiceModelTR.syndicateMembership }),
+    status: EnumSchema({ data: Object.values(invoiceStatuses) as [string, ...string[]], keyName: InvoiceModelTR.status }),
     fees: z
         .array(
             z.object({
-                name: StringSchema(InvoiceModelTR.fees.name).refine(
+                name: StringSchema({ keyName: InvoiceModelTR.fees.name }).refine(
                     async (value) => {
                         const exists = await Fee.exists({ name: value });
                         if (exists) {
@@ -24,8 +22,8 @@ const InvoiceSchema = z.object({
                     },
                     { message: zodSchemasMessages.INVOICE_SCHEMA.FEE_NAME_NOT_FOUND }
                 ),
-                value: NumberSchemaPositive(InvoiceModelTR.fees.value),
-                numOfYears: NumberSchemaPositive(InvoiceModelTR.fees.numOfYears),
+                value: NumberSchemaPositive({ keyName: InvoiceModelTR.fees.value }),
+                numOfYears: NumberSchemaPositive({ keyName: InvoiceModelTR.fees.numOfYears }),
             })
         )
         .refine(
@@ -46,5 +44,6 @@ const InvoiceSchema = z.object({
 
 export const CreateInvoiceSchema = InvoiceSchema.extend({
     calculateFees: z.boolean().optional(),
+    willPracticeThisYear: z.boolean(),
 }).omit({ status: true, fees: true });
 export const UpdateInvoiceSchema = InvoiceSchema.partial();

@@ -3,16 +3,16 @@ import { EmailSchema, StringSchema, PasswordSchema } from "../utils/customSchema
 import { AuthTR } from "../translation/models.ar";
 
 export const loginSchema = z.object({
-    email: EmailSchema(AuthTR.email),
-    password: PasswordSchema(AuthTR.password),
+    email: EmailSchema({ keyName: AuthTR.email }),
+    password: PasswordSchema({ keyName: AuthTR.password }),
 });
 
 export const sendPasswordResetEmailSchema = z.object({
-    email: EmailSchema(AuthTR.email),
+    email: EmailSchema({ keyName: AuthTR.email }),
 });
 
 export const resetPasswordSchema = z.object({
-    email: EmailSchema(AuthTR.email),
-    resetToken: StringSchema(AuthTR.resetToken),
-    password: PasswordSchema(AuthTR.password),
+    email: EmailSchema({ keyName: AuthTR.email }),
+    resetToken: StringSchema({ keyName: AuthTR.resetToken }),
+    password: PasswordSchema({ keyName: AuthTR.password }),
 });

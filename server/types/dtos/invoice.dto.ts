@@ -5,11 +5,11 @@ import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto
 
 export type createInvoiceDto = {
     syndicateMembership: string;
-    createdAt?: Date;
     calculateFines?: boolean;
+    willPracticeThisYear: boolean;
 };
 
-export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines">> & {
+export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines" | "willPracticeThisYear">> & {
     status?: string | null;
     fees?: { name: string; value: number; numOfYears: number }[];
 };

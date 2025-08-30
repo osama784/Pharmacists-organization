@@ -1,129 +1,92 @@
 import mongoose, { Model } from "mongoose";
-import { z } from "zod";
+import { z, ZodDate, ZodNullable, ZodOptional, ZodSchema, ZodString } from "zod";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar";
 
-export const StringSchema = (keyName: string | undefined = undefined) => {
-    if (keyName) {
-        return z
-            .string({ message: `${keyName}: ${zodSchemasMessages.INVALID_STRING}` })
-            .nonempty({ message: `${keyName}: ${zodSchemasMessages.EMPTY_STRING}` })
-            .trim();
-    }
-    return z.string({ message: zodSchemasMessages.INVALID_STRING }).nonempty({ message: zodSchemasMessages.EMPTY_STRING }).trim();
+type StringSchemaOptions = {
+    keyName: string;
+    optional?: boolean;
 };
+export function StringSchema(options: { keyName: string; optional?: false }): ZodString;
+export function StringSchema(options: { keyName: string; optional: true }): ZodNullable<ZodOptional<ZodString>>;
 
-export const EmptyStringSchema = (keyName: string | undefined = undefined) => {
-    if (keyName) {
-        return z.string({ message: `${keyName}: ${zodSchemasMessages.INVALID_STRING}` }).trim();
-    }
-    return z.string({ message: zodSchemasMessages.INVALID_STRING }).trim();
-};
-
-export const EmailSchema = (keyName: string | undefined = undefined) => {
-    let message: string = "";
-    if (keyName) {
-        message = `${keyName}: ${zodSchemasMessages.INVALID_EMAIL}`;
+export function StringSchema(options: StringSchemaOptions) {
+    let schema: ZodString | ZodNullable<ZodOptional<ZodString>>;
+    schema = z.string({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_STRING}` }).trim();
+    if (options.optional) {
+        schema = schema.optional().nullable();
     } else {
-        message = zodSchemasMessages.INVALID_EMAIL;
+        schema = schema.nonempty({ message: `${options.keyName}: ${zodSchemasMessages.EMPTY_STRING}` });
     }
-    return StringSchema(keyName).email({ message });
+
+    return schema;
+}
+
+type EmailSchemaOptions = {
+    keyName: string;
+};
+export const EmailSchema = (options: EmailSchemaOptions) => {
+    return StringSchema({ keyName: options.keyName }).email({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_EMAIL}` });
 };
 
-export const mongooseIDSchema = (model: Model<any>, keyName: string | undefined = undefined) => {
-    let message: string = "";
-    if (keyName) {
-        message = `${keyName}: ${zodSchemasMessages.INVALID_MONGOOSE_ID}`;
-    } else {
-        message = zodSchemasMessages.INVALID_MONGOOSE_ID;
-    }
-    return StringSchema(keyName).refine(
+type mongooseIDSchemaOptions = {
+    keyName: string;
+};
+export const mongooseIDSchema = (options: mongooseIDSchemaOptions) => {
+    return StringSchema({ keyName: options.keyName }).refine(
         async (data) => {
             const isValid = mongoose.Types.ObjectId.isValid(data);
             if (!isValid) {
                 return false;
             }
-            const exists = await model.findById(data);
-            if (!exists) {
-                return false;
-            }
             return true;
         },
-        { message }
+        { message: `${options.keyName}: ${zodSchemasMessages.INVALID_MONGOOSE_ID}` }
     );
 };
 
-export const PasswordSchema = (keyName: string | undefined = undefined) => {
-    let message: string = "";
-    if (keyName) {
-        message = `${keyName}: ${zodSchemasMessages.MIN(4)}`;
-    } else {
-        message = zodSchemasMessages.MIN(4);
-    }
-    return StringSchema(keyName).min(4, { message });
+type PasswordSchemaOptions = {
+    keyName: string;
+};
+export const PasswordSchema = (options: PasswordSchemaOptions) => {
+    return StringSchema({ keyName: options.keyName }).min(4, { message: `${options.keyName}: ${zodSchemasMessages.MIN(4)}` });
 };
 
-export const NumberSchema = (keyName: string | undefined = undefined) => {
-    let message: string = "";
-    if (keyName) {
-        message = `${keyName}: ${zodSchemasMessages.INVALID_NUMBER}`;
-    } else {
-        message = zodSchemasMessages.INVALID_NUMBER;
-    }
-    return z.number({ message }).transform((value): string => value.toString());
-};
-export const NumberSchemaPositive = (keyName: string | undefined = undefined) => {
-    if (keyName) {
-        return z
-            .number({ message: `${keyName}: ${zodSchemasMessages.INVALID_NUMBER}` })
-            .min(0, { message: `${keyName}: ${zodSchemasMessages.INVALID_POSITIVE_NUMBER}` })
-            .transform((value): string => value.toString());
-    } else {
-        return z
-            .number({ message: zodSchemasMessages.INVALID_NUMBER })
-            .min(0, { message: zodSchemasMessages.INVALID_POSITIVE_NUMBER })
-            .transform((value): string => value.toString());
-    }
+type NumberSchemaOptions = {
+    keyName: string;
 };
 
-export const EnumSchema = (data: [string, ...string[]], keyName: string | undefined = undefined) => {
-    let message: string = "";
-    if (keyName) {
-        message = `${keyName}: ${zodSchemasMessages.INVALID_ENUM_VALUE(data)}`;
-    } else {
-        message = zodSchemasMessages.INVALID_ENUM_VALUE(data);
-    }
-    return z.enum(data, { message });
+export const NumberSchema = (options: NumberSchemaOptions) => {
+    return z.number({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_NUMBER}` }).transform((value): string => value.toString());
 };
 
-export const DateSchema = (keyName: string | undefined = undefined, optional: boolean = false) => {
-    let message: string = "";
-    if (keyName) {
-        message = `${keyName} :${zodSchemasMessages.INVALID_DATE}`;
-    } else {
-        message = zodSchemasMessages.INVALID_DATE;
-    }
-    if (optional) {
-        return EmptyStringSchema(keyName)
-            .refine(
-                (value) => {
-                    if (value == "") return true;
-                    return !isNaN(Date.parse(value));
-                },
-                { message }
-            )
-            .transform((value) => {
-                if (value == "") return null;
-                return new Date(value);
-            });
-    }
-    return StringSchema(keyName)
-        .refine(
-            (value) => {
-                return !isNaN(Date.parse(value));
-            },
-            { message }
-        )
-        .transform((value) => {
-            return new Date(value);
-        });
+export const NumberSchemaPositive = (options: NumberSchemaOptions) => {
+    return z
+        .number({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_NUMBER}` })
+        .min(0, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_POSITIVE_NUMBER}` })
+        .transform((value): string => value.toString());
 };
+
+type EnumSchemaOptions = {
+    keyName: string;
+    data: [string, ...string[]];
+};
+
+export const EnumSchema = (options: EnumSchemaOptions) => {
+    return z.enum(options.data, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_ENUM_VALUE(options.data)}` });
+};
+
+type DateSchemaOptions = {
+    keyName: string;
+    optional?: boolean;
+};
+
+export function DateSchema(options: { keyName: string; optional?: false }): ZodDate;
+export function DateSchema(options: { keyName: string; optional: true }): ZodNullable<ZodOptional<ZodDate>>;
+export function DateSchema(options: DateSchemaOptions) {
+    let schema: ZodDate | ZodNullable<ZodOptional<ZodDate>>;
+    schema = z.coerce.date({ message: `${options.keyName} :${zodSchemasMessages.INVALID_DATE}` });
+    if (options.optional) {
+        return schema.optional().nullable();
+    }
+    return schema;
+}

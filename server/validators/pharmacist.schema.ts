@@ -1,34 +1,36 @@
 import { z } from "zod";
 import { genders, licenseTypes, practiceRecordsInfo, syndicateRecordsInfo, universityDegreeTypes } from "../models/pharmacist.model.js";
-import { DateSchema, EnumSchema, NumberSchema, EmptyStringSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { DateSchema, EnumSchema, NumberSchema, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 import { PharmacistModelTR } from "../translation/models.ar.js";
 
 const PharmacistSchema = z.object({
-    firstName: StringSchema(PharmacistModelTR.firstName),
-    lastName: StringSchema(PharmacistModelTR.lastName),
-    motherName: StringSchema(PharmacistModelTR.motherName),
-    fatherName: StringSchema(PharmacistModelTR.fatherName),
+    firstName: StringSchema({ keyName: PharmacistModelTR.firstName }),
+    lastName: StringSchema({ keyName: PharmacistModelTR.lastName }),
+    motherName: StringSchema({ keyName: PharmacistModelTR.motherName }),
+    fatherName: StringSchema({ keyName: PharmacistModelTR.fatherName }),
 
-    firstNameEnglish: EmptyStringSchema(PharmacistModelTR.firstNameEnglish).optional().nullable(),
-    lastNameEnglish: EmptyStringSchema(PharmacistModelTR.lastNameEnglish).optional().nullable(),
-    fatherNameEnglish: EmptyStringSchema(PharmacistModelTR.fatherNameEnglish).optional().nullable(),
-    motherNameEnglish: EmptyStringSchema(PharmacistModelTR.motherNameEnglish).optional().nullable(),
+    firstNameEnglish: StringSchema({ keyName: PharmacistModelTR.firstNameEnglish, optional: true }),
+    lastNameEnglish: StringSchema({ keyName: PharmacistModelTR.lastNameEnglish, optional: true }),
+    fatherNameEnglish: StringSchema({ keyName: PharmacistModelTR.fatherNameEnglish, optional: true }),
+    motherNameEnglish: StringSchema({ keyName: PharmacistModelTR.motherNameEnglish, optional: true }),
 
-    gender: EnumSchema(genders as [string, ...string[]], PharmacistModelTR.gender),
-    nationalNumber: StringSchema(PharmacistModelTR.nationalNumber),
-    birthPlace: EmptyStringSchema(PharmacistModelTR.birthPlace).optional().nullable(),
+    gender: EnumSchema({ data: genders as [string, ...string[]], keyName: PharmacistModelTR.gender }),
+    nationalNumber: StringSchema({ keyName: PharmacistModelTR.nationalNumber }),
+    birthPlace: StringSchema({ keyName: PharmacistModelTR.birthPlace, optional: true }),
     birthDate: DateSchema(PharmacistModelTR.birthDate),
-    phoneNumber: EmptyStringSchema(PharmacistModelTR.phoneNumber).optional().nullable(),
-    landlineNumber: EmptyStringSchema(PharmacistModelTR.landlineNumber).optional().nullable(),
-    address: EmptyStringSchema(PharmacistModelTR.address).optional().nullable(),
+    phoneNumber: StringSchema({ keyName: PharmacistModelTR.phoneNumber }),
+    landlineNumber: StringSchema({ keyName: PharmacistModelTR.landlineNumber, optional: true }),
+    address: StringSchema({ keyName: PharmacistModelTR.address, optional: true }),
     graduationYear: DateSchema(PharmacistModelTR.graduationYear),
-    lastTimePaid: DateSchema(PharmacistModelTR.lastTimePaid, true).optional().nullable(),
-    nationality: StringSchema(PharmacistModelTR.nationality),
+    lastTimePaid: DateSchema({ keyName: PharmacistModelTR.lastTimePaid, optional: true }).optional().nullable(),
+    nationality: StringSchema({ keyName: PharmacistModelTR.nationality }),
 
-    ministerialNumber: EmptyStringSchema(PharmacistModelTR.ministerialNumber).optional().nullable(),
-    ministerialRegistrationDate: DateSchema(PharmacistModelTR.ministerialRegistrationDate, true).optional().nullable(),
-    registrationNumber: StringSchema(PharmacistModelTR.registrationNumber),
+    ministerialNumber: StringSchema({ keyName: PharmacistModelTR.ministerialNumber, optional: true }),
+    ministerialRegistrationDate: DateSchema({ keyName: PharmacistModelTR.ministerialRegistrationDate, optional: true })
+        .optional()
+        .nullable(),
+    registrationNumber: StringSchema({ keyName: PharmacistModelTR.registrationNumber }),
     registrationDate: DateSchema(PharmacistModelTR.registrationNumber),
 
     images: z.preprocess((data) => {
@@ -39,23 +41,23 @@ const PharmacistSchema = z.object({
         return data;
     }, z.array(StringSchema(PharmacistModelTR.images))),
 
-    integrity: EmptyStringSchema(PharmacistModelTR.integrity).optional().nullable(),
-    register: EmptyStringSchema(PharmacistModelTR.register).optional().nullable(),
-    oathTakingDate: DateSchema(PharmacistModelTR.oathTakingDate, true).optional().nullable(),
+    integrity: StringSchema({ keyName: PharmacistModelTR.integrity, optional: true }),
+    register: StringSchema({ keyName: PharmacistModelTR.register, optional: true }),
+    oathTakingDate: DateSchema({ keyName: PharmacistModelTR.oathTakingDate, optional: true }).optional().nullable(),
 });
 
 const LicenseSchema = z.object({
-    licenseType: EnumSchema(Object.values(licenseTypes) as [string], PharmacistModelTR.licenses.licenseType),
+    licenseType: EnumSchema({ data: Object.values(licenseTypes) as [string], keyName: PharmacistModelTR.licenses.licenseType }),
     startDate: DateSchema(PharmacistModelTR.licenses.startDate),
-    endDate: DateSchema(PharmacistModelTR.licenses.endDate, true).optional().nullable(),
-    details: EmptyStringSchema(PharmacistModelTR.licenses.details).optional().nullable(),
+    endDate: DateSchema({ keyName: PharmacistModelTR.licenses.endDate, optional: true }).optional().nullable(),
+    details: StringSchema({ keyName: PharmacistModelTR.licenses.details, optional: true }),
     images: z.preprocess((data) => {
         if (typeof data == "string") {
             if (data != "") return [data];
             return [];
         }
         return data;
-    }, z.array(StringSchema(PharmacistModelTR.licenses.images))),
+    }, z.array(StringSchema({ keyName: PharmacistModelTR.licenses.images }))),
 });
 
 export const CreateLicenseSchema = LicenseSchema.omit({
@@ -64,12 +66,18 @@ export const CreateLicenseSchema = LicenseSchema.omit({
 export const UpdateLicenseSchema = LicenseSchema.partial();
 
 const PracticeRecordSchema = z.object({
-    syndicate: EnumSchema(Object.values(practiceRecordsInfo.syndicate) as [string], PharmacistModelTR.practiceRecords.syndicate),
-    practiceType: EnumSchema(Object.values(practiceRecordsInfo.practiceType) as [string], PharmacistModelTR.practiceRecords.practiceType),
+    syndicate: EnumSchema({
+        data: Object.values(practiceRecordsInfo.syndicate) as [string],
+        keyName: PharmacistModelTR.practiceRecords.syndicate,
+    }),
+    practiceType: EnumSchema({
+        data: Object.values(practiceRecordsInfo.practiceType) as [string],
+        keyName: PharmacistModelTR.practiceRecords.practiceType,
+    }),
     startDate: DateSchema(PharmacistModelTR.practiceRecords.startDate),
-    endDate: DateSchema(PharmacistModelTR.practiceRecords.endDate, true).optional().nullable(),
-    sector: StringSchema(PharmacistModelTR.practiceRecords.sector),
-    place: StringSchema(PharmacistModelTR.practiceRecords.place),
+    endDate: DateSchema({ keyName: PharmacistModelTR.practiceRecords.endDate, optional: true }).optional().nullable(),
+    sector: StringSchema({ keyName: PharmacistModelTR.practiceRecords.sector }),
+    place: StringSchema({ keyName: PharmacistModelTR.practiceRecords.place }),
 });
 
 export const CreatePracticeRecordSchema = PracticeRecordSchema.refine(
@@ -98,20 +106,23 @@ export const UpdatePracticeRecordSchema = PracticeRecordSchema.partial().refine(
 );
 
 const PenaltySchema = z.object({
-    penaltyType: StringSchema(PharmacistModelTR.penalties.penaltyType),
+    penaltyType: StringSchema({ keyName: PharmacistModelTR.penalties.penaltyType }),
     date: DateSchema(PharmacistModelTR.penalties.date),
-    reason: EmptyStringSchema(PharmacistModelTR.penalties.reason).optional().nullable(),
-    details: EmptyStringSchema(PharmacistModelTR.penalties.details).optional().nullable(),
+    reason: StringSchema({ keyName: PharmacistModelTR.penalties.reason, optional: true }),
+    details: StringSchema({ keyName: PharmacistModelTR.penalties.details, optional: true }),
 });
 
 export const CreatePenaltySchema = PenaltySchema;
 export const UpdatePenaltySchema = PenaltySchema.partial();
 
 const SyndicateRecordSchema = z.object({
-    syndicate: EnumSchema(Object.values(syndicateRecordsInfo.syndicate) as [string], PharmacistModelTR.syndicateRecords.syndicate),
+    syndicate: EnumSchema({
+        data: Object.values(syndicateRecordsInfo.syndicate) as [string],
+        keyName: PharmacistModelTR.syndicateRecords.syndicate,
+    }),
     startDate: DateSchema(PharmacistModelTR.syndicateRecords.startDate),
-    endDate: DateSchema(PharmacistModelTR.syndicateRecords.endDate, true).optional().nullable(),
-    registrationNumber: StringSchema(PharmacistModelTR.syndicateRecords.registrationNumber),
+    endDate: DateSchema({ keyName: PharmacistModelTR.syndicateRecords.endDate, optional: true }).optional().nullable(),
+    registrationNumber: StringSchema({ keyName: PharmacistModelTR.syndicateRecords.registrationNumber }),
 });
 
 export const CreateSyndicateRecordSchema = SyndicateRecordSchema.refine(
@@ -140,9 +151,12 @@ export const UpdateSyndicateRecordSchema = SyndicateRecordSchema.partial().refin
 );
 
 const UniversityDegreeSchema = z.object({
-    degreeType: EnumSchema(Object.values(universityDegreeTypes) as [string], PharmacistModelTR.universityDegrees.degreeType),
+    degreeType: EnumSchema({
+        data: Object.values(universityDegreeTypes) as [string],
+        keyName: PharmacistModelTR.universityDegrees.degreeType,
+    }),
     obtainingDate: DateSchema(PharmacistModelTR.universityDegrees.obtainingDate),
-    university: StringSchema(PharmacistModelTR.universityDegrees.university),
+    university: StringSchema({ keyName: PharmacistModelTR.universityDegrees.university }),
     images: z.preprocess((data) => {
         if (typeof data == "string") {
             if (data != "") return [data];
