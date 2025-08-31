@@ -168,44 +168,85 @@ export const getPharmacistRelatedFees = async (
             value = 0;
             numOfYears = 0;
         });
-        // calculate last year as practicing-year
-        const practicingYearSyndicateMembership = await SyndicateMembership.findOne({
-            name: syndicateMembershipsTR["practicing-year"],
-        }).populate<{
-            fees: PopulatedFeeDocument[];
-        }>({
-            path: "fees",
-            populate: {
-                path: "section",
-            },
-        });
-        practicingYearSyndicateMembership?.fees.forEach((fee) => {
-            if (fee.isMutable) {
-                // value just for this year
-                value = fee.details?.get(`${currentYear}`)!;
-            } else {
-                value = fee.value!;
-            }
-            const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
-            if (existBefore != -1) {
-                if (fee.isRepeatable) {
-                    fees[existBefore] = {
-                        name: fee.name,
-                        value: fees[existBefore].value + value,
-                        numOfYears: fees[existBefore].numOfYears + 1,
-                    };
+        // calculate last year
+        if (validatedData.willPracticeThisYear) {
+            const practicingYearSyndicateMembership = await SyndicateMembership.findOne({
+                name: syndicateMembershipsTR["practicing-year"],
+            }).populate<{
+                fees: PopulatedFeeDocument[];
+            }>({
+                path: "fees",
+                populate: {
+                    path: "section",
+                },
+            });
+            practicingYearSyndicateMembership?.fees.forEach((fee) => {
+                if (fee.isMutable) {
+                    // value just for this year
+                    value = fee.details?.get(`${currentYear}`)!;
+                } else {
+                    value = fee.value!;
                 }
-            } else {
-                fees.push({
-                    name: fee.name,
-                    value: value,
-                    numOfYears: 1,
-                });
-                excludedFees.push(fee.name);
-            }
+                const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
+                if (existBefore != -1) {
+                    if (fee.isRepeatable) {
+                        fees[existBefore] = {
+                            name: fee.name,
+                            value: fees[existBefore].value + value,
+                            numOfYears: fees[existBefore].numOfYears + 1,
+                        };
+                    }
+                } else {
+                    fees.push({
+                        name: fee.name,
+                        value: value,
+                        numOfYears: 1,
+                    });
+                    excludedFees.push(fee.name);
+                }
 
-            value = 0;
-        });
+                value = 0;
+            });
+        } else {
+            const unPracticingYearSyndicateMembership = await SyndicateMembership.findOne({
+                name: syndicateMembershipsTR["non-practicing-year"],
+            }).populate<{
+                fees: PopulatedFeeDocument[];
+            }>({
+                path: "fees",
+                populate: {
+                    path: "section",
+                },
+            });
+            unPracticingYearSyndicateMembership?.fees.forEach((fee) => {
+                if (fee.isMutable) {
+                    // value just for this year
+                    value = fee.details?.get(`${currentYear}`)!;
+                } else {
+                    value = fee.value!;
+                }
+                const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
+                if (existBefore != -1) {
+                    if (fee.isRepeatable) {
+                        fees[existBefore] = {
+                            name: fee.name,
+                            value: fees[existBefore].value + value,
+                            numOfYears: fees[existBefore].numOfYears + 1,
+                        };
+                    }
+                } else {
+                    fees.push({
+                        name: fee.name,
+                        value: value,
+                        numOfYears: 1,
+                    });
+                    excludedFees.push(fee.name);
+                }
+
+                value = 0;
+            });
+        }
+
         if (shouldPayReregistrationFees) {
             REREGISTRATION_FEES.forEach(async (fee) => {
                 const existBefore = fees.findIndex((_fee) => fee == _fee.name);
@@ -390,117 +431,7 @@ export const getPharmacistRelatedFees = async (
             };
         }
 
-        if (calculateNonPracticed) {
-            if (validatedData.willPracticeThisYear) {
-                const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
-                    fees: PopulatedFeeDocument[];
-                }>({
-                    path: "fees",
-                    populate: {
-                        path: "section",
-                    },
-                });
-                practicingSyndicateMembership?.fees.forEach((fee) => {
-                    if (fee.isMutable) {
-                        // summing value depending from last year to (current year - 1)
-                        let tmpYear = requiredYear;
-                        numOfYears = currentYear - requiredYear + 1;
-                        while (tmpYear != currentYear + 1) {
-                            value += fee.details?.get(`${tmpYear}`)!;
-                            tmpYear += 1;
-                        }
-                        tmpYear = requiredYear;
-                    } else if (fee.isRepeatable) {
-                        value = fee.value! * (currentYear - requiredYear + 1);
-                        numOfYears = currentYear - requiredYear + 1;
-                    } else {
-                        value = fee.value!;
-                        numOfYears = 1;
-                    }
-
-                    fees.push({
-                        name: fee.name,
-                        value: value,
-                        numOfYears,
-                    });
-                    excludedFees.push(fee.name);
-                    value = 0;
-                    numOfYears = 0;
-                });
-            } else {
-                // this year they will not practice
-                const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
-                    fees: PopulatedFeeDocument[];
-                }>({
-                    path: "fees",
-                    populate: {
-                        path: "section",
-                    },
-                });
-                practicingSyndicateMembership?.fees.forEach((fee) => {
-                    if (fee.isMutable) {
-                        // summing value depending from last year to (current year - 1)
-                        let tmpYear = requiredYear;
-                        numOfYears = currentYear - requiredYear;
-                        while (tmpYear != currentYear) {
-                            value += fee.details?.get(`${tmpYear}`)!;
-                            tmpYear += 1;
-                        }
-                        tmpYear = requiredYear;
-                    } else if (fee.isRepeatable) {
-                        value = fee.value! * (currentYear - requiredYear);
-                        numOfYears = currentYear - requiredYear;
-                    } else {
-                        value = fee.value!;
-                        numOfYears = 1;
-                    }
-
-                    fees.push({
-                        name: fee.name,
-                        value: value,
-                        numOfYears,
-                    });
-                    excludedFees.push(fee.name);
-                    value = 0;
-                    numOfYears = 0;
-                });
-                const nonPracticingSyndicateMembership = await SyndicateMembership.findOne(filter).populate<{
-                    fees: PopulatedFeeDocument[];
-                }>({
-                    path: "fees",
-                    populate: {
-                        path: "section",
-                    },
-                });
-                nonPracticingSyndicateMembership?.fees.forEach((fee) => {
-                    if (fee.isMutable) {
-                        value = fee.details?.get(`${currentYear}`)!;
-                    } else {
-                        value = fee.value!;
-                    }
-
-                    const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
-                    if (existBefore != -1) {
-                        if (fee.isRepeatable) {
-                            fees[existBefore] = {
-                                name: fee.name,
-                                value: fees[existBefore].value + value,
-                                numOfYears: fees[existBefore].numOfYears + 1,
-                            };
-                        }
-                    } else {
-                        fees.push({
-                            name: fee.name,
-                            value: value,
-                            numOfYears: 1,
-                        });
-                        excludedFees.push(fee.name);
-                    }
-
-                    value = 0;
-                });
-            }
-        } else {
+        if (validatedData.willPracticeThisYear) {
             const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
                 fees: PopulatedFeeDocument[];
             }>({
@@ -511,17 +442,101 @@ export const getPharmacistRelatedFees = async (
             });
             practicingSyndicateMembership?.fees.forEach((fee) => {
                 if (fee.isMutable) {
-                    // value just for this year
+                    // summing value depending from last year to (current year - 1)
+                    let tmpYear = requiredYear;
+                    numOfYears = currentYear - requiredYear + 1;
+                    while (tmpYear != currentYear + 1) {
+                        value += fee.details?.get(`${tmpYear}`)!;
+                        tmpYear += 1;
+                    }
+                    tmpYear = requiredYear;
+                } else if (fee.isRepeatable) {
+                    value = fee.value! * (currentYear - requiredYear + 1);
+                    numOfYears = currentYear - requiredYear + 1;
+                } else {
+                    value = fee.value!;
+                    numOfYears = 1;
+                }
+
+                fees.push({
+                    name: fee.name,
+                    value: value,
+                    numOfYears,
+                });
+                excludedFees.push(fee.name);
+                value = 0;
+                numOfYears = 0;
+            });
+        } else {
+            // this year they will not practice
+            const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
+                fees: PopulatedFeeDocument[];
+            }>({
+                path: "fees",
+                populate: {
+                    path: "section",
+                },
+            });
+            practicingSyndicateMembership?.fees.forEach((fee) => {
+                if (fee.isMutable) {
+                    // summing value depending from last year to (current year - 1)
+                    let tmpYear = requiredYear;
+                    numOfYears = currentYear - requiredYear;
+                    while (tmpYear != currentYear) {
+                        value += fee.details?.get(`${tmpYear}`)!;
+                        tmpYear += 1;
+                    }
+                    tmpYear = requiredYear;
+                } else if (fee.isRepeatable) {
+                    value = fee.value! * (currentYear - requiredYear);
+                    numOfYears = currentYear - requiredYear;
+                } else {
+                    value = fee.value!;
+                    numOfYears = 1;
+                }
+
+                fees.push({
+                    name: fee.name,
+                    value: value,
+                    numOfYears,
+                });
+                excludedFees.push(fee.name);
+                value = 0;
+                numOfYears = 0;
+            });
+            const nonPracticingSyndicateMembership = await SyndicateMembership.findOne(filter).populate<{
+                fees: PopulatedFeeDocument[];
+            }>({
+                path: "fees",
+                populate: {
+                    path: "section",
+                },
+            });
+            nonPracticingSyndicateMembership?.fees.forEach((fee) => {
+                if (fee.isMutable) {
                     value = fee.details?.get(`${currentYear}`)!;
                 } else {
                     value = fee.value!;
                 }
-                fees.push({
-                    name: fee.name,
-                    value: value,
-                    numOfYears: 1,
-                });
-                excludedFees.push(fee.name);
+
+                const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
+                if (existBefore != -1) {
+                    if (fee.isRepeatable) {
+                        fees[existBefore] = {
+                            name: fee.name,
+                            value: fees[existBefore].value + value,
+                            numOfYears: fees[existBefore].numOfYears + 1,
+                        };
+                    }
+                } else {
+                    fees.push({
+                        name: fee.name,
+                        value: value,
+                        numOfYears: 1,
+                    });
+                    excludedFees.push(fee.name);
+                }
+
                 value = 0;
             });
         }
@@ -539,9 +554,7 @@ export const getPharmacistRelatedFees = async (
     const finesDate = new Date(staticData["fines-date"]);
     let fineSummaryFeeValue = 0;
     let currentFee = null;
-    let isFinesIncluded = false;
     if (new Date() >= finesDate && validatedData.calculateFines != undefined && validatedData.calculateFines == true) {
-        isFinesIncluded = true;
         sections.forEach((section) => {
             section.fineableFees.forEach((fee) => {
                 currentFee = fees.filter((obj) => obj.name == fee.name)[0];
@@ -583,7 +596,7 @@ export const getPharmacistRelatedFees = async (
         });
     });
 
-    // handling fee with name "رسم السن"
+    // handling custom Fees
     fees = fees.map((fee) => {
         if (fee.name == "رسم السن") {
             let FeeAgeValue = 0;

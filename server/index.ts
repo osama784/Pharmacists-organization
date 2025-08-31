@@ -11,6 +11,7 @@ import FeeRouter from "./routes/fee.router.js";
 import UserRouter from "./routes/user.router.js";
 import RoleRouter from "./routes/role.router.js";
 import ReportsRouter from "./routes/reports.router.js";
+import BankRouter from "./routes/bank.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
@@ -45,6 +46,7 @@ app.use("/api/fees", FeeRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/users/roles", RoleRouter);
 app.use("/api/reports", ReportsRouter);
+app.use("/api/banks", BankRouter);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "front", "index.html"));

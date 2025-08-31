@@ -3,7 +3,7 @@ import passport from "passport";
 import checkPermission from "../middlewares/checkPermission.middleware.js";
 import createInvoice from "../controllers/Invoice/create.controller.js";
 import validate from "../middlewares/validate.middleware.js";
-import { CreateInvoiceSchema, UpdateInvoiceSchema } from "../validators/invoice.schema.js";
+import { InvoiceCreateSchema, InvoiceUpdateSchema } from "../validators/invoice.schema.js";
 import mongoose from "mongoose";
 import updateInvoice from "../controllers/Invoice/update.controller.js";
 import listInvoices from "../controllers/Invoice/list.controller.js";
@@ -34,9 +34,9 @@ router.param("pharmacistID", (req, res, next, value, name) => {
 
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.post("/create/:pharmacistID", checkPermission(permissions.createInvoice), validate(CreateInvoiceSchema), createInvoice);
+router.post("/create/:pharmacistID", checkPermission(permissions.createInvoice), validate(InvoiceCreateSchema), createInvoice);
 router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);
-router.patch("/update/:id", checkPermission(permissions.updateInvoice), validate(UpdateInvoiceSchema), updateInvoice);
+router.patch("/update/:id", checkPermission(permissions.updateInvoice), validate(InvoiceUpdateSchema), updateInvoice);
 router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
 router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
 router.get("/export", exportInvoicesAsExcel);

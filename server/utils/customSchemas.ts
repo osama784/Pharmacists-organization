@@ -1,5 +1,5 @@
 import mongoose, { Model } from "mongoose";
-import { z, ZodDate, ZodNullable, ZodOptional, ZodSchema, ZodString } from "zod";
+import { z, ZodDate, ZodEffects, ZodNullable, ZodOptional, ZodSchema, ZodString } from "zod";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar";
 
 type StringSchemaOptions = {
@@ -80,13 +80,47 @@ type DateSchemaOptions = {
     optional?: boolean;
 };
 
-export function DateSchema(options: { keyName: string; optional?: false }): ZodDate;
-export function DateSchema(options: { keyName: string; optional: true }): ZodNullable<ZodOptional<ZodDate>>;
+// export function DateSchema(options: { keyName: string; optional?: false });
+// export function DateSchema(options: { keyName: string; optional: true }): ZodEffects<ZodDate>;
 export function DateSchema(options: DateSchemaOptions) {
-    let schema: ZodDate | ZodNullable<ZodOptional<ZodDate>>;
-    schema = z.coerce.date({ message: `${options.keyName} :${zodSchemasMessages.INVALID_DATE}` });
+    // let dateSchema: ZodDate | ZodNullable<ZodOptional<ZodDate>> = z.date({
+    //     errorMap: (issue, { defaultError }) => {
+    //         return { message: `${options.keyName} :${zodSchemasMessages.INVALID_DATE}` };
+    //     },
+    // });
+    // if (options.optional) {
+    //     dateSchema = dateSchema.optional().nullable();
+    // }
+    // let schema = z.preprocess((value) => {
+    //     if (value == "" || value == undefined) {
+    //         return undefined;
+    //     }
+    //     if (value == null) {
+    //         return value;
+    //     }
+    //     return new Date(value as string);
+    // }, dateSchema);
+    // return schema;
     if (options.optional) {
-        return schema.optional().nullable();
+        return StringSchema({ keyName: options.keyName, optional: options.optional }).refine(
+            (value) => {
+                if (value == "" || !value) {
+                    return true;
+                }
+                if (isNaN(Date.parse(value))) return false;
+
+                return true;
+            },
+            { message: `${options.keyName} :${zodSchemasMessages.INVALID_DATE}` }
+        );
+    } else {
+        return StringSchema({ keyName: options.keyName }).refine(
+            (value) => {
+                if (isNaN(Date.parse(value))) return false;
+
+                return true;
+            },
+            { message: `${options.keyName} :${zodSchemasMessages.INVALID_DATE}` }
+        );
     }
-    return schema;
 }

@@ -12,3 +12,10 @@ const Section = new Schema<SectionDocument>({
 });
 
 export default mongoose.model<SectionDocument, ISectionModel>("Section", Section, "sections");
+
+export const SECTIONS = {
+    SYNDICATE: "صندوق النقابة",
+    RETIREMENT: "خزانة التقاعد",
+    DISABILITY: "صندوق إعانة العجز و الوفاة",
+    HEALTH: "خزانة التكافل الصحي",
+};
