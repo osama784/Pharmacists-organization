@@ -23,10 +23,10 @@ const exportExcelInvoicesReport = async (
         }
         let filter: Record<string, any> = { status: invoiceStatuses.paid };
         if (startDate && typeof startDate == "string" && !isNaN(Date.parse(startDate))) {
-            filter.createdAt = { $gt: new Date(startDate) };
+            filter.createdAt = { $gte: new Date(startDate) };
         }
         if (endDate && typeof endDate == "string" && !isNaN(Date.parse(endDate))) {
-            filter.createdAt = { ...filter.createdAt, $lt: new Date(endDate) };
+            filter.createdAt = { ...filter.createdAt, $lte: new Date(endDate) };
         }
         const sectionDoc = await Section.findOne({ name: section }).populate<{ fees: FeeDocument[] }>("fees");
         if (!sectionDoc) {

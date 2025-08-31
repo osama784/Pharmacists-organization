@@ -17,10 +17,10 @@ const invoicesReport = async (req: Request, res: TypedResponse<InvoiceResponseDt
         }
         let filter: Record<string, any> = { status: invoiceStatuses.paid };
         if (startDate && typeof startDate == "string" && !isNaN(Date.parse(startDate))) {
-            filter.createdAt = { $gt: new Date(startDate) };
+            filter.createdAt = { $gte: new Date(startDate) };
         }
         if (endDate && typeof endDate == "string" && !isNaN(Date.parse(endDate))) {
-            filter.createdAt = { ...filter.createdAt, $lt: new Date(endDate) };
+            filter.createdAt = { ...filter.createdAt, $lte: new Date(endDate) };
         }
 
         const sectionDoc = await Section.findOne({ name: section }).populate<{ fees: FeeDocument[] }>("fees");
@@ -35,7 +35,7 @@ const invoicesReport = async (req: Request, res: TypedResponse<InvoiceResponseDt
         for (const invoice of invoices) {
             const fees = invoice.fees.filter((fee) => {
                 const exist = sectionDoc.fees.findIndex((element) => element.name == fee.name);
-                return exist ? true : false;
+                return exist != -1 ? true : false;
             });
             result.push({ ...toInvoiceResponseDto(invoice), fees: fees });
         }
