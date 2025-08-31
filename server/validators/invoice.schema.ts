@@ -42,8 +42,8 @@ const InvoiceSchema = z.object({
         ),
 });
 
-export const CreateInvoiceSchema = InvoiceSchema.extend({
+export const InvoiceCreateSchema = InvoiceSchema.extend({
     calculateFees: z.boolean().optional(),
     willPracticeThisYear: z.boolean(),
 }).omit({ status: true, fees: true });
-export const UpdateInvoiceSchema = InvoiceSchema.partial();
+export const InvoiceUpdateSchema = InvoiceSchema.partial();

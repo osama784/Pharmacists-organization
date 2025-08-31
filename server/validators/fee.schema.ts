@@ -1,11 +1,9 @@
-import mongoose from "mongoose";
 import { z } from "zod";
 import { mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas";
-import Fee from "../models/fee.model";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar";
 import { FeeModelTR } from "../translation/models.ar";
 
-export const updateFeesValuesSchema = z.array(
+export const FeesUpdateValuesSchema = z.array(
     z.object({
         id: mongooseIDSchema({ keyName: FeeModelTR.id }),
         value: NumberSchemaPositive({ keyName: FeeModelTR.value }).optional(),
