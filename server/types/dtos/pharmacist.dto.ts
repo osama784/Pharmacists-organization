@@ -7,11 +7,11 @@ import {
     IUniversityDegree,
     PharmacistDocument,
 } from "../models/pharmacist.types.js";
-import { CreatePharmacistSchema, UpdatePharmacistSchema } from "../../validators/pharmacist.schema.js";
+import { PharmacistCreateSchema, PharmacistUpdateSchema } from "../../validators/pharmacist.schema.js";
 import toLocalDate from "../../utils/toLocalDate.js";
 
-export type CreatePharmacistDto = z.infer<typeof CreatePharmacistSchema>;
-export type UpdatePharmacistDto = z.infer<typeof UpdatePharmacistSchema>;
+export type CreatePharmacistDto = z.infer<typeof PharmacistCreateSchema>;
+export type UpdatePharmacistDto = z.infer<typeof PharmacistUpdateSchema>;
 
 export type PharmacistResponseDto = {
     id: string;

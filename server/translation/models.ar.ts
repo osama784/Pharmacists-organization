@@ -1,18 +1,9 @@
+import { IBank } from "../types/models/bank.types";
 import { IFee } from "../types/models/fee.types";
 import { IInvoice } from "../types/models/invoice.types";
 import { IPharmacist } from "../types/models/pharmacist.types";
 import { IRole } from "../types/models/role.types";
 import { IUser } from "../types/models/user.types";
-
-type Paths<T> = T extends object
-    ? {
-          [K in keyof T]: K extends string
-              ? T[K] extends object
-                  ? `${K}` | `${K}.${Paths<T[K]>}` // Include parent + nested paths
-                  : K // Include leaf nodes
-              : never;
-      }[keyof T] // Convert to union
-    : never;
 
 export const syndicateMembershipsTR = {
     affiliation: "انتساب",
@@ -163,12 +154,11 @@ export const AuthTR = {
     resetToken: "رمز التحقق",
 };
 
-export const modelsTR = {
-    pharmacist: PharmacistModelTR,
-    invoice: InvoiceModelTR,
+type BankModelTR = Record<keyof IBank, any>;
+export const BankModelTR: BankModelTR = {
+    name: "اسم البنك",
+    accounts: {
+        section: "اسم الصندوق",
+        accountNum: "رقم الحساب",
+    },
 };
-
-export interface IModelsTR {
-    pharmacist: PharmacistModelTR;
-    invoice: InvoiceModelTR;
-}

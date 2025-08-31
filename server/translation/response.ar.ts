@@ -39,4 +39,8 @@ export const responseMessages = {
         BAD_VALUES: "يجب عليك أن ترسل المعلومات بشكل صحيح لإتمام إرسال التقارير المطلوبة",
         SECTION_NOT_FOUND: "لم يتم إيجاد الصندوق الذي تبحث عنه",
     },
+    BANK_CONTROLLERS: {
+        SECTION_NOT_FOUND: "تم إدخال صندوق لم يتم التعرف عليه",
+        INCOMPLETE_SECTION_INFO: "لم يتم إرسال المعلومات الكاملة للصناديق",
+    },
 };
