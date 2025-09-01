@@ -9,5 +9,10 @@ interface ISection {
 }
 
 export type SectionDocument = HydratedDocument<ISection>;
+export type PopulatedSectionDocument = HydratedDocument<
+    Omit<ISection, "fees"> & {
+        fees: FeeDocument[];
+    }
+>;
 
 export interface ISectionModel extends Model<SectionDocument> {}

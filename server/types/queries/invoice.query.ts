@@ -4,6 +4,7 @@ export default interface IInvoiceQueries {
     id?: string;
     receiptNumber?: string | Object;
     pharmacist?: Object;
+    bank?: Object;
     status?: string | Object;
     syndicateMembership?: string | Object;
     total?: string | Object;

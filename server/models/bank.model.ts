@@ -6,4 +6,9 @@ const Bank = new Schema<BankDocument>({
     accounts: [{ _id: false, section: String, accountNum: String }],
 });
 
+Bank.method("getAccount", function (this: BankDocument, section: string) {
+    const account = this.accounts.findIndex((account) => account.section == section);
+    return this.accounts[account];
+});
+
 export default mongoose.model<BankDocument, IBankModel>("Bank", Bank, "banks");

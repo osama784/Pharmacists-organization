@@ -1,16 +1,19 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import fs from "fs/promises";
 import path from "path";
-import Section from "../../models/section.model";
+import Section, { SECTIONS } from "../../models/section.model";
 import { FeeDocument } from "../../types/models/fee.types";
 import Invoice from "../../models/invoice.model";
 import { responseMessages } from "../../translation/response.ar";
 import { PharmacistDocument } from "../../types/models/pharmacist.types";
 import puppeteer from "puppeteer-core";
+import { BankDocument } from "../../types/models/bank.types";
 
 const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
+        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument; bank: BankDocument }>(
+            "pharmacist bank"
+        );
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
@@ -19,6 +22,12 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
         let invoiceHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "templates", "invoice.html")), {
             encoding: "utf-8",
         });
+        invoiceHTML = invoiceHTML.replace("{{bank}}", invoice.bank.name);
+        invoiceHTML = invoiceHTML.replace("{{syndicate_account}}", invoice.bank.getAccount(SECTIONS.SYNDICATE).accountNum);
+        invoiceHTML = invoiceHTML.replace("{{retirement_account}}", invoice.bank.getAccount(SECTIONS.RETIREMENT).accountNum);
+        invoiceHTML = invoiceHTML.replace("{{disability_account}}", invoice.bank.getAccount(SECTIONS.DISABILITY).accountNum);
+        invoiceHTML = invoiceHTML.replace("{{health_account}}", invoice.bank.getAccount(SECTIONS.HEALTH).accountNum);
+
         invoiceHTML = invoiceHTML.replace("{{invoiceID}}", invoice.serialID);
         invoiceHTML = invoiceHTML.replace("{{status}}", invoice.status);
 

@@ -7,14 +7,17 @@ import Pharmacist from "../../models/pharmacist.model.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
 import Counter from "../../models/counter.model.js";
+import { BankDocument } from "../../types/models/bank.types.js";
+import { InvoiceModelTR } from "../../translation/models.ar.js";
+import Bank from "../../models/bank.model.js";
 
 const updateInvoice = async (
     req: Request,
     res: TypedResponse<Omit<InvoiceResponseDto, "fees"> & { fees: Record<string, any> }>,
     next: NextFunction
 ) => {
-    const validateData: updateInvoiceDto = req.validatedData;
-    const status = validateData.status;
+    const validatedData: updateInvoiceDto = req.validatedData;
+    const status = validatedData.status;
 
     try {
         const invoice = await Invoice.findOne({ serialID: req.params.id });
@@ -22,10 +25,17 @@ const updateInvoice = async (
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        let updatedFields: Record<string, any> = { ...validateData, updatedAt: Date.now() };
+        if (validatedData.bank) {
+            const bank = await Bank.findById(validatedData.bank);
+            if (!bank) {
+                res.status(400).json({ success: false, details: [`${InvoiceModelTR.bank}: ${responseMessages.NOT_FOUND}`] });
+                return;
+            }
+        }
+        let updatedFields: Record<string, any> = { ...validatedData, updatedAt: Date.now() };
         // update "total" filed if "fees" field gets changed
-        if (validateData.fees) {
-            const total = validateData.fees.reduce((sum, fee) => sum + Number(fee.value), 0);
+        if (validatedData.fees) {
+            const total = validatedData.fees.reduce((sum, fee) => sum + Number(fee.value), 0);
             updatedFields = {
                 ...updatedFields,
                 total: total,
@@ -59,7 +69,7 @@ const updateInvoice = async (
 
         await invoice.updateOne({ $set: updatedFields });
 
-        const doc = await Invoice.findById(invoice._id).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
+        const doc = await Invoice.findById(invoice._id).populate<{ pharmacist: PharmacistDocument; bank: BankDocument }>("pharmacist bank");
         let serializedDoc = toInvoiceResponseDto(doc!);
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let serializedFees: Record<string, any> = {};

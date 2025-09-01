@@ -7,6 +7,9 @@ import { responseMessages } from "../../translation/response.ar.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
+import Bank from "../../models/bank.model.js";
+import { InvoiceModelTR } from "../../translation/models.ar.js";
+import { PopulatedInvoiceDocument } from "../../types/models/invoice.types.js";
 
 const createInvoice = async (
     req: Request,
@@ -23,6 +26,11 @@ const createInvoice = async (
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
+        const bank = await Bank.findById(validatedData.bank);
+        if (!bank) {
+            res.status(400).json({ success: false, details: [`${InvoiceModelTR.bank}: ${responseMessages.NOT_FOUND}`] });
+            return;
+        }
         const fees = await getPharmacistRelatedFees(validatedData, pharmacist);
         const total = fees.reduce((sum, fee) => sum + fee.value, 0);
         let isFinesIncluded = false;
@@ -30,7 +38,7 @@ const createInvoice = async (
             isFinesIncluded = true;
         }
 
-        const invoice = await (
+        const invoice: PopulatedInvoiceDocument = await (
             await Invoice.create({
                 ...req.validatedData,
                 fees,
@@ -40,7 +48,7 @@ const createInvoice = async (
                 status: invoiceStatuses.ready,
                 updatedAt: Date.now(),
             })
-        ).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
+        ).populate("pharmacist bank");
         let serializedDoc = toInvoiceResponseDto(invoice);
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let serializedFees: Record<string, any> = {};

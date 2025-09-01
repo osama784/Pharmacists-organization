@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { syndicateMemberships } from "../models/syndicateMembership.model.js";
 import Fee from "../models/fee.model.js";
-import { EnumSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { EnumSchema, mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 import { InvoiceModelTR } from "../translation/models.ar.js";
 import { invoiceStatuses } from "../models/invoice.model.js";
@@ -9,6 +9,7 @@ import { invoiceStatuses } from "../models/invoice.model.js";
 const InvoiceSchema = z.object({
     syndicateMembership: EnumSchema({ data: syndicateMemberships as [string], keyName: InvoiceModelTR.syndicateMembership }),
     status: EnumSchema({ data: Object.values(invoiceStatuses) as [string, ...string[]], keyName: InvoiceModelTR.status }),
+    bank: mongooseIDSchema({ keyName: InvoiceModelTR.bank }),
     fees: z
         .array(
             z.object({

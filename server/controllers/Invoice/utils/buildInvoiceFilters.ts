@@ -2,6 +2,8 @@ import IInvoiceQueries from "../../../types/queries/invoice.query.js";
 import { buildBooleanFilter, buildDateFilter, buildNumberFilter, buildStringFilter } from "../../../utils/buildFilters.js";
 import buildPharmacistFilters from "../../Pharmacist/utils/buildPharmacistFilters.js";
 import Pharmacist from "../../../models/pharmacist.model.js";
+import buildBankFilters from "../../Bank/utils/buildBankFilters.js";
+import Bank from "../../../models/bank.model.js";
 
 const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<string, any>> => {
     let filters: Record<string, any> = {};
@@ -21,10 +23,16 @@ const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<str
     });
     if (queries.pharmacist) {
         const pharmacistsFilter = buildPharmacistFilters(queries.pharmacist);
-        console.log(pharmacistsFilter);
         if (Object.keys(pharmacistsFilter).length != 0) {
             const pharmacists = await Pharmacist.find(pharmacistsFilter);
             filters = { ...filters, pharmacist: { $in: pharmacists } };
+        }
+    }
+    if (queries.bank) {
+        const bankFilter = buildBankFilters(queries.bank);
+        if (Object.keys(bankFilter).length != 0) {
+            const banks = await Bank.find(bankFilter);
+            filters = { ...filters, bank: { $in: banks } };
         }
     }
     return filters;

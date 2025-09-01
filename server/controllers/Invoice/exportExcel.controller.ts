@@ -6,6 +6,7 @@ import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import IInvoiceQueries from "../../types/queries/invoice.query.js";
 import buildInvoiceFilters from "./utils/buildInvoiceFilters.js";
 import { IInvoice } from "../../types/models/invoice.types.js";
+import { BankDocument } from "../../types/models/bank.types.js";
 
 const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -17,7 +18,8 @@ const exportInvoicesAsExcel = async (req: Request, res: TypedResponse<null>, nex
 
         const result = await Invoice.find(filters).select("-fees").skip(skip).limit(limit).populate<{
             pharmacist: PharmacistDocument;
-        }>("pharmacist");
+            bank: BankDocument;
+        }>("pharmacist bank");
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Data Export");

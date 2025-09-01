@@ -55,6 +55,7 @@
         .bank-instruction {
             margin-bottom: 10px;
             text-align: right;
+            font-size: 18px;
         }
 
         table {
@@ -134,7 +135,7 @@
     <!-- Bank Information Section -->
     <div class="bank-info">
         <div class="bank-instruction">
-            <span>الى بنك سورية الدولي الاسلامي يرجى استيفاء الرسوم كما يلي:</span>
+            <span>الى {{bank}} يرجى استيفاء الرسوم كما يلي:</span>
         </div>
 
         <table>
@@ -166,19 +167,19 @@
         <table>
             <tbody>
                 <tr>
-                    <td>حساب نقابة صيادلة سورية رقم 209999 جاري</td>
+                    <td>حساب نقابة صيادلة سورية رقم {{syndicate_account}} جاري</td>
                     <td class="center-align" data-section="صندوق النقابة" data-section-total="true"></td>
                 </tr>
                 <tr>
-                    <td>حساب خزانة تقاعد صيادلة سورية رقم 203333 جاري</td>
+                    <td>حساب خزانة تقاعد صيادلة سورية رقم {{retirement_account}} جاري</td>
                     <td class="center-align" data-section="خزانة التقاعد" data-section-total="true"></td>
                 </tr>
                 <tr>
-                    <td>حساب صندوق اعانة العجز والرفاة اصيادلة سورية رقم 207777 جاري</td>
+                    <td>حساب صندوق اعانة العجز والرفاة اصيادلة سورية رقم {{disability_account}} جاري</td>
                     <td class="center-align" data-section="صندوق إعانة العجز و الوفاة" data-section-total="true"></td>
                 </tr>
                 <tr>
-                    <td>حساب التكافل الصحي لصيادلة سورية رقم 205550 جاري</td>
+                    <td>حساب التكافل الصحي لصيادلة سورية رقم {{health_account}} جاري</td>
                     <td class="center-align" data-section="خزانة التكافل الصحي" data-section-total="true"></td>
                 </tr>
                 <tr>
@@ -189,13 +190,8 @@
         </table>
     </div>
 
-    <!-- Signature Section -->
-    <div class="signature">
-        <div style="margin-bottom: 5mm;">توقيع الموظف : {{employee_name}}</div>
-    </div>
-
     <!-- Second Section Header -->
-    <div class="section-header" style="margin-top: -10px;">
+    <div class="section-header" style="margin-top: 10px;">
         <span class="red-bold">جـــــــــــــــرد أولي</span>
         <br>
         <span class="small-text"><pre><label style="font-weight: 800;">تاريخ الطباعة</label> : {{createdAt}}     <label style="font-weight: 800;">نوع الرسم</label> : {{syndicateMembership}}    <label style="font-weight: 800;">اسم الصيدلي</label> : {{fullName}}</pre></span>

@@ -5,5 +5,7 @@ export interface IBank {
     accounts: { section: string; accountNum: string }[];
 }
 
-export type BankDocument = HydratedDocument<IBank>;
+export type BankDocument = HydratedDocument<IBank> & {
+    getAccount(section: string): { section: string; accountNum: string };
+};
 export interface IBankModel extends Model<BankDocument> {}
