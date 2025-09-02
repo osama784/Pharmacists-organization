@@ -7,13 +7,10 @@ import Invoice from "../../models/invoice.model";
 import { responseMessages } from "../../translation/response.ar";
 import { PharmacistDocument } from "../../types/models/pharmacist.types";
 import puppeteer from "puppeteer-core";
-import { BankDocument } from "../../types/models/bank.types";
 
 const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument; bank: BankDocument }>(
-            "pharmacist bank"
-        );
+        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
@@ -23,11 +20,17 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
             encoding: "utf-8",
         });
         invoiceHTML = invoiceHTML.replace("{{bank}}", invoice.bank.name);
-        invoiceHTML = invoiceHTML.replace("{{syndicate_account}}", invoice.bank.getAccount(SECTIONS.SYNDICATE).accountNum);
-        invoiceHTML = invoiceHTML.replace("{{retirement_account}}", invoice.bank.getAccount(SECTIONS.RETIREMENT).accountNum);
-        invoiceHTML = invoiceHTML.replace("{{disability_account}}", invoice.bank.getAccount(SECTIONS.DISABILITY).accountNum);
-        invoiceHTML = invoiceHTML.replace("{{health_account}}", invoice.bank.getAccount(SECTIONS.HEALTH).accountNum);
-
+        for (const account of invoice.bank.accounts) {
+            if (account.section == SECTIONS.SYNDICATE) {
+                invoiceHTML = invoiceHTML.replace("{{syndicate_account}}", account.accountNum);
+            } else if (account.section == SECTIONS.RETIREMENT) {
+                invoiceHTML = invoiceHTML.replace("{{retirement_account}}", account.accountNum);
+            } else if (account.section == SECTIONS.DISABILITY) {
+                invoiceHTML = invoiceHTML.replace("{{disability_account}}", account.accountNum);
+            } else if (account.section == SECTIONS.HEALTH) {
+                invoiceHTML = invoiceHTML.replace("{{health_account}}", account.accountNum);
+            }
+        }
         invoiceHTML = invoiceHTML.replace("{{invoiceID}}", invoice.serialID);
         invoiceHTML = invoiceHTML.replace("{{status}}", invoice.status);
 

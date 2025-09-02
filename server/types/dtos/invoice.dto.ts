@@ -3,6 +3,7 @@ import { InvoiceDocument, PopulatedInvoiceDocument } from "../models/invoice.typ
 import { PharmacistDocument } from "../models/pharmacist.types.js";
 import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto.js";
 import { BankResponseDto, toBankResponseDto } from "./bank.dto.js";
+import { IBank } from "../models/bank.types.js";
 
 export type createInvoiceDto = {
     syndicateMembership: string;
@@ -11,7 +12,7 @@ export type createInvoiceDto = {
     willPracticeThisYear: boolean;
 };
 
-export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines" | "willPracticeThisYear">> & {
+export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines" | "willPracticeThisYear" | "bank">> & {
     status?: string | null;
     fees?: { name: string; value: number; numOfYears: number }[];
 };
@@ -20,7 +21,7 @@ export type InvoiceResponseDto = {
     id: string;
     receiptNumber?: string;
     pharmacist: PharmacistResponseDto | string;
-    bank: BankResponseDto | string;
+    bank: IBank | string;
     status: string;
     syndicateMembership: string;
     total: number;
@@ -47,22 +48,16 @@ export function toInvoiceResponseDto(
 
 function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto {
     let pharmacist: string | PharmacistResponseDto;
-    let bank: string | BankResponseDto;
     if ("__v" in doc.pharmacist) {
         pharmacist = toPharmacistResponseDto(doc.pharmacist as PharmacistDocument);
     } else {
         pharmacist = doc.pharmacist.toString();
     }
-    if ("__v" in doc.bank) {
-        bank = toBankResponseDto(doc.bank);
-    } else {
-        bank = doc.bank.toString();
-    }
     return {
         id: doc.serialID,
         receiptNumber: doc.receiptNumber,
         pharmacist: pharmacist,
-        bank: bank,
+        bank: doc.bank,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,
         total: doc.total,
@@ -73,22 +68,16 @@ function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument):
 }
 function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto {
     let pharmacist: string | PharmacistResponseDto;
-    let bank: string | BankResponseDto;
     if ("__v" in doc.pharmacist) {
         pharmacist = toPharmacistResponseDto(doc.pharmacist as PharmacistDocument);
     } else {
         pharmacist = doc.pharmacist.toString();
     }
-    if ("__v" in doc.bank) {
-        bank = doc.bank.name;
-    } else {
-        bank = doc.bank.toString();
-    }
     return {
         id: doc.serialID,
         receiptNumber: doc.receiptNumber,
         pharmacist: pharmacist,
-        bank: bank,
+        bank: doc.bank.name,
         status: doc.status,
         syndicateMembership: doc.syndicateMembership,
         total: doc.total,

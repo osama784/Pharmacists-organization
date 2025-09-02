@@ -1,11 +1,13 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import Fee from "../../models/fee.model.js";
-import { FeeDocument } from "../../types/models/fee.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
-import { IUpdateFeesValuesDto } from "../../types/dtos/fee.dto.js";
+import { FeeResponseDto, IUpdateFeesValuesDto, toFeeResponseDto } from "../../types/dtos/fee.dto.js";
+import { SectionDocument } from "../../types/models/section.types.js";
+import Section from "../../models/section.model.js";
+import mongoose from "mongoose";
 
-const updateFeesValues = async (req: Request, res: TypedResponse<FeeDocument[]>, next: NextFunction) => {
-    let result = [];
+const updateFeesValues = async (req: Request, res: TypedResponse<Record<string, FeeResponseDto[]>>, next: NextFunction) => {
+    let result: Record<string, FeeResponseDto[]> = {};
     const validatedData: IUpdateFeesValuesDto[] = req.validatedData;
     try {
         for (const feeObject of validatedData) {
@@ -38,9 +40,6 @@ const updateFeesValues = async (req: Request, res: TypedResponse<FeeDocument[]>,
                         },
                     });
                 }
-
-                const doc = await Fee.findById(fee._id);
-                result.push(doc!);
             } else {
                 if (!feeObject.value) {
                     res.status(400).json({ success: false, details: [responseMessages.FEE_CONTROLLERS.MISSING_VALUE] });
@@ -51,8 +50,19 @@ const updateFeesValues = async (req: Request, res: TypedResponse<FeeDocument[]>,
                         value: feeObject.value,
                     },
                 });
-                const doc = await Fee.findById(fee._id);
-                result.push(doc!);
+            }
+        }
+        for (const fee of await Fee.find().populate<{ section: SectionDocument }>("section")) {
+            if (result[fee.section.name]) {
+                result[fee.section.name].push(toFeeResponseDto(fee.depopulate<{ section: mongoose.Types.ObjectId }>("section")));
+            } else {
+                result[fee.section.name] = [toFeeResponseDto(fee.depopulate<{ section: mongoose.Types.ObjectId }>("section"))];
+            }
+        }
+        const sections = await Section.find();
+        for (const section of sections) {
+            if (!result[section.name]) {
+                result[section.name] = [];
             }
         }
 

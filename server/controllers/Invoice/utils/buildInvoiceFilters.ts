@@ -30,9 +30,8 @@ const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<str
     }
     if (queries.bank) {
         const bankFilter = buildBankFilters(queries.bank);
-        if (Object.keys(bankFilter).length != 0) {
-            const banks = await Bank.find(bankFilter);
-            filters = { ...filters, bank: { $in: banks } };
+        for (const entry of Object.entries(bankFilter)) {
+            filters = { ...filters, [`bank.${entry[0]}`]: entry[1] };
         }
     }
     return filters;

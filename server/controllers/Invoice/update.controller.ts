@@ -7,9 +7,6 @@ import Pharmacist from "../../models/pharmacist.model.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
 import Counter from "../../models/counter.model.js";
-import { BankDocument } from "../../types/models/bank.types.js";
-import { InvoiceModelTR } from "../../translation/models.ar.js";
-import Bank from "../../models/bank.model.js";
 
 const updateInvoice = async (
     req: Request,
@@ -24,13 +21,6 @@ const updateInvoice = async (
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
-        }
-        if (validatedData.bank) {
-            const bank = await Bank.findById(validatedData.bank);
-            if (!bank) {
-                res.status(400).json({ success: false, details: [`${InvoiceModelTR.bank}: ${responseMessages.NOT_FOUND}`] });
-                return;
-            }
         }
         let updatedFields: Record<string, any> = { ...validatedData, updatedAt: Date.now() };
         // update "total" filed if "fees" field gets changed
@@ -69,7 +59,7 @@ const updateInvoice = async (
 
         await invoice.updateOne({ $set: updatedFields });
 
-        const doc = await Invoice.findById(invoice._id).populate<{ pharmacist: PharmacistDocument; bank: BankDocument }>("pharmacist bank");
+        const doc = await Invoice.findById(invoice._id).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         let serializedDoc = toInvoiceResponseDto(doc!);
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let serializedFees: Record<string, any> = {};

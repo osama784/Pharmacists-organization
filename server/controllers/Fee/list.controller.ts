@@ -3,8 +3,10 @@ import Fee from "../../models/fee.model.js";
 import { FeeDocument, PopulatedFeeDocument } from "../../types/models/fee.types.js";
 import { SectionDocument } from "../../types/models/section.types.js";
 import Section from "../../models/section.model.js";
+import { FeeResponseDto, toFeeResponseDto } from "../../types/dtos/fee.dto.js";
+import mongoose from "mongoose";
 
-const listFees = async (req: Request, res: TypedResponse<Record<string, FeeDocument[]>>, next: NextFunction) => {
+const listFees = async (req: Request, res: TypedResponse<Record<string, FeeResponseDto[]>>, next: NextFunction) => {
     const queryStatus = req.query.status;
     let fees = [];
     try {
@@ -15,12 +17,12 @@ const listFees = async (req: Request, res: TypedResponse<Record<string, FeeDocum
         } else {
             fees = await Fee.find().populate<{ section: SectionDocument }>("section");
         }
-        const result: Record<string, FeeDocument[]> = {};
+        const result: Record<string, FeeResponseDto[]> = {};
         for (const fee of fees) {
             if (result[fee.section.name]) {
-                result[fee.section.name].push(fee.depopulate("section"));
+                result[fee.section.name].push(toFeeResponseDto(fee.depopulate<{ section: mongoose.Types.ObjectId }>("section")));
             } else {
-                result[fee.section.name] = [fee.depopulate("section")];
+                result[fee.section.name] = [toFeeResponseDto(fee.depopulate<{ section: mongoose.Types.ObjectId }>("section"))];
             }
         }
         const sections = await Section.find();

@@ -6,7 +6,6 @@ import { InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoi
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
-import { BankDocument } from "../../types/models/bank.types.js";
 
 const getInvoice = async (
     req: Request,
@@ -14,9 +13,7 @@ const getInvoice = async (
     next: NextFunction
 ) => {
     try {
-        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument; bank: BankDocument }>(
-            "pharmacist bank"
-        );
+        const invoice = await Invoice.findOne({ serialID: req.params.id }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
 
         if (!invoice) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });

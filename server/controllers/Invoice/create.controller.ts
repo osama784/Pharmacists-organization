@@ -45,10 +45,11 @@ const createInvoice = async (
                 isFinesIncluded,
                 pharmacist,
                 total,
+                bank: { name: bank.name, accounts: bank.accounts },
                 status: invoiceStatuses.ready,
                 updatedAt: Date.now(),
             })
-        ).populate("pharmacist bank");
+        ).populate("pharmacist");
         let serializedDoc = toInvoiceResponseDto(invoice);
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let serializedFees: Record<string, any> = {};

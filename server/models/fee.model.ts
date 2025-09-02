@@ -8,10 +8,7 @@ const Fee = new Schema<FeeDocument>({
         type: Map,
         of: Number,
     },
-    value: {
-        type: Number,
-        default: 0,
-    },
+    value: Number,
     isMutable: { type: Boolean, required: true },
     isRepeatable: { type: Boolean, required: true },
 });

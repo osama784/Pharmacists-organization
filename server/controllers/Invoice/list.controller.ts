@@ -4,7 +4,6 @@ import IInvoiceQueries from "../../types/queries/invoice.query.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import buildInvoiceFilters from "./utils/buildInvoiceFilters.js";
 import { InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
-import { BankDocument } from "../../types/models/bank.types.js";
 
 const listInvoices = async (req: Request, res: TypedResponse<InvoiceResponseDto[]>, next: NextFunction) => {
     try {
@@ -16,8 +15,7 @@ const listInvoices = async (req: Request, res: TypedResponse<InvoiceResponseDto[
 
         const result = await Invoice.find(filters).select("-fees").sort("-updatedAt").skip(skip).limit(limit).populate<{
             pharmacist: PharmacistDocument;
-            bank: BankDocument;
-        }>("pharmacist bank");
+        }>("pharmacist");
 
         const totalItems = await Invoice.find(filters).countDocuments();
 

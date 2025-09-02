@@ -22,7 +22,10 @@ const Invoice = new Schema<InvoiceDocument>(
         serialID: { type: String, unique: true },
         receiptNumber: String,
         pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
-        bank: { type: Schema.Types.ObjectId, ref: "Bank" },
+        bank: {
+            name: { type: String, required: true },
+            accounts: [{ _id: false, section: String, accountNum: String }],
+        },
         status: { type: String, required: true },
         syndicateMembership: { type: String, required: true },
         isFinesIncluded: Boolean,

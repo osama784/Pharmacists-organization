@@ -7,20 +7,26 @@ export interface IUpdateFeesValuesDto {
     value?: number;
 }
 
-export type FeeResponseDto = {
-    id: string;
-    name: string;
-    section: SectionDocument;
-    details?: Map<string, number>;
-    value?: number;
-    isMutable: boolean;
-    isRepeatable: boolean;
-};
+export type FeeResponseDto =
+    | {
+          id: string;
+          name: string;
+          section: string;
+          isMutable: true;
+          details: Map<string, number>;
+      }
+    | {
+          id: string;
+          name: string;
+          section: string;
+          isMutable: false;
+          value: number;
+      };
 
-export function toFeeResponseDto(data: PopulatedFeeDocument): FeeResponseDto;
-export function toFeeResponseDto(data: PopulatedFeeDocument[]): FeeResponseDto[];
+export function toFeeResponseDto(data: FeeDocument): FeeResponseDto;
+export function toFeeResponseDto(data: FeeDocument[]): FeeResponseDto[];
 
-export function toFeeResponseDto(data: PopulatedFeeDocument | PopulatedFeeDocument[]): FeeResponseDto | FeeResponseDto[] {
+export function toFeeResponseDto(data: FeeDocument | FeeDocument[]): FeeResponseDto | FeeResponseDto[] {
     if (Array.isArray(data)) {
         const result: FeeResponseDto[] = [];
         for (const doc of data) {
@@ -32,14 +38,21 @@ export function toFeeResponseDto(data: PopulatedFeeDocument | PopulatedFeeDocume
     }
 }
 
-function _toFeeResponseDto(doc: PopulatedFeeDocument): FeeResponseDto {
+function _toFeeResponseDto(doc: FeeDocument): FeeResponseDto {
+    if (doc.isMutable) {
+        return {
+            id: doc.id,
+            name: doc.name,
+            section: doc.section.toString(),
+            details: doc.details!,
+            isMutable: doc.isMutable,
+        };
+    }
     return {
         id: doc.id,
         name: doc.name,
-        section: doc.section,
-        details: doc.details,
-        value: doc.value,
+        section: doc.section.toString(),
+        value: doc.value!,
         isMutable: doc.isMutable,
-        isRepeatable: doc.isRepeatable,
     };
 }
