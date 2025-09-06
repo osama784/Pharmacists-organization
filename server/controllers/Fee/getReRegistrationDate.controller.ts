@@ -1,8 +1,8 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import staticData from "../../config/static-data.json";
 
-const getReRegistrationDate = (req: Request, res: TypedResponse<{ "re-registration-date": string }>, next: NextFunction) => {
-    res.json({ success: true, data: { "re-registration-date": staticData["re-registration-date"] } });
+const getReRegistrationDate = (req: Request, res: TypedResponse<{ reregistrationDate: string }>, next: NextFunction) => {
+    res.json({ success: true, data: { reregistrationDate: staticData["reregistrationDate"] } });
 };
 
 export default getReRegistrationDate;

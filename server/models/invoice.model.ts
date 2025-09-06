@@ -406,7 +406,7 @@ export const getPharmacistRelatedFees = async (
                 syndicateMembershipStatus
             )
         ) {
-            const reregistrationDate = staticData["re-registration-date"];
+            const reregistrationDate = staticData["reregistrationDate"];
             if (Date.now() < Date.parse(reregistrationDate)) {
                 fees = fees.map((fee) => {
                     if (REREGISTRATION_FEES.includes(fee.name)) {
@@ -555,7 +555,7 @@ export const getPharmacistRelatedFees = async (
     });
 
     // calculate fines
-    const finesDate = new Date(staticData["fines-date"]);
+    const finesDate = new Date(staticData["finesDate"]);
     let fineSummaryFeeValue = 0;
     let currentFee = null;
     if (new Date() >= finesDate && validatedData.calculateFines != undefined && validatedData.calculateFines == true) {

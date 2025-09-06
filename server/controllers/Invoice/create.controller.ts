@@ -19,7 +19,7 @@ const createInvoice = async (
     try {
         // check fines date, adding fines
         const validatedData: createInvoiceDto = req.validatedData;
-        const finesDate = new Date(staticData["fines-date"]);
+        const finesDate = new Date(staticData["finesDate"]);
 
         const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
         if (!pharmacist) {
