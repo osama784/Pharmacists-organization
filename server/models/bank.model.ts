@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 import { BankDocument, IBankModel } from "../types/models/bank.types";
 
-const Bank = new Schema<BankDocument>({
-    name: { type: String, required: true },
-    accounts: [{ _id: false, section: String, accountNum: String }],
-});
+const Bank = new Schema<BankDocument>(
+    {
+        name: { type: String, required: true },
+        accounts: [{ _id: false, section: String, accountNum: String }],
+    },
+    { timestamps: true }
+);
 
 Bank.method("getAccount", function (this: BankDocument, section: string) {
     const account = this.accounts.findIndex((account) => account.section == section);

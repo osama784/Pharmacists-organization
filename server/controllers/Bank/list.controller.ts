@@ -12,7 +12,7 @@ const listBanks = async (req: Request, res: TypedResponse<BankResponseDto[]>, ne
         const skip = page * limit;
 
         const filters = buildBankFilters(queries);
-        const banks = await Bank.find(filters).skip(skip).limit(limit);
+        const banks = await Bank.find(filters).sort("-updatedAt").skip(skip).limit(limit);
         res.json({
             success: true,
             data: toBankResponseDto(banks),

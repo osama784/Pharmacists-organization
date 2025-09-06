@@ -6,6 +6,8 @@ export interface IBank {
 }
 
 export type BankDocument = HydratedDocument<IBank> & {
+    createdAt: Date;
+    updatedAt: Date;
     getAccount(section: string): { section: string; accountNum: string };
 };
 export interface IBankModel extends Model<BankDocument> {}
