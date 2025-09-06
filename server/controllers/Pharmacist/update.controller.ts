@@ -4,7 +4,7 @@ import { PharmacistResponseDto, toPharmacistResponseDto, UpdatePharmacistDto } f
 import { responseMessages } from "../../translation/response.ar.js";
 import fs from "fs/promises";
 import path from "path";
-import { processImage } from "../../utils/images.js";
+import { processPharmacistImage } from "../../utils/images.js";
 
 const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
@@ -42,11 +42,14 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
         // handle uploaded images
         if (req.files) {
             for (const file of req.files as Express.Multer.File[]) {
-                const processedImage = await processImage(file, {
-                    userId: req.params.id,
-                    supportsWebP: res.locals.supportsWebP,
-                    isLegacyBrowser: res.locals.isLegacyBrowser,
-                });
+                const processedImage = await processPharmacistImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "personal", pharmacistId: req.params.id }
+                );
                 if (!imagesURLs.includes(processedImage.imageURL)) {
                     imagesURLs.push(processedImage.imageURL);
                 }

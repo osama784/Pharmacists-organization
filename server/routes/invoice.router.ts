@@ -14,6 +14,8 @@ import exportInvoicesAsExcel from "../controllers/Invoice/exportExcel.controller
 import AppError from "../utils/AppError.js";
 import { responseMessages } from "../translation/response.ar.js";
 import printInvoice from "../controllers/Invoice/printInvoice.controller.js";
+import upload from "../middlewares/multer.middleware.js";
+import downloadInvoiceImages from "../controllers/Invoice/downloadImages.controller.js";
 
 const router = Router();
 
@@ -34,12 +36,25 @@ router.param("pharmacistID", (req, res, next, value, name) => {
 
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.post("/create/:pharmacistID", checkPermission(permissions.createInvoice), validate(InvoiceCreateSchema), createInvoice);
+router.post(
+    "/create/:pharmacistID",
+    checkPermission(permissions.createInvoice),
+    upload.array("files"),
+    validate(InvoiceCreateSchema),
+    createInvoice
+);
 router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);
-router.patch("/update/:id", checkPermission(permissions.updateInvoice), validate(InvoiceUpdateSchema), updateInvoice);
+router.patch(
+    "/update/:id",
+    upload.array("files"),
+    checkPermission(permissions.updateInvoice),
+    validate(InvoiceUpdateSchema),
+    updateInvoice
+);
 router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
 router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
 router.get("/export", exportInvoicesAsExcel);
 router.get("/print/:id", printInvoice);
+router.get("/download/:id", checkPermission(permissions.downloadInvoiceImages), downloadInvoiceImages);
 
 export default router;

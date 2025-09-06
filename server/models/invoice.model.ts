@@ -37,6 +37,7 @@ const Invoice = new Schema<InvoiceDocument>(
                 numOfYears: { type: Number, required: true },
             },
         ],
+        images: [String],
         total: Number,
         paidDate: Date,
     },

@@ -4,15 +4,22 @@ import sharp from "sharp";
 
 export const UPLOADS_DIR = path.join(__dirname, "..", "..", "..", "uploads");
 
-export const processImage = async (
+export const processPharmacistImage = async (
     file: Express.Multer.File,
-    options: { userId: string; supportsWebP: boolean; isLegacyBrowser: boolean }
+    options: { supportsWebP: boolean; isLegacyBrowser: boolean },
+    info: { pharmacistId: string; imageType: "personal" } | { pharmacistId: string; imageType: "invoice"; invoiceId: string }
 ) => {
-    const { userId, supportsWebP, isLegacyBrowser } = options;
+    const { supportsWebP, isLegacyBrowser } = options;
 
     // Create output directory
-    const userDir = path.join("uploads", "users", userId);
-    const fullPath = path.join(__dirname, "..", "..", "..", userDir);
+    let pharmacistDir: string;
+    if (info.imageType == "personal") {
+        pharmacistDir = path.join("uploads", "pharmacists", info.pharmacistId, "personal");
+    } else {
+        pharmacistDir = path.join("uploads", "pharmacists", info.pharmacistId, "invoices", info.invoiceId);
+    }
+    // const pharmacistDir = path.join("uploads", "pharmacists", pharmacistId);
+    const fullPath = path.join(__dirname, "..", "..", "..", pharmacistDir);
     try {
         await fs.access(fullPath);
     } catch (e) {
@@ -26,7 +33,7 @@ export const processImage = async (
     }
     // Generate unique filename
     const filename = file.filename;
-    const imageURL = path.join(userDir, `${filename}.${outputFormat}`);
+    const imageURL = path.join(pharmacistDir, `${filename}.${outputFormat}`);
     const outputPath = path.join(fullPath, `${filename}.${outputFormat}`);
 
     // Create sharp instance

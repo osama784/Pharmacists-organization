@@ -2,7 +2,7 @@ import { NextFunction, Request, TypedResponse } from "express";
 import Pharmacist from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
 import { PharmacistResponseDto, toPharmacistResponseDto, UpdateUniversityDegreeDto } from "../../../types/dtos/pharmacist.dto";
-import { processImage } from "../../../utils/images";
+import { processPharmacistImage } from "../../../utils/images";
 import fs from "fs/promises";
 import path from "path";
 
@@ -49,11 +49,14 @@ const updateUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
         // handle uploaded images
         if (req.files) {
             for (const file of req.files as Express.Multer.File[]) {
-                const processedImage = await processImage(file, {
-                    userId: req.params.id,
-                    supportsWebP: res.locals.supportsWebP,
-                    isLegacyBrowser: res.locals.isLegacyBrowser,
-                });
+                const processedImage = await processPharmacistImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "personal", pharmacistId: req.params.id }
+                );
                 if (!imagesURLs.includes(processedImage.imageURL)) {
                     imagesURLs.push(processedImage.imageURL);
                 }

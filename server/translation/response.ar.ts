@@ -25,6 +25,7 @@ export const responseMessages = {
     },
     INVOICE_CONTROLLERS: {
         INVALID_STATUS: "قيمة حالة الفاتورة غير فعالة",
+        NO_IMAGES_FOUND: "لا يوجد صور لهذه الفاتورة بعد",
     },
     AUTH_CONTROLLERS: {
         EMAIL_PASSWORD_INCORRECT: "الإيميل أو كلمة المرور غير صحيحة",

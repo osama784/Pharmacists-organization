@@ -10,6 +10,8 @@ import { FeeDocument } from "../../types/models/fee.types.js";
 import Bank from "../../models/bank.model.js";
 import { InvoiceModelTR } from "../../translation/models.ar.js";
 import { PopulatedInvoiceDocument } from "../../types/models/invoice.types.js";
+import fs from "fs/promises";
+import { processPharmacistImage } from "../../utils/images.js";
 
 const createInvoice = async (
     req: Request,
@@ -50,7 +52,30 @@ const createInvoice = async (
                 updatedAt: Date.now(),
             })
         ).populate("pharmacist");
-        let serializedDoc = toInvoiceResponseDto(invoice);
+
+        const processed: string[] = [];
+        if (req.files) {
+            for (const file of req.files as Express.Multer.File[]) {
+                const processedImage = await processPharmacistImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "invoice", pharmacistId: req.params.pharmacistID, invoiceId: invoice.serialID }
+                );
+                processed.push(processedImage.imageURL);
+                try {
+                    await fs.unlink(file.path);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+        await invoice.updateOne({ $set: { images: processed } });
+        const doc = await Invoice.findById(invoice.id);
+
+        let serializedDoc = toInvoiceResponseDto(doc!);
         const sections = await Section.find().populate<{ fees: FeeDocument[] }>("fees");
         let serializedFees: Record<string, any> = {};
 

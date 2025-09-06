@@ -7,6 +7,11 @@ import Pharmacist from "../../models/pharmacist.model.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
 import Counter from "../../models/counter.model.js";
+import Bank from "../../models/bank.model.js";
+import { InvoiceModelTR } from "../../translation/models.ar.js";
+import path from "path";
+import fs from "fs/promises";
+import { processPharmacistImage } from "../../utils/images.js";
 
 const updateInvoice = async (
     req: Request,
@@ -31,6 +36,17 @@ const updateInvoice = async (
                 total: total,
             };
         }
+        if (validatedData.bank) {
+            const bank = await Bank.findById(validatedData.bank);
+            if (!bank) {
+                res.status(400).json({ success: false, details: [`${InvoiceModelTR.bank}: ${responseMessages.NOT_FOUND}`] });
+                return;
+            }
+            updatedFields = {
+                ...updatedFields,
+                bank: { name: bank.name, accounts: bank.accounts },
+            };
+        }
 
         if (status == invoiceStatuses.paid) {
             const receiptNumber = await Counter.findOneAndUpdate(
@@ -50,14 +66,55 @@ const updateInvoice = async (
                     lastTimePaid: invoice.createdAt,
                 }
             );
+        }
+        const newImages = validatedData.images;
+        const oldImages = invoice.images;
+        let imagesURLs: string[] = [];
+        if (newImages) {
+            // check if added a new url to the source array
+            for (const image of newImages) {
+                if (!oldImages.includes(image)) {
+                    res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.PREVENT_ADDING_IMAGES_URLS] });
+                    return;
+                }
+            }
+            // handle deleted images
+            const deletedImages = oldImages.filter((image) => !newImages.includes(image));
+            for (const image of deletedImages) {
+                const imagePath = path.join(__dirname, "..", "..", "..", "..", "..", image);
+                try {
+                    await fs.unlink(imagePath);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            imagesURLs = newImages;
         } else {
-            updatedFields = {
-                ...updatedFields,
-                paidDate: null,
-            };
+            imagesURLs = oldImages;
+        }
+        // handle uploaded images
+        if (req.files) {
+            for (const file of req.files as Express.Multer.File[]) {
+                const processedImage = await processPharmacistImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "invoice", pharmacistId: invoice.pharmacist.toString(), invoiceId: invoice.serialID }
+                );
+                if (!imagesURLs.includes(processedImage.imageURL)) {
+                    imagesURLs.push(processedImage.imageURL);
+                }
+                try {
+                    await fs.unlink(file.path);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
         }
 
-        await invoice.updateOne({ $set: updatedFields });
+        await invoice.updateOne({ $set: { ...updatedFields, images: imagesURLs } });
 
         const doc = await Invoice.findById(invoice._id).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         let serializedDoc = toInvoiceResponseDto(doc!);

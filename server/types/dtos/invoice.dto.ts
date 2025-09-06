@@ -12,9 +12,10 @@ export type createInvoiceDto = {
     willPracticeThisYear: boolean;
 };
 
-export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines" | "willPracticeThisYear" | "bank">> & {
+export type updateInvoiceDto = Partial<Omit<createInvoiceDto, "calculateFines" | "willPracticeThisYear">> & {
     status?: string | null;
     fees?: { name: string; value: number; numOfYears: number }[];
+    images?: string[];
 };
 
 export type InvoiceResponseDto = {
@@ -28,6 +29,7 @@ export type InvoiceResponseDto = {
     paidDate?: Date;
     createdAt: Date;
     fees?: { name: string; value: number; numOfYears: number }[];
+    images: string[];
 };
 
 export function toInvoiceResponseDto(data: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto;
@@ -64,6 +66,7 @@ function _toInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument):
         paidDate: doc.paidDate,
         createdAt: doc.createdAt,
         fees: doc.fees,
+        images: doc.images,
     };
 }
 function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocument): InvoiceResponseDto {
@@ -83,5 +86,6 @@ function _toListInvoiceResponseDto(doc: PopulatedInvoiceDocument | InvoiceDocume
         total: doc.total,
         paidDate: doc.paidDate,
         createdAt: doc.createdAt,
+        images: doc.images,
     };
 }

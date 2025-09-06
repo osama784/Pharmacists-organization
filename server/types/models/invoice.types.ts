@@ -11,6 +11,7 @@ export interface IInvoice {
     syndicateMembership: string;
     isFinesIncluded?: boolean;
     fees: { name: string; value: number; numOfYears: number }[];
+    images: string[];
     total: number;
     paidDate?: Date;
     createdAt: Date;

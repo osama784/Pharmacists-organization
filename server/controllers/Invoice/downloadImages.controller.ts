@@ -4,34 +4,34 @@ import fs from "fs/promises";
 import { responseMessages } from "../../translation/response.ar";
 import AdmZip from "adm-zip";
 import { UPLOADS_DIR } from "../../utils/images";
-import Pharmacist from "../../models/pharmacist.model";
+import Invoice from "../../models/invoice.model";
 
-const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
+const downloadInvoiceImages = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const pharmacistId = req.params.id;
-        const pharmacist = Pharmacist.findById(pharmacistId);
-        if (!pharmacist) {
+        const invoiceId = req.params.id;
+        const invoice = await Invoice.findOne({ serialID: invoiceId });
+        if (!invoice) {
             res.json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const pharmacistDir = path.join(UPLOADS_DIR, "pharmacists", pharmacistId, "personal");
+        const invoiceDir = path.join(UPLOADS_DIR, "pharmacists", invoice.pharmacist.toString(), "invoices", invoiceId);
         try {
-            await fs.access(pharmacistDir);
+            await fs.access(invoiceDir);
         } catch (e) {
-            res.status(200).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_IMAGES_FOUND] });
+            res.status(200).json({ success: false, details: [responseMessages.INVOICE_CONTROLLERS.NO_IMAGES_FOUND] });
             return;
         }
 
         const zip = new AdmZip();
-        const files = await fs.readdir(pharmacistDir);
+        const files = await fs.readdir(invoiceDir);
         if (files.length == 0) {
-            res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_IMAGES_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.INVOICE_CONTROLLERS.NO_IMAGES_FOUND] });
             return;
         }
 
         // Add each file to ZIP
         files.forEach((file) => {
-            const filePath = path.join(pharmacistDir, file);
+            const filePath = path.join(invoiceDir, file);
             zip.addLocalFile(filePath);
         });
 
@@ -49,4 +49,4 @@ const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, 
     }
 };
 
-export default downloadPharmacistImages;
+export default downloadInvoiceImages;

@@ -124,3 +124,22 @@ export function DateSchema(options: DateSchemaOptions) {
         );
     }
 }
+
+type BooleanSchemaOptions = {
+    keyName: string;
+    optional?: boolean;
+};
+export function BooleanSchema(options: BooleanSchemaOptions) {
+    if (options.optional) {
+        return z.preprocess((value) => {
+            if (value == "true") return true;
+            if (value == "false") return false;
+            return value;
+        }, z.boolean({ message: `${options.keyName} :${zodSchemasMessages.INVALID_BOOLEAN}` }).optional());
+    }
+    return z.preprocess((value) => {
+        if (value == "true") return true;
+        if (value == "false") return false;
+        return value;
+    }, z.boolean({ message: `${options.keyName} :${zodSchemasMessages.INVALID_BOOLEAN}` }));
+}

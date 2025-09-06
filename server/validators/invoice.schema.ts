@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { syndicateMemberships } from "../models/syndicateMembership.model.js";
 import Fee from "../models/fee.model.js";
-import { EnumSchema, mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
+import { BooleanSchema, EnumSchema, mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
-import { InvoiceModelTR } from "../translation/models.ar.js";
+import { ExtraInvoiceTR, InvoiceModelTR } from "../translation/models.ar.js";
 import { invoiceStatuses } from "../models/invoice.model.js";
 
 const InvoiceSchema = z.object({
@@ -41,10 +41,18 @@ const InvoiceSchema = z.object({
             },
             { message: zodSchemasMessages.INVOICE_SCHEMA.ALL_FEES_SHOULD_EXIST }
         ),
+
+    images: z.preprocess((data) => {
+        if (typeof data == "string") {
+            if (data != "") return [data];
+            return [];
+        }
+        return data;
+    }, z.array(StringSchema({ keyName: InvoiceModelTR.images }))),
 });
 
 export const InvoiceCreateSchema = InvoiceSchema.extend({
-    calculateFees: z.boolean().optional(),
-    willPracticeThisYear: z.boolean(),
-}).omit({ status: true, fees: true });
-export const InvoiceUpdateSchema = InvoiceSchema.omit({ bank: true }).partial();
+    calculateFees: BooleanSchema({ keyName: ExtraInvoiceTR.calculateFines, optional: true }),
+    willPracticeThisYear: BooleanSchema({ keyName: ExtraInvoiceTR.willPracticeThisYear }),
+}).omit({ status: true, fees: true, images: true });
+export const InvoiceUpdateSchema = InvoiceSchema.partial();

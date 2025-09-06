@@ -2,7 +2,7 @@ import { NextFunction, Request, TypedResponse } from "express";
 import Pharmacist from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
 import { CreateUniversityDegreeDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
-import { processImage } from "../../../utils/images";
+import { processPharmacistImage } from "../../../utils/images";
 import fs from "fs/promises";
 
 const createUniversityDegree = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
@@ -17,11 +17,14 @@ const createUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
         const processed: string[] = [];
         if (req.files) {
             for (const file of req.files as Express.Multer.File[]) {
-                const processedImage = await processImage(file, {
-                    userId: req.params.id,
-                    supportsWebP: res.locals.supportsWebP,
-                    isLegacyBrowser: res.locals.isLegacyBrowser,
-                });
+                const processedImage = await processPharmacistImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "personal", pharmacistId: req.params.id }
+                );
                 processed.push(processedImage.imageURL);
                 try {
                     await fs.unlink(file.path);

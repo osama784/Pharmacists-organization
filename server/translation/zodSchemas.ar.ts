@@ -6,6 +6,7 @@ export const zodSchemasMessages = {
     INVALID_NUMBER: "يجب أن تكون القيمة رقماً",
     INVALID_POSITIVE_NUMBER: "يجب أن تكون القيمة رقماً موجباً",
     INVALID_DATE: "يجب أن تكون القيمة عبارة عن تاريخ",
+    INVALID_BOOLEAN: "يجب أن تكون القيمة عبارة عن صح أو خطأ",
     START_lt_END_DATE: "يجب أن يكون تاريخ البداية أكبر من تاريخ النهاية",
     INVALID_ENUM_VALUE(data: [string, ...string[]]) {
         return `يجب أن تكون القيمة المعطاة إحدى القيم: ${data.join(" | ")}`;

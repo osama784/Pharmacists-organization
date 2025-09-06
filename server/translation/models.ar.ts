@@ -47,6 +47,12 @@ export const InvoiceModelTR: InvoiceModelTR = {
         value: "قيمة الرسم",
         numOfYears: "عدد السنوات",
     },
+    images: "صور الفاتورة",
+};
+
+export const ExtraInvoiceTR = {
+    willPracticeThisYear: "سيزاول هذه السنة",
+    calculateFines: "احتساب الغرامات",
 };
 type PharmacistModelTR = Record<keyof Omit<IPharmacist, "invoices" | "currentSyndicate">, any>;
 export const PharmacistModelTR: PharmacistModelTR = {
