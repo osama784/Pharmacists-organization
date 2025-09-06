@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نظام معلومات الصيدلي</title>
+    <meta name="description" content="نظام عرض معلومات وبيانات اعتماد الصيدلي المهنية" />
+    <meta name="author" content="Lovable" />
+
+    <meta property="og:title" content="نظام معلومات الصيدلي" />
+    <meta property="og:description" content="عرض بيانات اعتماد ومعلومات الصيدلي المهنية" />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: hsl(210, 15%, 8%);
+            color: hsl(210, 20%, 92%);
+            line-height: 1.6;
+            direction: rtl;
+        }
+
+        .pdf-page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: white;
+            color: hsl(222.2, 84%, 4.9%);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20mm;
+            box-sizing: border-box;
+            direction: rtl;
+        }
+
+        .space-y-4>*+* {
+            margin-top: 1rem;
+        }
+
+        .header-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title-en {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            direction: ltr;
+        }
+
+        .header-title-ar {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            direction: rtl;
+        }
+
+        .header-gradient {
+            background: white;
+            color: black;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            direction: rtl;
+        }
+
+        .header-icon {
+            width: 3rem;
+            height: 3rem;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .header-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .header-meta {
+            font-size: 0.875rem;
+            opacity: 0.75;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid hsl(214.3, 31.8%, 91.4%);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: hsl(200, 30%, 15%);
+            color: hsl(200, 20%, 85%);
+            padding: 1.5rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .grid-full {
+            grid-column: 1 / -1;
+        }
+
+        .field-group {
+            margin-bottom: 1rem;
+        }
+
+        .field-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: hsl(215.4, 16.3%, 46.9%);
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .field-value {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-container {
+            padding: 0; 
+            overflow-x: auto;
+        }
+
+        .table thead {
+            background: hsl(210, 40%, 96.1%);
+        }
+
+        .table th,
+        .table td {
+            text-align: right;
+            padding: 1rem;
+            border-bottom: 1px solid hsl(214.3, 31.8%, 91.4%);
+        }
+
+        .table th {
+            font-weight: 500;
+        }
+
+        .table tbody tr:hover {
+            background: hsl(210, 40%, 98%);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-secondary {
+            background: hsl(210, 40%, 96.1%);
+            color: hsl(222.2, 47.4%, 11.2%);
+        }
+
+        .badge-outline {
+            border: 1px solid hsl(214.3, 31.8%, 91.4%);
+            background: transparent;
+        }
+
+        .badge-success {
+            background: hsl(142, 76%, 45%);
+            color: white;
+        }
+        .icon {
+            width: 1rem;
+            height: 1rem;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            margin-left: 0.5rem;
+        }
+
+        .icon-large {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-success {
+            color: hsl(142, 76%, 45%);
+        }
+
+        .text-muted {
+            color: hsl(215.4, 16.3%, 46.9%);
+        }
+
+        .py-8 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .border-t {
+            border-top: 1px solid hsl(214.3, 31.8%, 91.4%);
+        }
+
+        .py-6 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .pdf-page {
+                box-shadow: none;
+                margin: 0;
+                padding: 15mm;
+            }
+            .card {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            .table-container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            /* Ensure table headers repeat on each page */
+            thead {
+                display: table-header-group;
+            }
+            
+            /* Allow breaking within table rows if needed */
+            tr {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            /* Adjust padding for print to use space more efficiently */
+            .pdf-page {
+                padding: 10mm;
+            }
+            
+            .card-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="min-height: 100vh; background: hsl(210, 15%, 8%);">
+        <div class="pdf-page space-y-4">
+            <!-- Header -->
+            <div class="header-center">
+                <div class="header-title-en">ASSOCIATION OF SYRIAN PHARMACISTS</div>
+                <div class="header-title-ar">نقابة صيادلة سورية</div>
+            </div>
+            <div class="header-gradient">
+                <svg class="header-icon" viewBox="0 0 24 24">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+                <div>
+                    <h1 class="header-title">د. {{fullName}}</h1>
+                    <!-- <p class="header-subtitle">صيدلي مرخص</p>
+                    <p class="header-meta">تاريخ التخرج: 2018</p> -->
+                </div>
+                
+            </div>
+
+            <!-- Personal Information -->
+            <div id="personal-info" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14,2 14,8 20,8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10,9 9,9 8,9" />
+                        </svg>
+                        المعلومات الشخصية
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">الاسم الكامل</label>
+                            <p class="field-value">د. {{fullName}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">اسم الأم</label>
+                            <p class="field-value">{{motherName}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">الجنس</label>
+                            <p class="field-value">{{gender}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">تاريخ الميلاد</label>
+                            <p class="field-value">{{birthDate}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">مكان الميلاد</label>
+                            <p class="field-value">{{birthPlace}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">الرقم الوطني</label>
+                            <p class="field-value">{{nationalNumber}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">رقم الجوال</label>
+                            <p class="field-value">{{phoneNumber}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">رقم الهاتف</label>
+                            <p class="field-value">{{landlineNumber}}</p>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">الجنسية</label>
+                            <p class="field-value">{{nationality}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">العنوان</label>
+                            <p class="field-value">{{address}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">الرقم الوزاري</label>
+                            <p class="field-value">{{ministerialNumber}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">ناريخ التسجيل في وزارة الصحة</label>
+                            <p class="field-value">{{ministerialRegistrationDate}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">الرقم النقابي</label>
+                            <p class="field-value">{{registrationNumber}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">تاريخ التسجيل في النقابة</label>
+                            <p class="field-value">{{registrationDate}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">الأمانة</label>
+                            <p class="field-value">{{integrity}}</p>
+                        </div>
+                        <div class="field-group grid">
+                            <label class="field-label">القيد</label>
+                            <p class="field-value">{{register}}</p>
+                        </div>
+                        <div class="field-group grid-full">
+                            <label class="field-label">تاريخ أداء اليمين</label>
+                            <p class="field-value">{{oathTakingDate}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- University Degrees -->
+            <div id="universityDegrees" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                        </svg>
+                        الشهادات الجامعية
+                    </h2>
+                </div>
+                <div id="universityDegrees" class="table-container"></div>
+            </div>
+
+            <!-- Employment History -->
+            <div id="practiceRecords" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M3 21h18" />
+                            <path d="M5 21V7l8-4v18" />
+                            <path d="M19 21V11l-6-4" />
+                        </svg>
+                        تاريخ العمل
+                    </h2>
+                </div>
+                <div id="practiceRecords" class="table-container"></div>
+            </div>
+
+            <!-- Syndicate Registrations -->
+            <div id="syndicateRecords" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="8" r="7" />
+                            <polyline points="8,21 12,17 16,21" />
+                            <polyline points="12,17 12,21" />
+                        </svg>
+                        تسجيلات النقابة
+                    </h2>
+                </div>
+                <div id="syndicateRecords" class="table-container"></div>
+            </div>
+
+            <!-- Licenses -->
+            <div id="licenses" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14,2 14,8 20,8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10,9 9,9 8,9" />
+                        </svg>
+                        التراخيص المهنية
+                    </h2>
+                </div>
+                <div id="licenses" class="table-container"></div>
+            </div>
+
+            <!-- Penalties -->
+            <div id="penalties" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                        العقوبات والإجراءات التأديبية
+                    </h2>
+                </div>
+                <div id="penalties" class="table-container"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center py-6 border-t">
+                <p style="font-size: 0.875rem;" class="text-muted">
+                    تحتوي هذه الوثيقة على معلومات الصيدلي الرسمية كما هي مسجلة لدى السلطات المختصة.
+                </p>
+                <p style="font-size: 0.75rem; margin-top: 0.25rem;" class="text-muted">
+                    تم إنتاجها بتاريخ:
+                    <script>document.write(new Date().toLocaleDateString('ar-SY', { year: 'numeric', month: 'long', day: 'numeric' }));</script>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

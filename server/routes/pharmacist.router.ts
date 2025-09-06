@@ -43,6 +43,7 @@ import deletePracticeRecord from "../controllers/Pharmacist/practiceRecords/dele
 import createUniversityDegree from "../controllers/Pharmacist/universityDegrees/createUniversityDegree.controller.js";
 import updateUniversityDegree from "../controllers/Pharmacist/universityDegrees/updateUniversityDegree.controller.js";
 import deleteUniversityDegree from "../controllers/Pharmacist/universityDegrees/deleteUniversityDegree.controller.js";
+import printPhramacist from "../controllers/Pharmacist/printPharmacist.controller.js";
 
 const router = Router();
 router.param("id", (req, res, next, value, name) => {
@@ -116,6 +117,7 @@ router.patch(
 router.delete("/delete/:id", checkPermission(permissions.deletePharmacist), deletePharmacist);
 
 router.get("/download/:id", checkPermission(permissions.downloadPharmacistImages), downloadPharmacistImages);
+router.get("/print/:id", checkPermission(permissions.getPharmacist), printPhramacist);
 
 router.post(
     "/:id/licenses/create",

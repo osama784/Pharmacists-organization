@@ -1,0 +1,143 @@
+import { NextFunction, Request, TypedResponse } from "express";
+import Pharmacist from "../../models/pharmacist.model";
+import { responseMessages } from "../../translation/response.ar";
+import fs from "fs/promises";
+import path from "path";
+import puppeteer from "puppeteer-core";
+import { pharmacistTamplate } from "../../utils/templatesUtils";
+import { dateUtils } from "../../utils/dateUtils";
+
+const printPhramacist = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
+    try {
+        const pharmacist = await Pharmacist.findById(req.params.id);
+        if (!pharmacist) {
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
+            return;
+        }
+        let pharmacistHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "templates", "pharmacist.html")), {
+            encoding: "utf-8",
+        });
+        const { universityDegrees, practiceRecords, syndicateRecords, penalties, licenses, personalInfo } = req.query;
+        pharmacistHTML = pharmacistHTML.replace("{{fullName}}", pharmacist.fullName);
+        if (personalInfo == "true") {
+            pharmacistHTML = pharmacistHTML.replace("{{fullName}}", pharmacist.fullName);
+            pharmacistHTML = pharmacistHTML.replace("{{motherName}}", pharmacist.motherName);
+            pharmacistHTML = pharmacistHTML.replace("{{birthDate}}", dateUtils.formatDate(pharmacist.birthDate));
+            pharmacistHTML = pharmacistHTML.replace("{{birthPlace}}", pharmacist.birthPlace || "غير محدد");
+
+            pharmacistHTML = pharmacistHTML.replace("{{gender}}", pharmacist.gender);
+            pharmacistHTML = pharmacistHTML.replace("{{nationalNumber}}", pharmacist.nationalNumber);
+            pharmacistHTML = pharmacistHTML.replace("{{phoneNumber}}", pharmacist.phoneNumber);
+            pharmacistHTML = pharmacistHTML.replace("{{landlineNumber}}", pharmacist.landlineNumber || "غير محدد");
+            pharmacistHTML = pharmacistHTML.replace("{{nationality}}", pharmacist.nationality);
+            pharmacistHTML = pharmacistHTML.replace("{{address}}", pharmacist.address || "غير محدد");
+            pharmacistHTML = pharmacistHTML.replace("{{ministerialNumber}}", pharmacist.ministerialNumber || "غير محدد");
+            pharmacistHTML = pharmacistHTML.replace(
+                "{{ministerialRegistrationDate}}",
+                pharmacist.ministerialRegistrationDate ? dateUtils.formatDate(pharmacist.ministerialRegistrationDate) : "غير محدد"
+            );
+            pharmacistHTML = pharmacistHTML.replace("{{registrationNumber}}", pharmacist.registrationNumber);
+            pharmacistHTML = pharmacistHTML.replace("{{registrationDate}}", dateUtils.formatDate(pharmacist.registrationDate));
+            pharmacistHTML = pharmacistHTML.replace("{{integrity}}", pharmacist.integrity || "غير محدد");
+            pharmacistHTML = pharmacistHTML.replace("{{register}}", pharmacist.register || "غير محدد");
+            pharmacistHTML = pharmacistHTML.replace(
+                "{{oathTakingDate}}",
+                pharmacist.oathTakingDate ? dateUtils.formatDate(pharmacist.oathTakingDate) : "غير محدد"
+            );
+        } else {
+            pharmacistHTML = pharmacistHTML.replace(
+                `<div id="personal-info" class="card">`,
+                `<div id="personal-info" style = "display: none;" class="card">`
+            );
+        }
+        if (universityDegrees == "true") {
+            pharmacistHTML = pharmacistTamplate.appendUniversityDegrees(pharmacist.universityDegrees, pharmacistHTML);
+        } else {
+            pharmacistHTML = pharmacistHTML.replace(
+                `<div id="universityDegrees" class="card">`,
+                `<div id="universityDegrees" style = "display: none;" class="card">`
+            );
+        }
+        if (practiceRecords == "true") {
+            pharmacistHTML = pharmacistTamplate.appendPracticeRecords(pharmacist.practiceRecords, pharmacistHTML);
+        } else {
+            pharmacistHTML = pharmacistHTML.replace(
+                `<div id="practiceRecords" class="card">`,
+                `<div id="practiceRecords" style = "display: none;" class="card">`
+            );
+        }
+        if (syndicateRecords == "true") {
+            pharmacistHTML = pharmacistTamplate.appendSyndicateRecords(pharmacist.syndicateRecords, pharmacistHTML);
+        } else {
+            pharmacistHTML = pharmacistHTML.replace(
+                `<div id="syndicateRecords" class="card">`,
+                `<div id="syndicateRecords" style = "display: none;" class="card">`
+            );
+        }
+        if (licenses == "true") {
+            pharmacistHTML = pharmacistTamplate.appendLicenses(pharmacist.licenses, pharmacistHTML);
+        } else {
+            pharmacistHTML = pharmacistHTML.replace(
+                `<div id="licenses" class="card">`,
+                `<div id="licenses" style = "display: none;" class="card">`
+            );
+        }
+        if (penalties == "true") {
+            pharmacistHTML = pharmacistTamplate.appendPenalties(pharmacist.penalties, pharmacistHTML);
+        } else {
+            pharmacistHTML = pharmacistHTML.replace(
+                `<div id="penalties" class="card">`,
+                `<div id="penalties" style = "display: none;" class="card">`
+            );
+        }
+
+        const browser = await puppeteer.launch({
+            executablePath: getChromePath(), // Function to get Chrome path
+            headless: true, // Run in headless mode
+            args: ["--no-sandbox", "--disable-setuid-sandbox"], // Recommended for server environments
+        });
+
+        const page = await browser.newPage();
+        await page.setContent(pharmacistHTML, { waitUntil: "networkidle0" });
+        const pdfBuffer = await page.pdf({
+            format: "A4",
+            printBackground: true,
+            margin: {
+                top: "20px",
+                right: "20px",
+                left: "20px",
+            },
+        });
+
+        // Set response headers
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", 'attachment; filename="pharmacist.pdf"');
+
+        // Send the PDF
+        res.send(pdfBuffer);
+    } catch (e) {
+        next(e);
+    }
+};
+
+export default printPhramacist;
+
+function getChromePath() {
+    const platform = process.platform;
+
+    if (platform === "win32") {
+        // Common Windows paths for Chrome
+        return (
+            [
+                "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+                "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+            ].find((path) => require("fs").existsSync(path)) || undefined
+        );
+    } else if (platform === "darwin") {
+        // macOS path
+        return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+    } else {
+        // Linux path
+        return "/usr/bin/google-chrome";
+    }
+}

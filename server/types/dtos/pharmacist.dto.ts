@@ -8,7 +8,7 @@ import {
     PharmacistDocument,
 } from "../models/pharmacist.types.js";
 import { PharmacistCreateSchema, PharmacistUpdateSchema } from "../../validators/pharmacist.schema.js";
-import toLocalDate from "../../utils/toLocalDate.js";
+import { dateUtils } from "../../utils/dateUtils.js";
 
 export type CreatePharmacistDto = z.infer<typeof PharmacistCreateSchema>;
 export type UpdatePharmacistDto = z.infer<typeof PharmacistUpdateSchema>;
@@ -82,34 +82,34 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
     for (const license of doc.licenses) {
         licenses.push({
             ...license.toJSON(),
-            startDate: toLocalDate(license.startDate)!,
-            endDate: toLocalDate(license.endDate),
+            startDate: dateUtils.toLocaleDate(license.startDate)!,
+            endDate: dateUtils.toLocaleDate(license.endDate),
         });
     }
     for (const practiceRecord of doc.practiceRecords) {
         practiceRecords.push({
             ...practiceRecord.toJSON(),
-            startDate: toLocalDate(practiceRecord.startDate)!,
-            endDate: toLocalDate(practiceRecord.endDate),
+            startDate: dateUtils.toLocaleDate(practiceRecord.startDate)!,
+            endDate: dateUtils.toLocaleDate(practiceRecord.endDate),
         });
     }
     for (const syndicateRecord of doc.syndicateRecords) {
         syndicateRecords.push({
             ...syndicateRecord.toJSON(),
-            startDate: toLocalDate(syndicateRecord.startDate)!,
-            endDate: toLocalDate(syndicateRecord.endDate),
+            startDate: dateUtils.toLocaleDate(syndicateRecord.startDate)!,
+            endDate: dateUtils.toLocaleDate(syndicateRecord.endDate),
         });
     }
     for (const universityDegree of doc.universityDegrees) {
         universityDegrees.push({
             ...universityDegree.toJSON(),
-            obtainingDate: toLocalDate(universityDegree.obtainingDate)!,
+            obtainingDate: dateUtils.toLocaleDate(universityDegree.obtainingDate)!,
         });
     }
     for (const penalty of doc.penalties) {
         penalties.push({
             ...penalty.toJSON(),
-            date: toLocalDate(penalty.date)!,
+            date: dateUtils.toLocaleDate(penalty.date)!,
         });
     }
 
@@ -119,8 +119,8 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
     } else {
         currentSyndicate = {
             ...doc.currentSyndicate,
-            startDate: toLocalDate(doc.currentSyndicate.startDate)!,
-            endDate: toLocalDate(doc.currentSyndicate.endDate),
+            startDate: dateUtils.toLocaleDate(doc.currentSyndicate.startDate)!,
+            endDate: dateUtils.toLocaleDate(doc.currentSyndicate.endDate),
         };
     }
     return {
@@ -139,18 +139,18 @@ function _toPharmacistResponseDto(doc: PharmacistDocument): PharmacistResponseDt
 
         gender: doc.gender,
         nationalNumber: doc.nationalNumber,
-        birthDate: toLocalDate(doc.birthDate)!,
+        birthDate: dateUtils.toLocaleDate(doc.birthDate)!,
         birthPlace: doc.birthPlace,
         phoneNumber: doc.phoneNumber,
         landlineNumber: doc.landlineNumber,
         address: doc.address,
-        graduationYear: toLocalDate(doc.graduationYear)!,
-        lastTimePaid: toLocalDate(doc.lastTimePaid),
+        graduationYear: dateUtils.toLocaleDate(doc.graduationYear)!,
+        lastTimePaid: dateUtils.toLocaleDate(doc.lastTimePaid),
         nationality: doc.nationality,
         ministerialNumber: doc.ministerialNumber,
-        ministerialRegistrationDate: toLocalDate(doc.ministerialRegistrationDate),
+        ministerialRegistrationDate: dateUtils.toLocaleDate(doc.ministerialRegistrationDate),
         registrationNumber: doc.registrationNumber,
-        registrationDate: toLocalDate(doc.registrationDate)!,
+        registrationDate: dateUtils.toLocaleDate(doc.registrationDate)!,
 
         images: doc.images,
         integrity: doc.integrity,

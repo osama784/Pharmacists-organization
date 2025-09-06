@@ -133,7 +133,6 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
 
         // Send the PDF
         res.send(pdfBuffer);
-        // res.send(invoiceHTML);
     } catch (e) {
         next(e);
     }
