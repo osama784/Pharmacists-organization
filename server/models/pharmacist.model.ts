@@ -1,6 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
 import { IPharmacistModel, IPracticeRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
+import crypto from "crypto";
 
 const Pharmacist = new Schema<PharmacistDocument>(
     {
@@ -56,6 +57,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
         registrationDate: { type: Date, required: true },
 
         images: [String],
+        folderToken: String,
 
         integrity: String,
         register: String,
@@ -123,6 +125,20 @@ const Pharmacist = new Schema<PharmacistDocument>(
     },
     { timestamps: true }
 );
+
+Pharmacist.pre("save", async function (next) {
+    if (this.isNew) {
+        try {
+            this.folderToken = crypto.randomBytes(32).toString("hex");
+            next();
+        } catch (e) {
+            next(e as Error);
+        }
+    } else {
+        next();
+    }
+});
+
 export const licenseTypes = ["دائم", "مؤقت"];
 export const genders = ["ذكر", "أنثى"];
 export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة", "بورد"];

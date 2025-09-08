@@ -67,6 +67,7 @@ export interface IPharmacist {
     registrationDate: Date;
 
     images: string[];
+    folderToken: string;
 
     integrity?: string | null;
     register?: string | null;

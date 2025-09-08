@@ -92,6 +92,7 @@ export const PharmacistModelTR: PharmacistModelTR = {
     practiceState: "نوع المزاولة",
 
     images: "صور عن المعلومات الشخصية",
+    folderToken: "رمز الملف",
 
     licenses: {
         licenseType: "نوع الترخيص",

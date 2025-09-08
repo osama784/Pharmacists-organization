@@ -1,4 +1,5 @@
 export const responseMessages = {
+    FORBIDDEN: "ليس لديك الصلاحية للقيام بهذا الأمر",
     INAVLID_JSON_RESPONSE: "عليك أن ترسل مفاتيح مع قيمها أو قائمة",
     INVALID_DATE_VALUE: "يجب أن تكون القيمة عبارة عن تاريخ",
     BAD_REQUEST: "بعض القيم مفقودة أو قيمتها غير مناسبة",

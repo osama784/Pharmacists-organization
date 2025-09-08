@@ -15,25 +15,54 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
         const filters = buildPharmacistFilters(queries);
 
         const result = await Pharmacist.find(filters)
-            .select("-invoices -licenses -universityDegrees -penalties -practiceRecords")
+            .select("-invoices -licenses -universityDegrees -penalties -practiceRecords -syndicateRecords")
             .skip(skip)
             .limit(limit);
-
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Data Export");
-        const excludedFields = ["invoices", "licenses", "universityDegrees", "penalties", "practiceRecords", "__v", "_id"];
+        const excludedFields = [
+            "invoices",
+            "licenses",
+            "universityDegrees",
+            "penalties",
+            "practiceRecords",
+            "syndicateRecords",
+            "__v",
+            "_id",
+            "fullName",
+            "currentSyndicate",
+            "folderToken",
+            "images",
+            "practiceState",
+            "syndicateMembershipStatus",
+            "currentSyndicate",
+            "createdAt",
+            "updatedAt",
+        ];
 
-        const headers = Object.keys(Pharmacist.schema.paths).filter((value) => {
-            return !excludedFields.includes(value);
+        const headers = Object.keys(Pharmacist.schema.paths).filter((key) => {
+            if (key.includes("currentSyndicate")) return false;
+            return !excludedFields.includes(key);
         });
-        worksheet.columns = headers.map((header) => ({
-            header: PharmacistModelTR[header as keyof Omit<IPharmacist, "invoices" | "currentSyndicate">],
-            key: header,
-            width: 25,
-        }));
+        worksheet.columns = headers
+            .map((header) => ({
+                header: PharmacistModelTR[header as keyof Omit<IPharmacist, "invoices" | "currentSyndicate">],
+                key: header,
+                width: 25,
+            }))
+            .concat([
+                {
+                    header: "رابط الصور",
+                    key: "imagesURL",
+                    width: 25,
+                },
+            ]);
 
         result.forEach((doc) => {
-            worksheet.addRow(doc);
+            worksheet.addRow({
+                ...doc.toJSON(),
+                imagesURL: `${req.protocol}://${req.get("host")}/api/pharmacists/download/${doc.id}/${doc.folderToken}`,
+            });
         });
 
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

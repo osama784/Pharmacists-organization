@@ -44,6 +44,7 @@ import createUniversityDegree from "../controllers/Pharmacist/universityDegrees/
 import updateUniversityDegree from "../controllers/Pharmacist/universityDegrees/updateUniversityDegree.controller.js";
 import deleteUniversityDegree from "../controllers/Pharmacist/universityDegrees/deleteUniversityDegree.controller.js";
 import printPhramacist from "../controllers/Pharmacist/printPharmacist.controller.js";
+import downloadPharmacistImagesSignedURL from "../controllers/Pharmacist/downloadImagesSignedURL.controller.js";
 
 const router = Router();
 router.param("id", (req, res, next, value, name) => {
@@ -95,6 +96,10 @@ router.param("penaltyId", (req, res, next, value, name) => {
     }
     next();
 });
+
+// insecure endpoint uses signed url
+router.get("/download/:id/:folderToken", downloadPharmacistImagesSignedURL);
+
 router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);

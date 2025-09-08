@@ -6,12 +6,17 @@ import AdmZip from "adm-zip";
 import { UPLOADS_DIR } from "../../utils/images";
 import Pharmacist from "../../models/pharmacist.model";
 
-const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
+const downloadPharmacistImagesSignedURL = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const pharmacistId = req.params.id;
+        const folderToken = req.params.folderToken;
         const pharmacist = await Pharmacist.findById(pharmacistId);
         if (!pharmacist) {
             res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            return;
+        }
+        if (pharmacist.folderToken != folderToken) {
+            res.json({ success: false, details: [responseMessages.FORBIDDEN] });
             return;
         }
         const pharmacistDir = path.join(UPLOADS_DIR, "pharmacists", pharmacistId, "personal");
@@ -41,4 +46,4 @@ const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, 
     }
 };
 
-export default downloadPharmacistImages;
+export default downloadPharmacistImagesSignedURL;
