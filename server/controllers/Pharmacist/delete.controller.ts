@@ -15,10 +15,10 @@ const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: Ne
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const userDir = path.join(UPLOADS_DIR, "users", pharmacistId);
+        const pharmacistDir = path.join(UPLOADS_DIR, "pharmacists", pharmacistId);
         try {
-            await fs.access(userDir);
-            await fs.rm(userDir, { force: true, recursive: true });
+            await fs.access(pharmacistDir);
+            await fs.rm(pharmacistDir, { force: true, recursive: true });
         } catch (e) {}
 
         await pharmacist.deleteOne();

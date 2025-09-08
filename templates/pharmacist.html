@@ -24,27 +24,35 @@
         }
 
         body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: hsl(210, 15%, 8%);
             color: hsl(210, 20%, 92%);
-            line-height: 1.6;
+            line-height: 1.4;
             direction: rtl;
         }
 
         .pdf-page {
             width: 210mm;
-            min-height: 297mm;
             margin: 0 auto;
             background: white;
             color: hsl(222.2, 84%, 4.9%);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20mm;
+            
+            padding-top: 30px;
             box-sizing: border-box;
             direction: rtl;
         }
 
         .space-y-4>*+* {
             margin-top: 1rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
         }
 
         .header-center {
@@ -69,14 +77,20 @@
         .header-gradient {
             background: white;
             color: black;
-            padding: 2rem;
+            padding: 12px;
             border-radius: 0.5rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
             display: flex;
             align-items: center;
             gap: 1rem;
             direction: rtl;
+            margin-bottom: 20px;
+            border: 1px solid black
         }
+        
+        .header-details {
+            font-size: 14px;
+        }
+        
 
         .header-icon {
             width: 3rem;
@@ -107,18 +121,16 @@
         .card {
             background: white;
             border: 1px solid hsl(214.3, 31.8%, 91.4%);
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
         }
 
         .card-header {
-            background: hsl(200, 30%, 15%);
-            color: hsl(200, 20%, 85%);
-            padding: 1.5rem;
-            border-radius: 0.5rem 0.5rem 0 0;
+            color: black;
+            padding: 10px;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            border-bottom: 1px solid #8080804d;
         }
 
         .card-title {
@@ -131,7 +143,7 @@
         }
 
         .card-content {
-            padding: 1.5rem;
+            padding: 10px;
         }
 
         .grid-2 {
@@ -161,6 +173,21 @@
             margin: 0;
         }
 
+        #personal-info table {
+            width: 100%;
+            border-collapse: collapse;
+            /* border: 1px solid #000; */
+            font-size: 14px;
+            
+        }
+
+        #personal-info th,
+        #personal-info td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: right;
+        }
+
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -178,7 +205,7 @@
         .table th,
         .table td {
             text-align: right;
-            padding: 1rem;
+            padding: 5px;
             border-bottom: 1px solid hsl(214.3, 31.8%, 91.4%);
         }
 
@@ -188,6 +215,14 @@
 
         .table tbody tr:hover {
             background: hsl(210, 40%, 98%);
+        }
+        .contact-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            direction: ltr;
         }
 
         .badge {
@@ -257,6 +292,7 @@
             padding-bottom: 1.5rem;
         }
 
+
         @media print {
             body {
                 background: white;
@@ -267,6 +303,8 @@
                 box-shadow: none;
                 margin: 0;
                 padding: 15mm;
+                padding-top: 5mm;
+                padding-bottom: 5mm;
             }
             .card {
                 page-break-inside: avoid;
@@ -289,126 +327,79 @@
                 break-inside: avoid;
             }
             
-            /* Adjust padding for print to use space more efficiently */
-            .pdf-page {
-                padding: 10mm;
-            }
-            
             .card-content {
-                padding: 1rem;
+                padding: 5px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div style="min-height: 100vh; background: hsl(210, 15%, 8%);">
-        <div class="pdf-page space-y-4">
+    <div style="min-height: 100vh; background-color: white;">
+        <div class="pdf-page">
             <!-- Header -->
-            <div class="header-center">
-                <div class="header-title-en">ASSOCIATION OF SYRIAN PHARMACISTS</div>
-                <div class="header-title-ar">نقابة صيادلة سورية</div>
-            </div>
-            <div class="header-gradient">
-                <svg class="header-icon" viewBox="0 0 24 24">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                </svg>
-                <div>
-                    <h1 class="header-title">د. {{fullName}}</h1>
-                    <!-- <p class="header-subtitle">صيدلي مرخص</p>
-                    <p class="header-meta">تاريخ التخرج: 2018</p> -->
+            <div class="header space-y-4">
+                <div class="header-center">
+                    <div class="header-title-en">ASSOCIATION OF SYRIAN PHARMACISTS</div>
+                    <div class="header-title-ar">نقابة صيادلة سورية</div>
+                    <div class="header-details">
+                        <pre>     <label style="font-weight: 800;">تاريخ الطباعة</label>: {{createdAt}}  </pre>
+                    </div>
                 </div>
                 
             </div>
+            
+            
 
             <!-- Personal Information -->
+            
             <div id="personal-info" class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <svg class="icon" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14,2 14,8 20,8" />
-                            <line x1="16" y1="13" x2="8" y2="13" />
-                            <line x1="16" y1="17" x2="8" y2="17" />
-                            <polyline points="10,9 9,9 8,9" />
-                        </svg>
-                        المعلومات الشخصية
-                    </h2>
-                </div>
-                <div class="card-content">
-                    <div class="grid-2">
-                        <div class="field-group">
-                            <label class="field-label">الاسم الكامل</label>
-                            <p class="field-value">د. {{fullName}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">اسم الأم</label>
-                            <p class="field-value">{{motherName}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">الجنس</label>
-                            <p class="field-value">{{gender}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">تاريخ الميلاد</label>
-                            <p class="field-value">{{birthDate}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">مكان الميلاد</label>
-                            <p class="field-value">{{birthPlace}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">الرقم الوطني</label>
-                            <p class="field-value">{{nationalNumber}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">رقم الجوال</label>
-                            <p class="field-value">{{phoneNumber}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">رقم الهاتف</label>
-                            <p class="field-value">{{landlineNumber}}</p>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">الجنسية</label>
-                            <p class="field-value">{{nationality}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">العنوان</label>
-                            <p class="field-value">{{address}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">الرقم الوزاري</label>
-                            <p class="field-value">{{ministerialNumber}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">ناريخ التسجيل في وزارة الصحة</label>
-                            <p class="field-value">{{ministerialRegistrationDate}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">الرقم النقابي</label>
-                            <p class="field-value">{{registrationNumber}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">تاريخ التسجيل في النقابة</label>
-                            <p class="field-value">{{registrationDate}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">الأمانة</label>
-                            <p class="field-value">{{integrity}}</p>
-                        </div>
-                        <div class="field-group grid">
-                            <label class="field-label">القيد</label>
-                            <p class="field-value">{{register}}</p>
-                        </div>
-                        <div class="field-group grid-full">
-                            <label class="field-label">تاريخ أداء اليمين</label>
-                            <p class="field-value">{{oathTakingDate}}</p>
-                        </div>
-                    </div>
-                </div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">الاسم الأول: {{firstName}}</td>
+                            <td>الكنية : {{lastName}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">اســــــم الأب: {{fatherName}}</td>
+                            <td>اسم الأم : {{motherName}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">مكـــــان الولادة: {{birthPlace}}</td>
+                            <td>تاريخ الولادة: {{birthDate}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">الجنس: {{gender}}</td>
+                            <td>الرقم الوطني: {{nationalNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">رقم الجوال: {{phoneNumber}}</td>
+                            <td>رقم الهاتف: {{landlineNumber}}</td>
+                
+                        </tr>
+                        <tr>
+                            <td colspan="2">الجنسية: {{nationality}}</td>
+                            <td>العنوان: {{address}}</td>
+                
+                        </tr>
+                        <tr>
+                            <td colspan="2">الأمانة: {{integrity}}</td>
+                            <td>القيد: {{register}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">الرقم الوزاري: {{ministerialNumber}}</td>
+                            <td>تاريخ التسجيل في الوزارة: {{ministerialRegistrationDate}}</td>
+                
+                        </tr>
+                        <tr>
+                            <td colspan="2">الرقم النقابي: {{registrationNumber}}</td>
+                            <td>تاريخ التسجيل في النقابة: {{registrationDate}}</td>
+                
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            
 
             <!-- University Degrees -->
             <div id="universityDegrees" class="card">
@@ -433,7 +424,7 @@
                             <path d="M5 21V7l8-4v18" />
                             <path d="M19 21V11l-6-4" />
                         </svg>
-                        تاريخ العمل
+                        سجل المزاولات
                     </h2>
                 </div>
                 <div id="practiceRecords" class="table-container"></div>
@@ -448,7 +439,7 @@
                             <polyline points="8,21 12,17 16,21" />
                             <polyline points="12,17 12,21" />
                         </svg>
-                        تسجيلات النقابة
+                        السجل النقابي
                     </h2>
                 </div>
                 <div id="syndicateRecords" class="table-container"></div>
@@ -488,7 +479,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="text-center py-6 border-t">
+            <!-- <div class="text-center py-6 border-t">
                 <p style="font-size: 0.875rem;" class="text-muted">
                     تحتوي هذه الوثيقة على معلومات الصيدلي الرسمية كما هي مسجلة لدى السلطات المختصة.
                 </p>
@@ -496,6 +487,16 @@
                     تم إنتاجها بتاريخ:
                     <script>document.write(new Date().toLocaleDateString('ar-SY', { year: 'numeric', month: 'long', day: 'numeric' }));</script>
                 </p>
+            </div> -->
+            <div class="contact-info">
+                <div>
+                    E-MAIL: assphsyr@scs-net.org<br>
+                    Damascus-P.O.Box:13367
+                </div>
+                <div>
+                    TEL. :2222829 - 2224256<br>
+                    FAX :009631112234604
+                </div>
             </div>
         </div>
     </div>

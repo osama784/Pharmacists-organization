@@ -81,7 +81,7 @@ const updateInvoice = async (
             // handle deleted images
             const deletedImages = oldImages.filter((image) => !newImages.includes(image));
             for (const image of deletedImages) {
-                const imagePath = path.join(__dirname, "..", "..", "..", "..", "..", image);
+                const imagePath = path.join(__dirname, "..", "..", "..", "..", image);
                 try {
                     await fs.unlink(imagePath);
                 } catch (e) {

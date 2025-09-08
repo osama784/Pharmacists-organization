@@ -18,38 +18,36 @@ const printPhramacist = async (req: Request, res: TypedResponse<null>, next: Nex
             encoding: "utf-8",
         });
         const { universityDegrees, practiceRecords, syndicateRecords, penalties, licenses, personalInfo } = req.query;
-        pharmacistHTML = pharmacistHTML.replace("{{fullName}}", pharmacist.fullName);
-        if (personalInfo == "true") {
-            pharmacistHTML = pharmacistHTML.replace("{{fullName}}", pharmacist.fullName);
-            pharmacistHTML = pharmacistHTML.replace("{{motherName}}", pharmacist.motherName);
-            pharmacistHTML = pharmacistHTML.replace("{{birthDate}}", dateUtils.formatDate(pharmacist.birthDate));
-            pharmacistHTML = pharmacistHTML.replace("{{birthPlace}}", pharmacist.birthPlace || "غير محدد");
 
-            pharmacistHTML = pharmacistHTML.replace("{{gender}}", pharmacist.gender);
-            pharmacistHTML = pharmacistHTML.replace("{{nationalNumber}}", pharmacist.nationalNumber);
-            pharmacistHTML = pharmacistHTML.replace("{{phoneNumber}}", pharmacist.phoneNumber);
-            pharmacistHTML = pharmacistHTML.replace("{{landlineNumber}}", pharmacist.landlineNumber || "غير محدد");
-            pharmacistHTML = pharmacistHTML.replace("{{nationality}}", pharmacist.nationality);
-            pharmacistHTML = pharmacistHTML.replace("{{address}}", pharmacist.address || "غير محدد");
-            pharmacistHTML = pharmacistHTML.replace("{{ministerialNumber}}", pharmacist.ministerialNumber || "غير محدد");
-            pharmacistHTML = pharmacistHTML.replace(
-                "{{ministerialRegistrationDate}}",
-                pharmacist.ministerialRegistrationDate ? dateUtils.formatDate(pharmacist.ministerialRegistrationDate) : "غير محدد"
-            );
-            pharmacistHTML = pharmacistHTML.replace("{{registrationNumber}}", pharmacist.registrationNumber);
-            pharmacistHTML = pharmacistHTML.replace("{{registrationDate}}", dateUtils.formatDate(pharmacist.registrationDate));
-            pharmacistHTML = pharmacistHTML.replace("{{integrity}}", pharmacist.integrity || "غير محدد");
-            pharmacistHTML = pharmacistHTML.replace("{{register}}", pharmacist.register || "غير محدد");
-            pharmacistHTML = pharmacistHTML.replace(
-                "{{oathTakingDate}}",
-                pharmacist.oathTakingDate ? dateUtils.formatDate(pharmacist.oathTakingDate) : "غير محدد"
-            );
-        } else {
-            pharmacistHTML = pharmacistHTML.replace(
-                `<div id="personal-info" class="card">`,
-                `<div id="personal-info" style = "display: none;" class="card">`
-            );
-        }
+        pharmacistHTML = pharmacistHTML.replace("{{createdAt}}", dateUtils.formatDate(new Date()));
+        pharmacistHTML = pharmacistHTML.replace("{{fullName}}", pharmacist.fullName);
+        pharmacistHTML = pharmacistHTML.replace("{{firstName}}", pharmacist.firstName);
+        pharmacistHTML = pharmacistHTML.replace("{{lastName}}", pharmacist.lastName);
+        pharmacistHTML = pharmacistHTML.replace("{{fatherName}}", pharmacist.fatherName);
+        pharmacistHTML = pharmacistHTML.replace("{{motherName}}", pharmacist.motherName);
+        pharmacistHTML = pharmacistHTML.replace("{{birthDate}}", dateUtils.formatDate(pharmacist.birthDate));
+        pharmacistHTML = pharmacistHTML.replace("{{birthPlace}}", pharmacist.birthPlace || "غير محدد");
+
+        pharmacistHTML = pharmacistHTML.replace("{{gender}}", pharmacist.gender);
+        pharmacistHTML = pharmacistHTML.replace("{{nationalNumber}}", pharmacist.nationalNumber);
+        pharmacistHTML = pharmacistHTML.replace("{{phoneNumber}}", pharmacist.phoneNumber);
+        pharmacistHTML = pharmacistHTML.replace("{{landlineNumber}}", pharmacist.landlineNumber || "غير محدد");
+        pharmacistHTML = pharmacistHTML.replace("{{nationality}}", pharmacist.nationality);
+        pharmacistHTML = pharmacistHTML.replace("{{address}}", pharmacist.address || "غير محدد");
+        pharmacistHTML = pharmacistHTML.replace("{{ministerialNumber}}", pharmacist.ministerialNumber || "غير محدد");
+        pharmacistHTML = pharmacistHTML.replace(
+            "{{ministerialRegistrationDate}}",
+            pharmacist.ministerialRegistrationDate ? dateUtils.formatDate(pharmacist.ministerialRegistrationDate) : "غير محدد"
+        );
+        pharmacistHTML = pharmacistHTML.replace("{{registrationNumber}}", pharmacist.registrationNumber);
+        pharmacistHTML = pharmacistHTML.replace("{{registrationDate}}", dateUtils.formatDate(pharmacist.registrationDate));
+        pharmacistHTML = pharmacistHTML.replace("{{integrity}}", pharmacist.integrity || "غير محدد");
+        pharmacistHTML = pharmacistHTML.replace("{{register}}", pharmacist.register || "غير محدد");
+        pharmacistHTML = pharmacistHTML.replace(
+            "{{oathTakingDate}}",
+            pharmacist.oathTakingDate ? dateUtils.formatDate(pharmacist.oathTakingDate) : "غير محدد"
+        );
+
         if (universityDegrees == "true") {
             pharmacistHTML = pharmacistTamplate.appendUniversityDegrees(pharmacist.universityDegrees, pharmacistHTML);
         } else {
