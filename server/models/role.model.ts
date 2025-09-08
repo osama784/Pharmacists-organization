@@ -22,10 +22,10 @@ Role.statics.checkUniqueName = async function (name: string): Promise<boolean> {
 };
 
 async function preDeleteLogic(doc: RoleDocument) {
-    let EMPTY_ROLE = await doc.model().findOne({ name: "EMPTY" });
+    let EMPTY_ROLE = await doc.model().findOne({ name: "بلا صلاحيات" });
     if (!EMPTY_ROLE) {
         EMPTY_ROLE = await doc.model().create({
-            name: "EMPTY",
+            name: "بلا صلاحيات",
             permissions: [],
         });
     }

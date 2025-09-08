@@ -9,7 +9,7 @@ const deleteRole = async (req: Request, res: TypedResponse<null>, next: NextFunc
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        if (doc.name == "SUPER_ADMIN" || doc.name == "EMPTY") {
+        if (doc.name == "مدير عام" || doc.name == "بلا صلاحيات") {
             res.status(400).json({ success: false, details: [responseMessages.ROLE_CONTROLLERS.PROTECTED_ROLES] });
             return;
         }
