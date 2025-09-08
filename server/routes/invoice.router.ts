@@ -53,8 +53,8 @@ router.patch(
 );
 router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
 router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
-router.get("/export", exportInvoicesAsExcel);
-router.get("/print/:id", printInvoice);
+router.get("/export", checkPermission(permissions.exportInvoicesAsExcel), exportInvoicesAsExcel);
+router.get("/print/:id", checkPermission(permissions.printInvoice), printInvoice);
 router.get("/download/:id", checkPermission(permissions.downloadInvoiceImages), downloadInvoiceImages);
 
 export default router;

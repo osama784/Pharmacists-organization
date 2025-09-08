@@ -24,6 +24,11 @@ export const buildDateFilter = (value: string | Record<string, any>) => {
             if (typeof value[key] == "object" || isNaN(Date.parse(value[key])) || !allowedDateOperators.includes(key)) {
                 return undefined;
             }
+            if (key == "$lte") {
+                const date = new Date(value[key]);
+                date.setDate(date.getDate() + 1);
+                value[key] = date;
+            }
         }
         return value;
     }

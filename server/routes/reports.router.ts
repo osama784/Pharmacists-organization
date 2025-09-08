@@ -10,6 +10,6 @@ const router = Router();
 router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/invoices", checkPermission(permissions.getInvoicesReport), invoicesReport);
-router.get("/invoices/export", checkPermission(permissions.getInvoicesReport), exportExcelInvoicesReport);
+router.get("/invoices/export", checkPermission(permissions.exportInvoicesReportAsExcel), exportExcelInvoicesReport);
 
 export default router;

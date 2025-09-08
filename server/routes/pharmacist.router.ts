@@ -104,7 +104,6 @@ router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);
 router.get("/detail/:id", checkPermission(permissions.getPharmacist), getPharmacist);
-router.get("/export", checkPermission(permissions.listPharmacists), exportPharmacistsAsExcel);
 router.post(
     "/create",
     checkPermission(permissions.createPharmacist),
@@ -121,8 +120,9 @@ router.patch(
 );
 router.delete("/delete/:id", checkPermission(permissions.deletePharmacist), deletePharmacist);
 
+router.get("/export", checkPermission(permissions.exportPharmacistsAsExcel), exportPharmacistsAsExcel);
 router.get("/download/:id", checkPermission(permissions.downloadPharmacistImages), downloadPharmacistImages);
-router.get("/print/:id", checkPermission(permissions.getPharmacist), printPhramacist);
+router.get("/print/:id", checkPermission(permissions.printPharmacist), printPhramacist);
 
 router.post(
     "/:id/licenses/create",
