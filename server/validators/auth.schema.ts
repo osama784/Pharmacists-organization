@@ -4,7 +4,7 @@ import { AuthTR } from "../translation/models.ar";
 
 export const LoginSchema = z.object({
     email: EmailSchema({ keyName: AuthTR.email }),
-    password: PasswordSchema({ keyName: AuthTR.password }),
+    password: StringSchema({ keyName: AuthTR.password }),
 });
 
 export const sendPasswordResetEmailSchema = z.object({
