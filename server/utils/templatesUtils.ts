@@ -252,7 +252,7 @@ const appendPenalties = (rows: IPenalty[], HtmlContent: string): string => {
             result += `
         <tr>
             <td>${row.penaltyType}</td>
-            <td>${row.date}</td>
+            <td>${dateUtils.formatDate(row.date)}</td>
             <td>${row.reason || "سبب مجهول"}</td>
             <td>${row.details || "لا يوجد تفاصيل"}</td>
         </tr>
@@ -263,7 +263,7 @@ const appendPenalties = (rows: IPenalty[], HtmlContent: string): string => {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>سبب العقوبة</th>
+                        <th>نوع العقوبة</th>
                         <th>التاريخ</th>
                         <th>سبب العقوبة</th>
                         <th>التفاصيل</th>
