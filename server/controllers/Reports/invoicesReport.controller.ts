@@ -20,7 +20,9 @@ const invoicesReport = async (req: Request, res: TypedResponse<InvoiceResponseDt
             filter.createdAt = { $gte: new Date(startDate) };
         }
         if (endDate && typeof endDate == "string" && !isNaN(Date.parse(endDate))) {
-            filter.createdAt = { ...filter.createdAt, $lte: new Date(endDate) };
+            const date = new Date(endDate);
+            date.setDate(date.getDate() + 1);
+            filter.createdAt = { ...filter.createdAt, $lte: date };
         }
 
         const sectionDoc = await Section.findOne({ name: section }).populate<{ fees: FeeDocument[] }>("fees");
