@@ -9,7 +9,7 @@ import { updateDetailedPrintsSchema, FeesUpdateValuesSchema } from "../validator
 import permissions from "../utils/permissions.js";
 import passport from "passport";
 import getDetailedPrints from "../controllers/Fee/getDetailedPrints.controller.js";
-import updateDetailedPrints from "../controllers/Fee/updateDetailsPrints.controller.js";
+import updateDetailedPrints from "../controllers/Fee/updateDetailedPrints.controller.js";
 import getReRegistrationDate from "../controllers/Fee/getReRegistrationDate.controller.js";
 import updateReRegistrationDate from "../controllers/Fee/updateReRegistrationDate.controller.js";
 import mongoose from "mongoose";
