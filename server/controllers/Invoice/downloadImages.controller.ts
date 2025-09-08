@@ -15,25 +15,17 @@ const downloadInvoiceImages = async (req: Request, res: TypedResponse<null>, nex
             return;
         }
         const invoiceDir = path.join(UPLOADS_DIR, "pharmacists", invoice.pharmacist.toString(), "invoices", invoiceId);
-        try {
-            await fs.access(invoiceDir);
-        } catch (e) {
-            res.status(200).json({ success: false, details: [responseMessages.INVOICE_CONTROLLERS.NO_IMAGES_FOUND] });
-            return;
-        }
-
         const zip = new AdmZip();
-        const files = await fs.readdir(invoiceDir);
-        if (files.length == 0) {
-            res.status(400).json({ success: false, details: [responseMessages.INVOICE_CONTROLLERS.NO_IMAGES_FOUND] });
-            return;
+        try {
+            const files = await fs.readdir(invoiceDir);
+            // Add each file to ZIP
+            files.forEach((file) => {
+                const filePath = path.join(invoiceDir, file);
+                zip.addLocalFile(filePath);
+            });
+        } catch (e) {
+            // so folder doesn't exist
         }
-
-        // Add each file to ZIP
-        files.forEach((file) => {
-            const filePath = path.join(invoiceDir, file);
-            zip.addLocalFile(filePath);
-        });
 
         // Get ZIP buffer
         const zipBuffer = zip.toBuffer();

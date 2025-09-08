@@ -95,7 +95,7 @@ router.param("penaltyId", (req, res, next, value, name) => {
     }
     next();
 });
-router.use(passport.authenticate("jwt", { session: false }));
+// router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);
 router.get("/detail/:id", checkPermission(permissions.getPharmacist), getPharmacist);
@@ -116,7 +116,7 @@ router.patch(
 );
 router.delete("/delete/:id", checkPermission(permissions.deletePharmacist), deletePharmacist);
 
-router.get("/download/:id", checkPermission(permissions.downloadPharmacistImages), downloadPharmacistImages);
+router.get("/download/:id", downloadPharmacistImages);
 router.get("/print/:id", checkPermission(permissions.getPharmacist), printPhramacist);
 
 router.post(

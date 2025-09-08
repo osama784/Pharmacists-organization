@@ -15,25 +15,17 @@ const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, 
             return;
         }
         const pharmacistDir = path.join(UPLOADS_DIR, "pharmacists", pharmacistId, "personal");
-        try {
-            await fs.access(pharmacistDir);
-        } catch (e) {
-            res.status(200).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_IMAGES_FOUND] });
-            return;
-        }
-
         const zip = new AdmZip();
-        const files = await fs.readdir(pharmacistDir);
-        if (files.length == 0) {
-            res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_IMAGES_FOUND] });
-            return;
+        try {
+            const files = await fs.readdir(pharmacistDir);
+            // Add each file to ZIP
+            files.forEach((file) => {
+                const filePath = path.join(pharmacistDir, file);
+                zip.addLocalFile(filePath);
+            });
+        } catch (e) {
+            // so folder doesn't exist
         }
-
-        // Add each file to ZIP
-        files.forEach((file) => {
-            const filePath = path.join(pharmacistDir, file);
-            zip.addLocalFile(filePath);
-        });
 
         // Get ZIP buffer
         const zipBuffer = zip.toBuffer();
