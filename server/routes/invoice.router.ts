@@ -34,7 +34,7 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-// router.use(passport.authenticate("jwt", { session: false }));
+router.use(passport.authenticate("jwt", { session: false }));
 
 router.post(
     "/create/:pharmacistID",
@@ -55,6 +55,6 @@ router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
 router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
 router.get("/export", exportInvoicesAsExcel);
 router.get("/print/:id", printInvoice);
-router.get("/download/:id", downloadInvoiceImages);
+router.get("/download/:id", checkPermission(permissions.downloadInvoiceImages), downloadInvoiceImages);
 
 export default router;
