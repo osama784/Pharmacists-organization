@@ -1,1 +1,0 @@
-const t="_actionButtonWithInput_5c851_1",o="_noLoaderAutocomplete_5c851_35",n="_inputSwitch_5c851_43",c="_subtitle_5c851_55",i="_invoiceButtons_5c851_65",u="_paid_5c851_77",_={actionButtonWithInput:t,noLoaderAutocomplete:o,inputSwitch:n,subtitle:c,invoiceButtons:i,paid:u};export{_ as s};

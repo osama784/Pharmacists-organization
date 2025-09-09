@@ -1,0 +1,1 @@
+import{d as t,j as e,B as u}from"./index-CAbGq19O.js";function l({setFilters:a,action:s}){const{language:{general:n}}=t();return e.jsxs("div",{className:"failed-request",children:[e.jsx("span",{children:n.failed_request}),e.jsx(u,{label:n.try_again,text:!0,onClick:()=>{a&&a(r=>({...r})),s&&s()}})]})}export{l as F};

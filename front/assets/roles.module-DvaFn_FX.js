@@ -1,0 +1,1 @@
+const e="_roleHeaderFields_uxjqz_1",s="_rolePermissionSwitcher_uxjqz_31",o="_permissionBoxesCon_uxjqz_47",i="_permissionBox_uxjqz_47",r="_permissionBoxHeader_uxjqz_93",n="_permissionCheckBoxes_uxjqz_115",x={roleHeaderFields:e,rolePermissionSwitcher:s,permissionBoxesCon:o,permissionBox:i,permissionBoxHeader:r,permissionCheckBoxes:n};export{x as s};
