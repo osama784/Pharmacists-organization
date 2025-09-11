@@ -140,8 +140,19 @@ Pharmacist.pre("save", async function (next) {
 });
 
 export const licenseTypes = ["دائم", "مؤقت"];
+export enum GenderEnum {
+    MALE = "ذكر",
+    FEMALE = "أنثى",
+}
 export const genders = ["ذكر", "أنثى"];
-export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة", "بورد"];
+export enum UniversityDegreesEnum {
+    BACHELOR = "بكالوريوس صيدلة",
+    DIPLOMA = "دبلوم صيدلة",
+    PHD = "دكتوراه صيدلة",
+    MASTERS = "ماجستير صيدلة",
+    BOARD = "بورد صيدلة",
+}
+export const universityDegreeTypes = ["بكالوريوس صيدلة", "دبلوم صيدلة", "دكتوراه صيدلة", "ماجستير صيدلة", "بورد صيدلة"];
 export const practiceRecordsInfo = {
     syndicate: [
         "نقابة الصيادلة المركزية",

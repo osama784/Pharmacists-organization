@@ -1,9 +1,9 @@
 [
     {
         "name": "انتساب نقابة سوريين",
-        "isRepeatable": true,
+        "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 1500
     },
     {
         "name": "إعادة قيد نقابة",

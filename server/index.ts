@@ -12,13 +12,14 @@ import UserRouter from "./routes/user.router.js";
 import RoleRouter from "./routes/role.router.js";
 import ReportsRouter from "./routes/reports.router.js";
 import BankRouter from "./routes/bank.router.js";
+import RegistryOfficeRouter from "./routes/registryOffice.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
 import { responseMessages } from "./translation/response.ar.js";
 import { UPLOADS_DIR } from "./utils/images.js";
 import multer, { MulterError } from "multer";
-import { logger } from "./middlewares/logger.middleware.js";
+import { logger, loggerMiddlware } from "./middlewares/logger.middleware.js";
 import { MulterErrorTranslator } from "./translation/utils.ar.js";
 import path from "path";
 config();
@@ -39,6 +40,8 @@ app.use("/uploads", express.static(UPLOADS_DIR));
 app.use(express.static(path.join(__dirname, "..", "front")));
 app.use(passport.initialize());
 
+app.use(loggerMiddlware);
+
 app.use("/api/auth", authRouter);
 app.use("/api/pharmacists", PharmacistsRouter);
 app.use("/api/invoices", InvoiceRouter);
@@ -47,6 +50,7 @@ app.use("/api/users", UserRouter);
 app.use("/api/users/roles", RoleRouter);
 app.use("/api/reports", ReportsRouter);
 app.use("/api/banks", BankRouter);
+app.use("/api/registry-office", RegistryOfficeRouter);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "front", "index.html"));

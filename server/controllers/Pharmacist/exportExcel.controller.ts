@@ -1,7 +1,7 @@
 import Pharmacist from "../../models/pharmacist.model.js";
 import ExcelJS from "exceljs";
 import { PharmacistModelTR } from "../../translation/models.ar.js";
-import { NextFunction, Request, TypedResponse } from "express";
+import { NextFunction, Request, text, TypedResponse } from "express";
 import IPharmacistQueries from "../../types/queries/pharmacist.query.js";
 import buildPharmacistFilters from "./utils/buildPharmacistFilters.js";
 import { IPharmacist } from "../../types/models/pharmacist.types.js";
@@ -54,14 +54,17 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
                 {
                     header: "رابط الصور",
                     key: "imagesURL",
-                    width: 25,
+                    width: 40,
                 },
             ]);
 
         result.forEach((doc) => {
             worksheet.addRow({
                 ...doc.toJSON(),
-                imagesURL: `${req.protocol}://${req.get("host")}/api/pharmacists/download/${doc.id}/${doc.folderToken}`,
+                imagesURL: {
+                    text: "click for download",
+                    hyperlink: `${req.protocol}://${req.get("host")}/api/pharmacists/download/${doc.id}/${doc.folderToken}`,
+                },
             });
         });
 

@@ -193,15 +193,7 @@ export const getPharmacistRelatedFees = async (
                     value = fee.value!;
                 }
                 const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
-                if (existBefore != -1) {
-                    if (fee.isRepeatable) {
-                        fees[existBefore] = {
-                            name: fee.name,
-                            value: fees[existBefore].value + value,
-                            numOfYears: fees[existBefore].numOfYears + 1,
-                        };
-                    }
-                } else {
+                if (existBefore == -1) {
                     fees.push({
                         name: fee.name,
                         value: value,
@@ -209,7 +201,6 @@ export const getPharmacistRelatedFees = async (
                     });
                     excludedFees.push(fee.name);
                 }
-
                 value = 0;
             });
         } else {
@@ -231,15 +222,7 @@ export const getPharmacistRelatedFees = async (
                     value = fee.value!;
                 }
                 const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
-                if (existBefore != -1) {
-                    if (fee.isRepeatable) {
-                        fees[existBefore] = {
-                            name: fee.name,
-                            value: fees[existBefore].value + value,
-                            numOfYears: fees[existBefore].numOfYears + 1,
-                        };
-                    }
-                } else {
+                if (existBefore == -1) {
                     fees.push({
                         name: fee.name,
                         value: value,
@@ -650,7 +633,13 @@ export const getPharmacistRelatedFees = async (
                         value: 60000 * (currentYear - requiredYear) + 20000,
                     };
                 }
-            } else {
+            } else if (
+                [
+                    syndicateMembershipsTR["practicing-year"],
+                    syndicateMembershipsTR["two-years-of-practicing"],
+                    syndicateMembershipsTR["re-registration-of-practitioner"],
+                ].includes(syndicateMembershipStatus)
+            ) {
                 if (validatedData.willPracticeThisYear) {
                     return {
                         ...fee,
@@ -662,6 +651,11 @@ export const getPharmacistRelatedFees = async (
                         value: 20000 * (currentYear - requiredYear) + 60000,
                     };
                 }
+            } else {
+                return {
+                    ...fee,
+                    value: 60000 * (currentYear - requiredYear) + 20000,
+                };
             }
         }
         return fee;

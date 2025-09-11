@@ -69,9 +69,13 @@ export const NumberSchemaPositive = (options: NumberSchemaOptions) => {
 type EnumSchemaOptions = {
     keyName: string;
     data: [string, ...string[]];
+    optional?: boolean;
 };
 
 export const EnumSchema = (options: EnumSchemaOptions) => {
+    if (options.optional) {
+        return z.enum(options.data, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_ENUM_VALUE(options.data)}` }).optional();
+    }
     return z.enum(options.data, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_ENUM_VALUE(options.data)}` });
 };
 

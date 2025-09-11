@@ -45,4 +45,7 @@ export const responseMessages = {
         SECTION_NOT_FOUND: "تم إدخال صندوق لم يتم التعرف عليه",
         INCOMPLETE_SECTION_INFO: "لم يتم إرسال المعلومات الكاملة للصناديق",
     },
+    REGISTRY_OFFICE_CONTROLLERS: {
+        BAD_REQUEST: "يجب عليك أن ترسل المعلومات كاملة بشكل صحيح لإتمام إرسال الوثيقة المطلوبة",
+    },
 };

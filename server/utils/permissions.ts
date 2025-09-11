@@ -48,6 +48,8 @@ const permissions = {
     createBank: "إنشاء بنك",
     updateBank: "تعديل بنك",
     deleteBank: "حذف بنك",
+
+    printDocument: "طباعة وثيقة",
 };
 
 export const ReadablePermissions = {
@@ -75,6 +77,7 @@ export const ReadablePermissions = {
     "التواريخ الثابتة": ["تعديل تاريخ الغرامات", "تعديل تاريخ إعادة القيد", "قراءة معلومات التواريخ الثابتة"],
     التقارير: ["قراءة تقرير الفواتير", "تصدير تقرير الفواتير على شكل إكسل"],
     البنوك: ["قراءة معلومات البنوك", "إنشاء بنك", "تعديل بنك", "حذف بنك"],
+    الديوان: ["طباعة وثيقة"],
 };
 
 export default permissions;

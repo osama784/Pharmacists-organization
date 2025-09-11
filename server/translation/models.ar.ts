@@ -170,3 +170,13 @@ export const BankModelTR: BankModelTR = {
         accountNum: "رقم الحساب",
     },
 };
+
+export const RegistryOfficeTR = {
+    pharmacist: "الصيدلي",
+    documentType: "نوع الوثيقة",
+    signer: "الموقع",
+    additionalContent: "النص المدخل",
+    travelPlace: "مكان السفر",
+    travelReason: "سبب السفر",
+    registered: "هل هو مسجل",
+};

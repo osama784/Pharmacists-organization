@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقابة الصيادلة السوريين - وثيقة رسمية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            padding: 20px;
+        }
+
+        .a4-document {
+            width: 210mm;
+            margin: 0 auto;
+            color: black;
+            font-size: 18px;
+            line-height: 1.4;
+            padding: 20mm;
+            direction: rtl;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            font-size: 11px;
+            text-align: left;
+            direction: ltr;
+            flex: 1;
+            text-align: center;
+        }
+
+        .contact-info div {
+            margin-bottom: 2px;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border: 2px solid black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .arabic-header {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: right;
+            direction: rtl;
+            flex: 1;
+            text-align: center;
+        }
+
+        .arabic-header div {
+            margin-bottom: 5px;
+        }
+
+        .document-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+
+        .document-meta-left {
+            direction: ltr;
+            text-align: left;
+        }
+
+        .document-meta-right {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .document-body {
+            margin: 30px 0;
+            text-align: justify;
+            direction: rtl;
+        }
+
+        .greeting {
+            font-size: 23px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .main-content {
+            margin: 20px 0;
+            line-height: 1.8;
+            font-size: 22px;
+        }
+
+        .main-content p {
+            margin-bottom: 15px;
+        }
+
+        /* .main-content strong {
+            font-size: 25px;
+        } */
+
+        .signature-section {
+            margin-top: 60px;
+            text-align: center;
+            display: flex;
+            justify-content: end;
+            gap: 75px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 25px;
+            line-height: 2;
+        }
+
+        .underlined {
+            text-decoration: underline;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .a4-document {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 20mm;
+                box-shadow: none;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="a4-document">
+        <!-- Document Header -->
+        <div class="document-header">
+            <!-- Left side - Contact Info -->
+            <div class="contact-info">
+                <div><strong>ASSOCIATION OF SYRIAN PHARMACISTS</strong></div>
+                <div>Damascus - P.O.Box : 13367</div>
+                <div>SYRIA</div>
+                <div>Tel : 2222256 - 2222820</div>
+                <div>Fax : 00963 (11) 2234604</div>
+                <div>E-mail : info@asp.sy</div>
+                <div>www.asp.sy</div>
+            </div>
+
+            <!-- Center - Logo -->
+            <div class="logo-section">
+                <div class="logo">⚚</div>
+            </div>
+
+            <!-- Right side - Arabic Header -->
+            <div class="arabic-header">
+                <div>نقابة الصيادلة السوريين</div>
+                <div style="font-size: 12px; margin-top: 10px;">دمشق - ص.ب : 13367</div>
+                <div style="font-size: 12px;">سورية</div>
+                <div style="font-size: 12px;">2222256 - 2222820 : هاتف</div>
+                <div style="font-size: 12px;">00963 (11) 2234604 : فاكس</div>
+            </div>
+        </div>
+
+        <!-- Document Meta Information -->
+        <div class="document-meta">
+            <div class="document-meta-left">
+                <div>No. : .........................</div>
+                <div>Date : .........................</div>
+            </div>
+            <div class="document-meta-right">
+                <div>الرقم : ............................</div>
+                <div>التاريخ : ...........................</div>
+            </div>
+        </div>
+
+        <!-- Document Body -->
+        <div class="document-body">
+            <!-- Greeting -->
+            <div class="greeting">
+                إلى من يهمه الأمر
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content"></div>
+
+            <!-- Signature Section -->
+            <div class="signature-section"></div>
+        </div>
+    </div>
+</body>
+</html>
