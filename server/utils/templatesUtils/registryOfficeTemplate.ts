@@ -1,9 +1,10 @@
 import { GenderEnum, UniversityDegreesEnum } from "../../models/pharmacist.model";
 import { PharmacistDocument } from "../../types/models/pharmacist.types";
 import { dateUtils } from "../dateUtils";
+import staticData from "./../../config/static-data.json";
 
 export enum SignerEnum {
-    Captain = "نقيب صيادلة سوريا",
+    President = "نقيب صيادلة سوريا",
     Secretary = "أمين سر صيادلة سوريا",
     Both = "كلاهما",
 }
@@ -215,11 +216,11 @@ export function fillSignutreContent(signer: SignerEnum) {
     <div class="signature-section">
         <div ${signer == SignerEnum.Both || signer == SignerEnum.Secretary ? "" : `style="display: none;"`} class="secretary">
             <div class="title">أمين سر صيادلة سوريا</div>
-            <div class="name">الدكتور الصيدلاني محمود قصاص</div>
+            <div class="name">الدكتور الصيدلاني ${staticData["secretary"]}</div>
         </div>
-        <div ${signer == SignerEnum.Both || signer == SignerEnum.Captain ? "" : `style="display: none;"`} class="captain">
+        <div ${signer == SignerEnum.Both || signer == SignerEnum.President ? "" : `style="display: none;"`} class="president">
             <div class="title">نقيب صيادلة سوريا</div>
-            <div class="name">الدكتور الصيدلاني إبراهيم الإسماعيل</div>
+            <div class="name">الدكتور الصيدلاني ${staticData["president"]}</div>
         </div>
     </div>`;
 }
