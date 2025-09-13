@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import validate from "../middlewares/validate.middleware.js";
 import createPharmacist from "../controllers/Pharmacist/create.controller.js";
-import checkPermission from "../middlewares/checkPermission.middleware.js";
+import checkPermissions from "../middlewares/checkPermissions.middleware.js";
 import listPharmacists from "../controllers/Pharmacist/list.controller.js";
 import updatePharmacist from "../controllers/Pharmacist/update.controller.js";
 import deletePharmacist from "../controllers/Pharmacist/delete.controller.js";
@@ -102,90 +102,113 @@ router.get("/download/:id/:folderToken", downloadPharmacistImagesSignedURL);
 
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/list", checkPermission(permissions.listPharmacists), listPharmacists);
-router.get("/detail/:id", checkPermission(permissions.getPharmacist), getPharmacist);
+router.get(
+    "/list",
+    checkPermissions([
+        permissions.listPharmacists,
+        permissions.createInvoice,
+        permissions.updateInvoice,
+        permissions.printRegistryOfficeDocument,
+    ]),
+    listPharmacists
+);
+router.get(
+    "/detail/:id",
+    checkPermissions([
+        permissions.getPharmacist,
+        permissions.createInvoice,
+        permissions.updateInvoice,
+        permissions.printRegistryOfficeDocument,
+    ]),
+    getPharmacist
+);
 router.post(
     "/create",
-    checkPermission(permissions.createPharmacist),
+    checkPermissions(permissions.createPharmacist),
     upload.array("files"),
     validate(PharmacistCreateSchema),
     createPharmacist
 );
 router.patch(
     "/update/:id",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     upload.array("files"),
     validate(PharmacistUpdateSchema),
     updatePharmacist
 );
-router.delete("/delete/:id", checkPermission(permissions.deletePharmacist), deletePharmacist);
+router.delete("/delete/:id", checkPermissions(permissions.deletePharmacist), deletePharmacist);
 
-router.get("/export", checkPermission(permissions.exportPharmacistsAsExcel), exportPharmacistsAsExcel);
-router.get("/download/:id", checkPermission(permissions.downloadPharmacistImages), downloadPharmacistImages);
-router.get("/print/:id", checkPermission(permissions.printPharmacist), printPhramacist);
+router.get("/export", checkPermissions(permissions.exportPharmacistsAsExcel), exportPharmacistsAsExcel);
+router.get("/download/:id", checkPermissions(permissions.downloadPharmacistImages), downloadPharmacistImages);
+router.get("/print/:id", checkPermissions(permissions.printPharmacist), printPhramacist);
 
 router.post(
     "/:id/licenses/create",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     upload.array("files"),
     validate(LicenseCreateSchema),
     createLicense
 );
 router.put(
     "/:id/licenses/update/:licenseId",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     upload.array("files"),
     validate(LicenseUpdateSchema),
     updateLicense
 );
-router.delete("/:id/licenses/delete/:licenseId", checkPermission(permissions.updatePharmacist), deleteLicense);
+router.delete("/:id/licenses/delete/:licenseId", checkPermissions(permissions.updatePharmacist), deleteLicense);
 
-router.post("/:id/penalties/create", checkPermission(permissions.updatePharmacist), validate(PenaltyCreateSchema), createPenalty);
-router.put("/:id/penalties/update/:penaltyId", checkPermission(permissions.updatePharmacist), validate(PenaltyUpdateSchema), updatePenalty);
-router.delete("/:id/penalties/delete/:penaltyId", checkPermission(permissions.updatePharmacist), deletePenalty);
+router.post("/:id/penalties/create", checkPermissions(permissions.updatePharmacist), validate(PenaltyCreateSchema), createPenalty);
+router.put(
+    "/:id/penalties/update/:penaltyId",
+    checkPermissions(permissions.updatePharmacist),
+    validate(PenaltyUpdateSchema),
+    updatePenalty
+);
+router.delete("/:id/penalties/delete/:penaltyId", checkPermissions(permissions.updatePharmacist), deletePenalty);
 
 router.post(
     "/:id/syndicate-records/create",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     validate(SyndicateRecordCreateSchema),
     createSyndicateRecord
 );
 router.put(
     "/:id/syndicate-records/update/:syndicateRecordId",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     validate(SyndicateRecordUpdateSchema),
     updateSyndicateRecord
 );
-router.delete("/:id/syndicate-records/delete/:syndicateRecordId", checkPermission(permissions.updatePharmacist), deleteSyndicateRecord);
+router.delete("/:id/syndicate-records/delete/:syndicateRecordId", checkPermissions(permissions.updatePharmacist), deleteSyndicateRecord);
 
 router.post(
     "/:id/practice-records/create",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     validate(PracticeRecordCreateSchema),
     createPracticeRecord
 );
 router.put(
     "/:id/practice-records/update/:practiceRecordId",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     validate(PracticeRecordUpdateSchema),
     updatePracticeRecord
 );
-router.delete("/:id/practice-records/delete/:practiceRecordId", checkPermission(permissions.updatePharmacist), deletePracticeRecord);
+router.delete("/:id/practice-records/delete/:practiceRecordId", checkPermissions(permissions.updatePharmacist), deletePracticeRecord);
 
 router.post(
     "/:id/university-degrees/create",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     upload.array("files"),
     validate(UniversityDegreeCreateSchema),
     createUniversityDegree
 );
 router.put(
     "/:id/university-degrees/update/:universityDegreeId",
-    checkPermission(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePharmacist),
     upload.array("files"),
     validate(UniversityDegreeUpdateSchema),
     updateUniversityDegree
 );
-router.delete("/:id/university-degrees/delete/:universityDegreeId", checkPermission(permissions.updatePharmacist), deleteUniversityDegree);
+router.delete("/:id/university-degrees/delete/:universityDegreeId", checkPermissions(permissions.updatePharmacist), deleteUniversityDegree);
 
 export default router;

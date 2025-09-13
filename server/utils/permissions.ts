@@ -49,7 +49,7 @@ const permissions = {
     updateBank: "تعديل بنك",
     deleteBank: "حذف بنك",
 
-    printDocument: "طباعة وثيقة",
+    printRegistryOfficeDocument: "طباعة وثيقة",
     readSecretary: "قراءة معلومات أمين السر",
     updateSecretary: "تعديل معلومات أمين السر",
     readPresident: "قراءة معلومات النقيب",

@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Times New Roman', serif;
+            font-family: Arial, sans-serif;
             padding: 20px;
         }
 
@@ -52,6 +52,12 @@
             flex-direction: column;
             align-items: center;
             flex: 1;
+            object-fit: fill;
+        }
+
+        .logo-section img {
+            max-width: 130px;
+            max-height: 130px;
         }
 
         .logo {
@@ -119,11 +125,6 @@
         .main-content p {
             margin-bottom: 15px;
         }
-
-        /* .main-content strong {
-            font-size: 25px;
-        } */
-
         .signature-section {
             margin-top: 60px;
             text-align: center;
@@ -138,6 +139,15 @@
 
         .underlined {
             text-decoration: underline;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            direction: ltr;
         }
 
         @media print {
@@ -165,6 +175,23 @@
     <div class="a4-document">
         <!-- Document Header -->
         <div class="document-header">
+
+            <!-- Right side - Arabic Header -->
+            <div class="arabic-header">
+                <div>نقابة الصيادلة السوريين</div>
+                <div style="font-size: 12px; margin-top: 10px;">دمشق - ص.ب : 13367</div>
+                <div style="font-size: 12px;">سورية</div>
+                <div style="font-size: 12px;">2222256 - 2222820 : هاتف</div>
+                <div style="font-size: 12px;">00963 (11) 2234604 : فاكس</div>
+            </div>
+            
+
+            <!-- Center - Logo -->
+            <div class="logo-section">
+                <!-- <div class="logo">⚚</div> -->
+                 <img src="images/pharmacy.png" alt="">
+            </div>
+
             <!-- Left side - Contact Info -->
             <div class="contact-info">
                 <div><strong>ASSOCIATION OF SYRIAN PHARMACISTS</strong></div>
@@ -174,20 +201,6 @@
                 <div>Fax : 00963 (11) 2234604</div>
                 <div>E-mail : info@asp.sy</div>
                 <div>www.asp.sy</div>
-            </div>
-
-            <!-- Center - Logo -->
-            <div class="logo-section">
-                <div class="logo">⚚</div>
-            </div>
-
-            <!-- Right side - Arabic Header -->
-            <div class="arabic-header">
-                <div>نقابة الصيادلة السوريين</div>
-                <div style="font-size: 12px; margin-top: 10px;">دمشق - ص.ب : 13367</div>
-                <div style="font-size: 12px;">سورية</div>
-                <div style="font-size: 12px;">2222256 - 2222820 : هاتف</div>
-                <div style="font-size: 12px;">00963 (11) 2234604 : فاكس</div>
             </div>
         </div>
 
@@ -215,6 +228,17 @@
 
             <!-- Signature Section -->
             <div class="signature-section"></div>
+        </div>
+
+        <div class="footer">
+            <div>
+                E-MAIL: assphsyr@scs-net.org<br>
+                Damascus-P.O.Box:13367
+            </div>
+            <div>
+                TEL. :2222829 - 2224256<br>
+                FAX :009631112234604
+            </div>
         </div>
     </div>
 </body>

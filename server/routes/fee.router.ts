@@ -1,5 +1,5 @@
 import { Router } from "express";
-import checkPermission from "../middlewares/checkPermission.middleware.js";
+import checkPermissions from "../middlewares/checkPermissions.middleware.js";
 import validate from "../middlewares/validate.middleware.js";
 import updateFeesValues from "../controllers/Fee/updateValues.controller.js";
 import listFees from "../controllers/Fee/list.controller.js";
@@ -27,19 +27,19 @@ router.param("pharmacistID", (req, res, next, value, name) => {
     next();
 });
 
-router.get("/fines-date", checkPermission(permissions.getFixedDates), getFinesDate);
-router.put("/fines-date", checkPermission(permissions.updateFinesDate), updateFinesDate);
-router.get("/detailed-prints", checkPermission(permissions.getDetailedPrints), getDetailedPrints);
+router.get("/fines-date", checkPermissions(permissions.getFixedDates), getFinesDate);
+router.put("/fines-date", checkPermissions(permissions.updateFinesDate), updateFinesDate);
+router.get("/detailed-prints", checkPermissions(permissions.getDetailedPrints), getDetailedPrints);
 router.put(
     "/detailed-prints",
-    checkPermission(permissions.updateDetailedPrints),
+    checkPermissions(permissions.updateDetailedPrints),
     validate(updateDetailedPrintsSchema),
     updateDetailedPrints
 );
-router.get("/re-registration-date", checkPermission(permissions.getFixedDates), getReRegistrationDate);
-router.put("/re-registration-date", checkPermission(permissions.updateReRegistrationtDate), updateReRegistrationDate);
+router.get("/re-registration-date", checkPermissions(permissions.getFixedDates), getReRegistrationDate);
+router.put("/re-registration-date", checkPermissions(permissions.updateReRegistrationtDate), updateReRegistrationDate);
 
-router.patch("/update-values", checkPermission(permissions.updateFeesValues), validate(FeesUpdateValuesSchema), updateFeesValues);
-router.get("/list", checkPermission(permissions.listFees), listFees);
+router.patch("/update-values", checkPermissions(permissions.updateFeesValues), validate(FeesUpdateValuesSchema), updateFeesValues);
+router.get("/list", checkPermissions(permissions.listFees), listFees);
 
 export default router;

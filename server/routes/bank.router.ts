@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { responseMessages } from "../translation/response.ar";
 import AppError from "../utils/AppError";
 import passport from "passport";
-import checkPermission from "../middlewares/checkPermission.middleware";
+import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
 import validate from "../middlewares/validate.middleware";
 import { BankCreateSchema, BankUpdateSchema } from "../validators/bank.schema";
@@ -24,10 +24,10 @@ router.param("id", (req, res, next, value, name) => {
 });
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/list", checkPermission(permissions.listBanks), listBanks);
-router.get("/get/:id", checkPermission(permissions.listBanks), getBank);
-router.post("/create", checkPermission(permissions.createBank), validate(BankCreateSchema), createBank);
-router.patch("/update/:id", checkPermission(permissions.updateBank), validate(BankUpdateSchema), updateBank);
-router.delete("/delete/:id", checkPermission(permissions.deleteBank), deleteBank);
+router.get("/list", checkPermissions([permissions.listBanks, permissions.createInvoice, permissions.updateInvoice]), listBanks);
+router.get("/get/:id", checkPermissions([permissions.listBanks, permissions.createInvoice, permissions.updateInvoice]), getBank);
+router.post("/create", checkPermissions(permissions.createBank), validate(BankCreateSchema), createBank);
+router.patch("/update/:id", checkPermissions(permissions.updateBank), validate(BankUpdateSchema), updateBank);
+router.delete("/delete/:id", checkPermissions(permissions.deleteBank), deleteBank);
 
 export default router;

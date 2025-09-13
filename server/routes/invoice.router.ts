@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import checkPermission from "../middlewares/checkPermission.middleware.js";
+import checkPermissions from "../middlewares/checkPermissions.middleware.js";
 import createInvoice from "../controllers/Invoice/create.controller.js";
 import validate from "../middlewares/validate.middleware.js";
 import { InvoiceCreateSchema, InvoiceUpdateSchema } from "../validators/invoice.schema.js";
@@ -38,23 +38,23 @@ router.use(passport.authenticate("jwt", { session: false }));
 
 router.post(
     "/create/:pharmacistID",
-    checkPermission(permissions.createInvoice),
+    checkPermissions(permissions.createInvoice),
     upload.array("files"),
     validate(InvoiceCreateSchema),
     createInvoice
 );
-router.delete("/delete/:id", checkPermission(permissions.deleteInvoice), deleteInvoice);
+router.delete("/delete/:id", checkPermissions(permissions.deleteInvoice), deleteInvoice);
 router.patch(
     "/update/:id",
     upload.array("files"),
-    checkPermission(permissions.updateInvoice),
+    checkPermissions(permissions.updateInvoice),
     validate(InvoiceUpdateSchema),
     updateInvoice
 );
-router.get("/list", checkPermission(permissions.listInvoices), listInvoices);
-router.get("/detail/:id", checkPermission(permissions.getInvoice), getInvoice);
-router.get("/export", checkPermission(permissions.exportInvoicesAsExcel), exportInvoicesAsExcel);
-router.get("/print/:id", checkPermission(permissions.printInvoice), printInvoice);
-router.get("/download/:id", checkPermission(permissions.downloadInvoiceImages), downloadInvoiceImages);
+router.get("/list", checkPermissions(permissions.listInvoices), listInvoices);
+router.get("/detail/:id", checkPermissions(permissions.getInvoice), getInvoice);
+router.get("/export", checkPermissions(permissions.exportInvoicesAsExcel), exportInvoicesAsExcel);
+router.get("/print/:id", checkPermissions(permissions.printInvoice), printInvoice);
+router.get("/download/:id", checkPermissions(permissions.downloadInvoiceImages), downloadInvoiceImages);
 
 export default router;

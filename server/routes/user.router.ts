@@ -1,5 +1,5 @@
 import { Router } from "express";
-import checkPermission from "../middlewares/checkPermission.middleware.js";
+import checkPermissions from "../middlewares/checkPermissions.middleware.js";
 import permissions from "../utils/permissions.js";
 import createUser from "../controllers/User/create.controller.js";
 import updateUser from "../controllers/User/update.controller.js";
@@ -24,10 +24,10 @@ router.param("id", (req, res, next, value, name) => {
 });
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/list", checkPermission(permissions.listUsers), listUsers);
-router.get("/get/:id", checkPermission(permissions.readUser), getUser);
-router.post("/create", checkPermission(permissions.createUser), validate(UserSchema), createUser);
-router.patch("/update/:id", checkPermission(permissions.updateUser), validate(UserUpdateSchema), updateUser);
-router.delete("/delete/:id", checkPermission(permissions.deleteUser), deleteUser);
+router.get("/list", checkPermissions(permissions.listUsers), listUsers);
+router.get("/get/:id", checkPermissions(permissions.readUser), getUser);
+router.post("/create", checkPermissions(permissions.createUser), validate(UserSchema), createUser);
+router.patch("/update/:id", checkPermissions(permissions.updateUser), validate(UserUpdateSchema), updateUser);
+router.delete("/delete/:id", checkPermissions(permissions.deleteUser), deleteUser);
 
 export default router;

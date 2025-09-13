@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import checkPermission from "../middlewares/checkPermission.middleware.js";
+import checkPermissions from "../middlewares/checkPermissions.middleware.js";
 import validate from "../middlewares/validate.middleware.js";
 import listRoles from "../controllers/Role/list.controller.js";
 import createRole from "../controllers/Role/create.controller.js";
@@ -25,11 +25,11 @@ router.param("id", (req, res, next, value, name) => {
 });
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/get/:id", checkPermission(permissions.getRole), getRole);
-router.get("/list", checkPermission(permissions.listRoles), listRoles);
-router.post("/create", checkPermission(permissions.createRole), validate(RoleSchema), createRole);
-router.delete("/delete/:id", checkPermission(permissions.deleteRole), deleteRole);
-router.patch("/update/:id", checkPermission(permissions.updateRole), validate(RoleSchema.partial()), updateRole);
-router.get("/list-permissions", checkPermission(permissions.listPermissions), listPermissions);
+router.get("/get/:id", checkPermissions(permissions.getRole), getRole);
+router.get("/list", checkPermissions(permissions.listRoles), listRoles);
+router.post("/create", checkPermissions(permissions.createRole), validate(RoleSchema), createRole);
+router.delete("/delete/:id", checkPermissions(permissions.deleteRole), deleteRole);
+router.patch("/update/:id", checkPermissions(permissions.updateRole), validate(RoleSchema.partial()), updateRole);
+router.get("/list-permissions", checkPermissions(permissions.listPermissions), listPermissions);
 
 export default router;
