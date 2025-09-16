@@ -19,7 +19,7 @@ const printDocuments = async (req: Request, res: TypedResponse<null>, next: Next
 
         const pharmacist = await Pharmacist.findById(validatedData.pharmacist);
         if (!pharmacist) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         registryOfficeHTML = registryOfficeHTML.replace(

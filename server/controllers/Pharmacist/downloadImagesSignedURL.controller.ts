@@ -12,11 +12,11 @@ const downloadPharmacistImagesSignedURL = async (req: Request, res: TypedRespons
         const folderToken = req.params.folderToken;
         const pharmacist = await Pharmacist.findById(pharmacistId);
         if (!pharmacist) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         if (pharmacist.folderToken != folderToken) {
-            res.json({ success: false, details: [responseMessages.FORBIDDEN] });
+            res.status(400).json({ success: false, details: [responseMessages.FORBIDDEN] });
             return;
         }
         const pharmacistDir = path.join(UPLOADS_DIR, "pharmacists", pharmacistId, "personal");

@@ -11,7 +11,7 @@ const downloadInvoiceImages = async (req: Request, res: TypedResponse<null>, nex
         const invoiceId = req.params.id;
         const invoice = await Invoice.findOne({ serialID: invoiceId });
         if (!invoice) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         const invoiceDir = path.join(UPLOADS_DIR, "pharmacists", invoice.pharmacist.toString(), "invoices", invoiceId);

@@ -11,7 +11,7 @@ const downloadPharmacistImages = async (req: Request, res: TypedResponse<null>, 
         const pharmacistId = req.params.id;
         const pharmacist = await Pharmacist.findById(pharmacistId);
         if (!pharmacist) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         const pharmacistDir = path.join(UPLOADS_DIR, "pharmacists", pharmacistId, "personal");
