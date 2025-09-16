@@ -4,7 +4,7 @@ import express, { NextFunction, Request, Response, TypedResponse } from "express
 import { config } from "dotenv";
 import "./config/dbConn.js";
 import passport from "passport";
-import authRouter from "./routes/auth.router.js";
+import AuthRouter from "./routes/auth.router.js";
 import PharmacistsRouter from "./routes/pharmacist.router.js";
 import InvoiceRouter from "./routes/invoice.router.js";
 import FeeRouter from "./routes/fee.router.js";
@@ -13,6 +13,7 @@ import RoleRouter from "./routes/role.router.js";
 import ReportsRouter from "./routes/reports.router.js";
 import BankRouter from "./routes/bank.router.js";
 import RegistryOfficeRouter from "./routes/registryOffice.router.js";
+import TreasuryFeeRouter from "./routes/treasuryFee.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
@@ -42,7 +43,7 @@ app.use(passport.initialize());
 
 app.use(loggerMiddlware);
 
-app.use("/api/auth", authRouter);
+app.use("/api/auth", AuthRouter);
 app.use("/api/pharmacists", PharmacistsRouter);
 app.use("/api/invoices", InvoiceRouter);
 app.use("/api/fees", FeeRouter);
@@ -51,6 +52,7 @@ app.use("/api/users/roles", RoleRouter);
 app.use("/api/reports", ReportsRouter);
 app.use("/api/banks", BankRouter);
 app.use("/api/registry-office", RegistryOfficeRouter);
+app.use("/api/treasury/fees", TreasuryFeeRouter);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "front", "index.html"));

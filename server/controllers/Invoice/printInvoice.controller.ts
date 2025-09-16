@@ -1,7 +1,7 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import fs from "fs/promises";
 import path from "path";
-import Section, { SECTIONS } from "../../models/section.model";
+import Section, { SectionsEnum } from "../../models/section.model";
 import { FeeDocument } from "../../types/models/fee.types";
 import Invoice from "../../models/invoice.model";
 import { responseMessages } from "../../translation/response.ar";
@@ -21,13 +21,13 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
         });
         invoiceHTML = invoiceHTML.replace("{{bank}}", invoice.bank.name);
         for (const account of invoice.bank.accounts) {
-            if (account.section == SECTIONS.SYNDICATE) {
+            if (account.section == SectionsEnum.SYNDICATE) {
                 invoiceHTML = invoiceHTML.replace("{{syndicate_account}}", account.accountNum);
-            } else if (account.section == SECTIONS.RETIREMENT) {
+            } else if (account.section == SectionsEnum.RETIREMENT) {
                 invoiceHTML = invoiceHTML.replace("{{retirement_account}}", account.accountNum);
-            } else if (account.section == SECTIONS.DISABILITY) {
+            } else if (account.section == SectionsEnum.DISABILITY) {
                 invoiceHTML = invoiceHTML.replace("{{disability_account}}", account.accountNum);
-            } else if (account.section == SECTIONS.HEALTH) {
+            } else if (account.section == SectionsEnum.HEALTH) {
                 invoiceHTML = invoiceHTML.replace("{{health_account}}", account.accountNum);
             }
         }

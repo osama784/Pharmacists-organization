@@ -3,7 +3,6 @@ import { buildBooleanFilter, buildDateFilter, buildNumberFilter, buildStringFilt
 import buildPharmacistFilters from "../../Pharmacist/utils/buildPharmacistFilters.js";
 import Pharmacist from "../../../models/pharmacist.model.js";
 import buildBankFilters from "../../Bank/utils/buildBankFilters.js";
-import Bank from "../../../models/bank.model.js";
 
 const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<string, any>> => {
     let filters: Record<string, any> = {};

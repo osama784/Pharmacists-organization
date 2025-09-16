@@ -180,3 +180,11 @@ export const RegistryOfficeTR = {
     travelReason: "سبب السفر",
     registered: "هل هو مسجل",
 };
+
+export const TreasuryFeeTR = {
+    name: "اسم الرسم",
+    value: "قيمة الرسم",
+    associatedParty: "الجهة المرتبطة",
+    associatedSection: "الصندوق",
+    receiptBook: "دفتر الإيصالات",
+};

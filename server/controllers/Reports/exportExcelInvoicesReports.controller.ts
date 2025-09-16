@@ -5,7 +5,6 @@ import Invoice, { invoiceStatuses } from "../../models/invoice.model";
 import { FeeDocument } from "../../types/models/fee.types";
 import { InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto";
 import ExcelJS from "exceljs";
-// @ts-nocheck
 
 const exportExcelInvoicesReport = async (
     req: Request,

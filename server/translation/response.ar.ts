@@ -43,7 +43,6 @@ export const responseMessages = {
         SECTION_NOT_FOUND: "لم يتم إيجاد الصندوق الذي تبحث عنه",
     },
     BANK_CONTROLLERS: {
-        SECTION_NOT_FOUND: "تم إدخال صندوق لم يتم التعرف عليه",
         INCOMPLETE_SECTION_INFO: "لم يتم إرسال المعلومات الكاملة للصناديق",
     },
     REGISTRY_OFFICE_CONTROLLERS: {
