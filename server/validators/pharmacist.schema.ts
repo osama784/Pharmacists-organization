@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { genders, licenseTypes, practiceRecordsInfo, syndicateRecordsInfo, universityDegreeTypes } from "../models/pharmacist.model.js";
+import {
+    GenderEnum,
+    LicenseTypesEnum,
+    practiceRecordsInfo,
+    syndicateRecordsInfo,
+    UniversityDegreesEnum,
+} from "../models/pharmacist.model.js";
 import { DateSchema, EnumSchema, NumberSchema, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 import { PharmacistModelTR } from "../translation/models.ar.js";
@@ -15,7 +21,7 @@ const PharmacistSchema = z.object({
     fatherNameEnglish: StringSchema({ keyName: PharmacistModelTR.fatherNameEnglish, optional: true }),
     motherNameEnglish: StringSchema({ keyName: PharmacistModelTR.motherNameEnglish, optional: true }),
 
-    gender: EnumSchema({ data: genders as [string, ...string[]], keyName: PharmacistModelTR.gender }),
+    gender: EnumSchema({ data: Object.values(GenderEnum) as [string, ...string[]], keyName: PharmacistModelTR.gender }),
     nationalNumber: StringSchema({ keyName: PharmacistModelTR.nationalNumber }),
     birthPlace: StringSchema({ keyName: PharmacistModelTR.birthPlace, optional: true }),
     birthDate: DateSchema({ keyName: PharmacistModelTR.birthDate }),
@@ -45,7 +51,7 @@ const PharmacistSchema = z.object({
 });
 
 const LicenseSchema = z.object({
-    licenseType: EnumSchema({ data: Object.values(licenseTypes) as [string], keyName: PharmacistModelTR.licenses.licenseType }),
+    licenseType: EnumSchema({ data: Object.values(LicenseTypesEnum) as [string], keyName: PharmacistModelTR.licenses.licenseType }),
     startDate: DateSchema(PharmacistModelTR.licenses.startDate),
     endDate: DateSchema({ keyName: PharmacistModelTR.licenses.endDate, optional: true }).optional().nullable(),
     details: StringSchema({ keyName: PharmacistModelTR.licenses.details, optional: true }),
@@ -150,7 +156,7 @@ export const SyndicateRecordUpdateSchema = SyndicateRecordSchema.partial().refin
 
 const UniversityDegreeSchema = z.object({
     degreeType: EnumSchema({
-        data: Object.values(universityDegreeTypes) as [string],
+        data: Object.values(UniversityDegreesEnum) as [string],
         keyName: PharmacistModelTR.universityDegrees.degreeType,
     }),
     obtainingDate: DateSchema(PharmacistModelTR.universityDegrees.obtainingDate),
