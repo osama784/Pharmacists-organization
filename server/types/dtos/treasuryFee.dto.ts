@@ -23,7 +23,7 @@ export function toTreasuryFeeResponseDto(doc: TreasuryFeeDocument | PopulatedTre
         return {
             id: doc.id,
             name: doc.name,
-            value: parseInt(doc.value),
+            value: doc.value,
             associatedParty: doc.associatedParty,
             associatedSection: doc.associatedSection.name,
             receiptBook: doc.receiptBook,
@@ -33,7 +33,7 @@ export function toTreasuryFeeResponseDto(doc: TreasuryFeeDocument | PopulatedTre
     return {
         id: doc.id,
         name: doc.name,
-        value: parseInt(doc.value),
+        value: doc.value,
         associatedParty: doc.associatedParty,
         associatedSection: doc.associatedSection.toString(),
         receiptBook: doc.receiptBook,

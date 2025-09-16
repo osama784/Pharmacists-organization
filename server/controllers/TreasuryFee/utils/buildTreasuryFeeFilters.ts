@@ -20,7 +20,7 @@ const buildTreasuryFeeFilters = async (queries: ITreasuryFeeQuery) => {
         const sectionFilter = buildStringFilter(queries.associatedSection);
         if (sectionFilter != undefined) {
             const sections = await Section.find({ name: sectionFilter });
-            filters = { ...filters, pharmacist: { $in: sections } };
+            filters = { ...filters, associatedSection: { $in: sections } };
         }
     }
     return filters;

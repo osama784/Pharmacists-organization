@@ -6,7 +6,7 @@ import { ITreasuryFeeModel, TreasuryFeeDocument } from "../types/models/treasury
 const TreasuryFee = new Schema<TreasuryFeeDocument>(
     {
         name: { type: String, required: true },
-        value: { type: String, required: true },
+        value: { type: Number, required: true },
         associatedParty: String,
         associatedSection: { type: Schema.Types.ObjectId, ref: "Section", required: true },
         receiptBook: { type: String, required: true },

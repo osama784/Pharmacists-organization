@@ -15,7 +15,7 @@ export enum ReceiptBooksEnum {
 
 interface ITreasuryFee {
     name: string;
-    value: string;
+    value: number;
     associatedParty?: PartiesEnum;
     associatedSection: Types.ObjectId;
     receiptBook: ReceiptBooksEnum;

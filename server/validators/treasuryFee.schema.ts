@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TreasuryFeeTR } from "../translation/models.ar";
-import { EnumSchema, mongooseIDSchema, NumberSchema, StringSchema } from "../utils/customSchemas";
+import { EnumSchema, NumberSchema, StringSchema } from "../utils/customSchemas";
 import { PARTIES, RECEIPT_BOOKS } from "../models/treasuryFee.model";
 import { SectionsEnum } from "../models/section.model";
 

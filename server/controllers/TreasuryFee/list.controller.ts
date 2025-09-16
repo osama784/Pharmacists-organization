@@ -33,7 +33,7 @@ const listTreasuryFees = async (
                 result[receiptBook][section] = finalFees.map((fee) => toTreasuryFeeResponseDto(fee));
             }
         });
-        const totalItems = fees.length;
+        const totalItems = await TreasuryFee.find(filters).countDocuments();
         res.json({
             success: true,
             data: result,
