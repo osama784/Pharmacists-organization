@@ -60,6 +60,21 @@ const permissions = {
     createTreasuryFee: "إنشاء رسم خزانة",
     updateTreasuryFee: "تعديل رسم خزانة",
     deleteTreasuryFee: "حذف رسم خزانة",
+
+    listTreasuryExpenditures: "قراءة معلومات النفقات",
+    createTreasuryExpenditure: "إنشاء نفقة",
+    updateTreasuryExpenditure: "تعديل نفقة",
+    deleteTreasuryExpenditure: "حذف نفقة",
+
+    listTreasuryIncomes: "قراءة معلومات الواردات",
+    createTreasuryIncome: "إنشاء وارد",
+    updateTreasuryIncome: "تعديل وارد",
+    deleteTreasuryIncome: "حذف وارد",
+
+    listTreasuryStamps: "قراءة معلومات الطوابع",
+    createTreasuryStamp: "إنشاء طابع",
+    updateTreasuryStamp: "تعديل طابع",
+    deleteTreasuryStamp: "حذف طابع",
 };
 
 export const ReadablePermissions = {
@@ -88,7 +103,28 @@ export const ReadablePermissions = {
     التقارير: ["قراءة تقرير الفواتير", "تصدير تقرير الفواتير على شكل إكسل"],
     البنوك: ["قراءة معلومات البنوك", "إنشاء بنك", "تعديل بنك", "حذف بنك"],
     الديوان: ["طباعة وثيقة", "قراءة معلومات النقيب", "تعديل معلومات النقيب", "قراءة معلومات أمين السر", "تعديل معلومات أمين السر"],
-    الصندوق: ["قراءة معلومات رسوم الخزانة", "قراءة معلومات رسم خزانة", "إنشاء رسم خزانة", "تعديل رسم خزانة", "حذف رسم خزانة"],
+    الصندوق: [
+        "قراءة معلومات رسوم الخزانة",
+        "قراءة معلومات رسم خزانة",
+        "إنشاء رسم خزانة",
+        "تعديل رسم خزانة",
+        "حذف رسم خزانة",
+
+        "قراءة معلومات النفقات",
+        "إنشاء نفقة",
+        "تعديل نفقة",
+        "حذف نفقة",
+
+        "قراءة معلومات الواردات",
+        "إنشاء وارد",
+        "تعديل وارد",
+        "حذف وارد",
+
+        "قراءة معلومات الطوابع",
+        "إنشاء طابع",
+        "تعديل طابع",
+        "حذف طابع",
+    ],
 };
 
 export default permissions;

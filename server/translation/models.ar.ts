@@ -3,6 +3,10 @@ import { IFee } from "../types/models/fee.types";
 import { IInvoice } from "../types/models/invoice.types";
 import { IPharmacist } from "../types/models/pharmacist.types";
 import { IRole } from "../types/models/role.types";
+import { ITreasuryExpenditure } from "../types/models/treasuryExpenditure.types";
+import { ITreasuryFee } from "../types/models/treasuryFee.types";
+import { ITreasuryIncome } from "../types/models/treasuryIncome.types";
+import { ITreasuryStamp } from "../types/models/treasuryStamp.types";
 import { IUser } from "../types/models/user.types";
 
 export const syndicateMembershipsTR = {
@@ -181,10 +185,38 @@ export const RegistryOfficeTR = {
     registered: "هل هو مسجل",
 };
 
-export const TreasuryFeeTR = {
+type TreasuryFeeModelTR = Record<keyof ITreasuryFee, any>;
+export const TreasuryFeeModelTR: TreasuryFeeModelTR = {
     name: "اسم الرسم",
     value: "قيمة الرسم",
     associatedParty: "الجهة المرتبطة",
     associatedSection: "الصندوق",
     receiptBook: "دفتر الإيصالات",
+};
+
+type TreasuryExpenditureModelTR = Record<keyof ITreasuryExpenditure, any>;
+export const TreasuryExpenditureModelTR: TreasuryExpenditureModelTR = {
+    serialID: "الرقم التسلسلي",
+    name: "اسم المصروف",
+    value: "قيمة المصروف",
+    associatedSection: "اسم الصندوق",
+    image: "رابط الصورة",
+};
+
+type TreasuryIncomeModelTR = Record<keyof ITreasuryIncome, any>;
+export const TreasuryIncomeModelTR: TreasuryIncomeModelTR = {
+    serialID: "الرقم التسلسلي",
+    name: "اسم الوارد",
+    value: "قيمة الوارد",
+    associatedSection: "اسم الصندوق",
+    image: "رابط الصورة",
+};
+
+type TreasuryStampModelTR = Record<keyof ITreasuryStamp, any>;
+export const TreasuryStampModelTR: TreasuryStampModelTR = {
+    serialID: "الرقم التسلسلي",
+    name: "اسم الطابع",
+    value: "قيمة الطابع",
+    initialQuantity: "الكمية الابتدائية",
+    soldQuantity: "الكمية المباعة",
 };

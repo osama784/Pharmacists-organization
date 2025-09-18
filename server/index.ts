@@ -14,12 +14,15 @@ import ReportsRouter from "./routes/reports.router.js";
 import BankRouter from "./routes/bank.router.js";
 import RegistryOfficeRouter from "./routes/registryOffice.router.js";
 import TreasuryFeeRouter from "./routes/treasuryFee.router.js";
+import TreasuryExpenditureRouter from "./routes/treasuryExpenditure.router.js";
+import TreasuryIncomeRouter from "./routes/treasuryIncome.router.js";
+import TreasuryStampRouter from "./routes/treasuryStamp.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
 import { responseMessages } from "./translation/response.ar.js";
 import { UPLOADS_DIR } from "./utils/images.js";
-import multer, { MulterError } from "multer";
+import { MulterError } from "multer";
 import { logger, loggerMiddlware } from "./middlewares/logger.middleware.js";
 import { MulterErrorTranslator } from "./translation/utils.ar.js";
 import path from "path";
@@ -53,6 +56,9 @@ app.use("/api/reports", ReportsRouter);
 app.use("/api/banks", BankRouter);
 app.use("/api/registry-office", RegistryOfficeRouter);
 app.use("/api/treasury/fees", TreasuryFeeRouter);
+app.use("/api/treasury/expenditures", TreasuryExpenditureRouter);
+app.use("/api/treasury/incomes", TreasuryIncomeRouter);
+app.use("/api/treasury/stamps", TreasuryStampRouter);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "front", "index.html"));
@@ -69,10 +75,7 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
         if (err instanceof MulterError) {
             res.status(400).json({ success: false, details: [MulterErrorTranslator(err.code)] });
         } else {
-            // logger.error(err.message);
-            if (err instanceof Error) {
-                console.log(err.stack);
-            }
+            logger.error(err.message);
             res.status(500).json({
                 success: false,
                 details: [responseMessages.SERVER_ERROR],
@@ -87,3 +90,5 @@ mongoose.connection.on("open", () => {
         console.log(`Listening on Port ${PORT}...`);
     });
 });
+
+export default app;
