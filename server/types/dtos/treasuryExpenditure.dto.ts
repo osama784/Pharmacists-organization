@@ -1,0 +1,42 @@
+import { z } from "zod";
+import { TreasuryExpenditureDocument } from "../models/treasuryExpenditure.types";
+import { TreasuryExpenditureCreateSchema, TreasuryExpenditureUpdateSchema } from "../../validators/treasuryExpenditure.schema";
+import { dateUtils } from "../../utils/dateUtils";
+
+export type TreasuryExpenditureCreateDto = z.infer<typeof TreasuryExpenditureCreateSchema>;
+export type TreasuryExpenditureUpdateDto = z.infer<typeof TreasuryExpenditureUpdateSchema>;
+
+export type TreasuryExpenditureResponseDto = {
+    id: string;
+    name: string;
+    value: number;
+    associatedSection: string;
+    image?: string;
+
+    createdAt: Date;
+};
+
+export function toTreasuryExpenditureResponseDto(data: TreasuryExpenditureDocument[]): TreasuryExpenditureResponseDto[];
+export function toTreasuryExpenditureResponseDto(data: TreasuryExpenditureDocument): TreasuryExpenditureResponseDto;
+export function toTreasuryExpenditureResponseDto(data: TreasuryExpenditureDocument | TreasuryExpenditureDocument[]) {
+    if (Array.isArray(data)) {
+        let result = [];
+        for (const doc of data) {
+            result.push(_toTreasuryExpenditureResponseDto(doc));
+        }
+        return result;
+    }
+    return _toTreasuryExpenditureResponseDto(data);
+}
+
+function _toTreasuryExpenditureResponseDto(doc: TreasuryExpenditureDocument): TreasuryExpenditureResponseDto {
+    return {
+        id: doc.serialID,
+        name: doc.name,
+        value: doc.value,
+        associatedSection: doc.associatedSection,
+        image: doc.image,
+
+        createdAt: dateUtils.toLocaleDate(doc.createdAt)!,
+    };
+}
