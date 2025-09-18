@@ -1,16 +1,23 @@
-import { z } from "zod";
-import { TreasuryFeeTR } from "../translation/models.ar";
+import { object, z } from "zod";
+import { TreasuryFeeModelTR } from "../translation/models.ar";
 import { EnumSchema, NumberSchema, StringSchema } from "../utils/customSchemas";
-import { PARTIES, RECEIPT_BOOKS } from "../models/treasuryFee.model";
 import { SectionsEnum } from "../models/section.model";
+import { PARTIES, RECEIPT_BOOKS } from "../models/treasuryFee.model";
 
 const TreasuryFeeSchema = z.object({
-    name: StringSchema({ keyName: TreasuryFeeTR.name }),
-    value: NumberSchema({ keyName: TreasuryFeeTR.value }).default(0),
-    associatedSection: EnumSchema({ keyName: TreasuryFeeTR.associatedSection, data: Object.values(SectionsEnum) as [string, ...[string]] }),
-    associatedParty: EnumSchema({ keyName: TreasuryFeeTR.associatedParty, data: PARTIES as [string, ...[string]], optional: true }),
-    receiptBook: EnumSchema({ keyName: TreasuryFeeTR.receiptBook, data: RECEIPT_BOOKS as [string, ...[string]] }),
+    name: StringSchema({ keyName: TreasuryFeeModelTR.name }),
+    value: NumberSchema({ keyName: TreasuryFeeModelTR.value }).default(0),
+    associatedSection: EnumSchema({
+        keyName: TreasuryFeeModelTR.associatedSection,
+        data: Object.values(SectionsEnum) as [string, ...[string]],
+    }),
+    associatedParty: EnumSchema({
+        keyName: TreasuryFeeModelTR.associatedParty,
+        data: Object.values(PARTIES) as [string, ...[string]],
+        optional: true,
+    }),
+    receiptBook: EnumSchema({ keyName: TreasuryFeeModelTR.receiptBook, data: Object.values(RECEIPT_BOOKS) as [string, ...[string]] }),
 });
 
-export const CreateTreasuryFeeSchema = TreasuryFeeSchema;
-export const UpdateTreasuryFeeSchema = TreasuryFeeSchema.partial();
+export const TreasuryFeeCreateSchema = TreasuryFeeSchema;
+export const TreasuryFeeUpdateSchema = TreasuryFeeSchema.partial();

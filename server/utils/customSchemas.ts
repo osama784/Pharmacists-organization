@@ -72,12 +72,18 @@ type EnumSchemaOptions = {
     optional?: boolean;
 };
 
-export const EnumSchema = (options: EnumSchemaOptions) => {
+export function EnumSchema(options: { keyName: string; data: [string, ...string[]]; optional?: false }): z.ZodEnum<[string, ...string[]]>;
+export function EnumSchema(options: {
+    keyName: string;
+    data: [string, ...string[]];
+    optional: true;
+}): z.ZodOptional<z.ZodEnum<[string, ...string[]]>>;
+export function EnumSchema(options: EnumSchemaOptions) {
     if (options.optional) {
         return z.enum(options.data, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_ENUM_VALUE(options.data)}` }).optional();
     }
     return z.enum(options.data, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_ENUM_VALUE(options.data)}` });
-};
+}
 
 type DateSchemaOptions = {
     keyName: string;

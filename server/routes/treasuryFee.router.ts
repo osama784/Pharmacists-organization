@@ -6,7 +6,7 @@ import passport from "passport";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import createTreasuryFee from "../controllers/TreasuryFee/create.controller";
 import validate from "../middlewares/validate.middleware";
-import { CreateTreasuryFeeSchema, UpdateTreasuryFeeSchema } from "../validators/treasuryFee.schema";
+import { TreasuryFeeCreateSchema, TreasuryFeeUpdateSchema } from "../validators/treasuryFee.schema";
 import deleteTreasuryFee from "../controllers/TreasuryFee/delete.controller";
 import updateTreasuryFee from "../controllers/TreasuryFee/update.controller";
 import permissions from "../utils/permissions";
@@ -26,8 +26,8 @@ router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermissions(permissions.listTreasuryFees), listTreasuryFees);
 router.get("/get/:id", checkPermissions(permissions.getTreasuryFee), getTreasuryFee);
-router.post("/create", checkPermissions(permissions.createTreasuryFee), validate(CreateTreasuryFeeSchema), createTreasuryFee);
-router.patch("/update/:id", checkPermissions(permissions.updateTreasuryFee), validate(UpdateTreasuryFeeSchema), updateTreasuryFee);
+router.post("/create", checkPermissions(permissions.createTreasuryFee), validate(TreasuryFeeCreateSchema), createTreasuryFee);
+router.patch("/update/:id", checkPermissions(permissions.updateTreasuryFee), validate(TreasuryFeeUpdateSchema), updateTreasuryFee);
 router.delete("/delete/:id", checkPermissions(permissions.deleteTreasuryFee), deleteTreasuryFee);
 
 export default router;

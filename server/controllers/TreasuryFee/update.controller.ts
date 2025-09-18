@@ -8,7 +8,7 @@ import {
 import TreasuryFee from "../../models/treasuryFee.model";
 import Section from "../../models/section.model";
 import { responseMessages } from "../../translation/response.ar";
-import { TreasuryFeeTR } from "../../translation/models.ar";
+import { TreasuryFeeModelTR } from "../../translation/models.ar";
 import { SectionDocument } from "../../types/models/section.types";
 
 const updateTreasuryFee = async (req: Request, res: TypedResponse<TreasuryFeeResponseDto>, next: NextFunction) => {

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { StringSchema } from "../utils/customSchemas";
-import { TreasuryFeeTR } from "../translation/models.ar";
+import { TreasuryFeeModelTR } from "../translation/models.ar";
 import { ITreasuryFeeModel, TreasuryFeeDocument } from "../types/models/treasuryFee.types";
 
 const TreasuryFee = new Schema<TreasuryFeeDocument>(
@@ -14,6 +14,24 @@ const TreasuryFee = new Schema<TreasuryFeeDocument>(
     { timestamps: true }
 );
 
-export const PARTIES = ["الذاتية", "الديوان", "مستودع المطبوعات"];
-export const RECEIPT_BOOKS = ["تسوية", "وثائق", "مطبوعات"];
+export enum PARTIES {
+    Credentialing = "الذاتية",
+    RegistryOffice = "الديوان",
+    PrintsRepository = "مستودع المطبوعات",
+}
+
+export enum RECEIPT_BOOKS {
+    Prints = "مطبوعات",
+    Documents = "وثائق",
+    Settlement = "تسوية",
+}
+
 export default mongoose.model<TreasuryFeeDocument, ITreasuryFeeModel>("TreasuryFee", TreasuryFee, "treasuryFees");
+
+export enum TREASURY_SECTIONS {
+    SYNDICATE = "صندوق النقابة",
+    RETIREMENT = "خزانة التقاعد",
+    DISABILITY = "صندوق إعانة العجز و الوفاة",
+    HEALTH = "خزانة التكافل الصحي",
+    SUPPORT = "صندوق الدعم",
+}

@@ -126,7 +126,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
     { timestamps: true }
 );
 
-Pharmacist.pre("save", async function (next) {
+Pharmacist.pre("validate", async function (next) {
     if (this.isNew) {
         try {
             this.folderToken = crypto.randomBytes(32).toString("hex");

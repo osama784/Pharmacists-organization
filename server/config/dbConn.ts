@@ -14,3 +14,4 @@ export default (async () => {
 })();
 
 mongoose.plugin(idTransformPlugin);
+mongoose.set("autoIndex", false);

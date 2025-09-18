@@ -1,4 +1,4 @@
-export default function toLocaleDate(date: Date | null | undefined): Date | null | undefined {
+export function toLocaleDate(date: Date | null | undefined): Date | null | undefined {
     if (!date) {
         return date;
     }

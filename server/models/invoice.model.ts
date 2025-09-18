@@ -19,7 +19,7 @@ export const invoiceStatuses = {
 
 const Invoice = new Schema<InvoiceDocument>(
     {
-        serialID: { type: String, unique: true },
+        serialID: { type: String, unique: true, index: true, required: true },
         receiptNumber: String,
         pharmacist: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
         bank: {
@@ -44,7 +44,7 @@ const Invoice = new Schema<InvoiceDocument>(
     { timestamps: true }
 );
 
-Invoice.pre("save", async function (next) {
+Invoice.pre("validate", async function (next) {
     if (this.isNew) {
         try {
             const counter = await Counter.findOneAndUpdate({ name: "invoice" }, { $inc: { value: 1 } }, { new: true, upsert: true });

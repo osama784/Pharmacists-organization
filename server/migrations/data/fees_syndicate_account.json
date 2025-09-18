@@ -73,7 +73,7 @@
     },
     {
         "name": "انتساب نقابة أجانب",
-        "isRepeatable": true,
+        "isRepeatable": false,
         "isMutable": false,
         "value": 0
     },

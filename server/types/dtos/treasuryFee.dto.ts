@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { dateUtils } from "../../utils/dateUtils";
 import { PopulatedTreasuryFeeDocument, TreasuryFeeDocument } from "../models/treasuryFee.types";
-import { CreateTreasuryFeeSchema, UpdateTreasuryFeeSchema } from "../../validators/treasuryFee.schema";
+import { TreasuryFeeCreateSchema, TreasuryFeeUpdateSchema } from "../../validators/treasuryFee.schema";
 
 export type TreasuryFeeResponseDto = {
     id: string;
@@ -13,8 +13,8 @@ export type TreasuryFeeResponseDto = {
     createdAt: Date;
 };
 
-export type CreateTreasuryFeeDto = z.infer<typeof CreateTreasuryFeeSchema>;
-export type UpdateTreasuryFeeDto = z.infer<typeof UpdateTreasuryFeeSchema>;
+export type CreateTreasuryFeeDto = z.infer<typeof TreasuryFeeCreateSchema>;
+export type UpdateTreasuryFeeDto = z.infer<typeof TreasuryFeeUpdateSchema>;
 
 export function toTreasuryFeeResponseDto(doc: TreasuryFeeDocument): TreasuryFeeResponseDto;
 export function toTreasuryFeeResponseDto(doc: PopulatedTreasuryFeeDocument): TreasuryFeeResponseDto;

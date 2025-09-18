@@ -1,8 +1,7 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import ITreasuryFeeQuery from "../../types/queries/treasuryFee.query";
 import buildTreasuryFeeFilters from "./utils/buildTreasuryFeeFilters";
-import TreasuryFee from "../../models/treasuryFee.model";
-import { ReceiptBooksEnum } from "../../types/models/treasuryFee.types";
+import TreasuryFee, { RECEIPT_BOOKS } from "../../models/treasuryFee.model";
 import { SectionsEnum } from "../../models/section.model";
 import { SectionDocument } from "../../types/models/section.types";
 import { toTreasuryFeeResponseDto, TreasuryFeeResponseDto } from "../../types/dtos/treasuryFee.dto";
@@ -25,7 +24,7 @@ const listTreasuryFees = async (
             .populate<{ associatedSection: SectionDocument }>("associatedSection");
         let result: Record<string, Record<string, TreasuryFeeResponseDto[]>> = {};
 
-        Object.values(ReceiptBooksEnum).forEach((receiptBook) => {
+        Object.values(RECEIPT_BOOKS).forEach((receiptBook) => {
             let currentFees = fees.filter((fee) => fee.receiptBook == receiptBook);
             result[receiptBook] = {};
             for (const section of Object.values(SectionsEnum)) {

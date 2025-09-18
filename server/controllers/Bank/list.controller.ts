@@ -13,13 +13,15 @@ const listBanks = async (req: Request, res: TypedResponse<BankResponseDto[]>, ne
 
         const filters = buildBankFilters(queries);
         const banks = await Bank.find(filters).sort("-updatedAt").skip(skip).limit(limit);
+
+        const totalItems = await Bank.countDocuments(filters);
         res.json({
             success: true,
             data: toBankResponseDto(banks),
             meta: {
-                totalItems: banks.length,
+                totalItems: totalItems,
                 currentPage: page,
-                totalPages: Math.ceil(banks.length / limit),
+                totalPages: Math.ceil(totalItems / limit),
                 itemsPerPage: limit,
             },
         });

@@ -1,24 +1,13 @@
 import { HydratedDocument, Model, Types } from "mongoose";
 import { SectionDocument } from "./section.types";
+import { PARTIES, RECEIPT_BOOKS } from "../../models/treasuryFee.model";
 
-export enum PartiesEnum {
-    Credentialing = "الذاتية",
-    RegistryOffice = "الديوان",
-    PrintsRepository = "مستودع المطبوعات",
-}
-
-export enum ReceiptBooksEnum {
-    Prints = "مطبوعات",
-    Documents = "وثائق",
-    Settlement = "تسوية",
-}
-
-interface ITreasuryFee {
+export interface ITreasuryFee {
     name: string;
     value: number;
-    associatedParty?: PartiesEnum;
+    associatedParty?: PARTIES;
     associatedSection: Types.ObjectId;
-    receiptBook: ReceiptBooksEnum;
+    receiptBook: RECEIPT_BOOKS;
 }
 
 export type TreasuryFeeDocument = HydratedDocument<ITreasuryFee> & {
