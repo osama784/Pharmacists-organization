@@ -3,7 +3,7 @@ import Pharmacist from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
 import { UpdateLicenseDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
 import fs from "fs/promises";
-import { processPharmacistImage } from "../../../utils/images";
+import { PARENT_DIR, processPharmacistImage } from "../../../utils/images";
 import path from "path";
 
 const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
@@ -35,7 +35,7 @@ const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponse
             // handle deleted images
             const deletedImages = oldImages.filter((image) => !newImages.includes(image));
             for (const image of deletedImages) {
-                const imagePath = path.join(__dirname, "..", "..", "..", "..", "..", image);
+                const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
                 } catch (e) {

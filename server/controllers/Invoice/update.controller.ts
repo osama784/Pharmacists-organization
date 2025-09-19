@@ -11,7 +11,7 @@ import Bank from "../../models/bank.model.js";
 import { InvoiceModelTR } from "../../translation/models.ar.js";
 import path from "path";
 import fs from "fs/promises";
-import { processPharmacistImage } from "../../utils/images.js";
+import { PARENT_DIR, processPharmacistImage } from "../../utils/images.js";
 
 const updateInvoice = async (
     req: Request,
@@ -81,7 +81,7 @@ const updateInvoice = async (
             // handle deleted images
             const deletedImages = oldImages.filter((image) => !newImages.includes(image));
             for (const image of deletedImages) {
-                const imagePath = path.join(__dirname, "..", "..", "..", "..", image);
+                const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
                 } catch (e) {

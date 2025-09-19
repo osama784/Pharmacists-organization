@@ -6,16 +6,14 @@ import Pharmacist from "../../models/pharmacist.model";
 import { responseMessages } from "../../translation/response.ar";
 import { PrintRegistryOfficeDocument } from "../../types/dtos/registryOffice.dto";
 import puppeteer from "puppeteer-core";
+import { PROJECT_DIR } from "../../utils/images";
 
 const printDocuments = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const validatedData: PrintRegistryOfficeDocument = req.validatedData;
-        let registryOfficeHTML = await fs.readFile(
-            path.join(path.join(__dirname, "..", "..", "..", "templates", "registry-office-base.html")),
-            {
-                encoding: "utf-8",
-            }
-        );
+        let registryOfficeHTML = await fs.readFile(path.join(path.join(PROJECT_DIR, "templates", "registry-office-base.html")), {
+            encoding: "utf-8",
+        });
 
         const pharmacist = await Pharmacist.findById(validatedData.pharmacist);
         if (!pharmacist) {

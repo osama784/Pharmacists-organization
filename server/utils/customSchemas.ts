@@ -56,14 +56,21 @@ type NumberSchemaOptions = {
 };
 
 export const NumberSchema = (options: NumberSchemaOptions) => {
-    return z.number({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_NUMBER}` }).transform((value): string => value.toString());
+    return z.preprocess((value) => {
+        if (typeof value == "string") {
+            return parseInt(value);
+        }
+        return value;
+    }, z.number({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_NUMBER}` }));
 };
 
 export const NumberSchemaPositive = (options: NumberSchemaOptions) => {
-    return z
-        .number({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_NUMBER}` })
-        .min(0, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_POSITIVE_NUMBER}` })
-        .transform((value): string => value.toString());
+    return z.preprocess((value) => {
+        if (typeof value == "string") {
+            return parseInt(value);
+        }
+        return value;
+    }, z.number({ message: `${options.keyName}: ${zodSchemasMessages.INVALID_NUMBER}` }).min(0, { message: `${options.keyName}: ${zodSchemasMessages.INVALID_POSITIVE_NUMBER}` }));
 };
 
 type EnumSchemaOptions = {

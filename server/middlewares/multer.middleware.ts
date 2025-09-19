@@ -4,10 +4,11 @@ import AppError from "../utils/AppError";
 import { NextFunction, Request, TypedResponse } from "express";
 import { responseMessages } from "../translation/response.ar";
 import fs from "fs/promises";
+import { PARENT_DIR } from "../utils/images";
 
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
-        const destiationFolder = path.join(__dirname, "..", "..", "..", "tmp");
+        const destiationFolder = path.join(PARENT_DIR, "tmp");
         try {
             await fs.access(destiationFolder);
         } catch (e) {

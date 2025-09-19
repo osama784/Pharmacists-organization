@@ -6,6 +6,7 @@ import path from "path";
 import puppeteer from "puppeteer-core";
 import { pharmacistTamplate } from "../../utils/templatesUtils/pharmacistInfoTemplate";
 import { dateUtils } from "../../utils/dateUtils";
+import { PROJECT_DIR } from "../../utils/images";
 
 const printPhramacist = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -14,7 +15,7 @@ const printPhramacist = async (req: Request, res: TypedResponse<null>, next: Nex
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        let pharmacistHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "templates", "pharmacist.html")), {
+        let pharmacistHTML = await fs.readFile(path.join(path.join(PROJECT_DIR, "templates", "pharmacist.html")), {
             encoding: "utf-8",
         });
         const { universityDegrees, practiceRecords, syndicateRecords, penalties, licenses, personalInfo } = req.query;

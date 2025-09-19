@@ -10,7 +10,8 @@ const TreasuryExpenditureSchema = z.object({
         keyName: TreasuryExpenditureModelTR.associatedSection,
         data: Object.values(TREASURY_SECTIONS) as [string, ...string[]],
     }),
+    image: StringSchema({ keyName: TreasuryExpenditureModelTR.image, optional: true }),
 });
 
-export const TreasuryExpenditureCreateSchema = TreasuryExpenditureSchema;
+export const TreasuryExpenditureCreateSchema = TreasuryExpenditureSchema.omit({ image: true });
 export const TreasuryExpenditureUpdateSchema = TreasuryExpenditureSchema.partial();

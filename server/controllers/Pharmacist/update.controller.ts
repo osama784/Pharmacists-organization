@@ -4,7 +4,7 @@ import { PharmacistResponseDto, toPharmacistResponseDto, UpdatePharmacistDto } f
 import { responseMessages } from "../../translation/response.ar.js";
 import fs from "fs/promises";
 import path from "path";
-import { processPharmacistImage } from "../../utils/images.js";
+import { PARENT_DIR, processPharmacistImage } from "../../utils/images.js";
 
 const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
@@ -28,7 +28,7 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
             // handle deleted images
             const deletedImages = oldImages.filter((image) => !newImages.includes(image));
             for (const image of deletedImages) {
-                const imagePath = path.join(__dirname, "..", "..", "..", "..", image);
+                const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
                 } catch (e) {

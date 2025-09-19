@@ -4,6 +4,7 @@ import { responseMessages } from "../../../translation/response.ar";
 import { PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
 import path from "path";
 import fs from "fs/promises";
+import { PARENT_DIR } from "../../../utils/images";
 
 const deleteLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
@@ -22,7 +23,7 @@ const deleteLicense = async (req: Request, res: TypedResponse<PharmacistResponse
         }
         const deletedImages = exist.images;
         for (const image of deletedImages) {
-            const imagePath = path.join(__dirname, "..", "..", "..", "..", "..", image);
+            const imagePath = path.join(PARENT_DIR, image);
             try {
                 await fs.unlink(imagePath);
             } catch (e) {

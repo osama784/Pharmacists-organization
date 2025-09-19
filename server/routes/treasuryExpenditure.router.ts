@@ -10,6 +10,7 @@ import validate from "../middlewares/validate.middleware";
 import { TreasuryExpenditureCreateSchema, TreasuryExpenditureUpdateSchema } from "../validators/treasuryExpenditure.schema";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
+import upload from "../middlewares/multer.middleware";
 
 const router = Router();
 
@@ -32,6 +33,7 @@ router.post(
 router.patch(
     "/update/:id",
     checkPermissions(permissions.updateTreasuryExpenditure),
+    upload.single("file"),
     validate(TreasuryExpenditureUpdateSchema),
     updateTreasuryExpenditure
 );

@@ -13,11 +13,13 @@ const deleteInvoice = async (req: Request, res: TypedResponse<null>, next: NextF
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const invoiceDir = path.join(UPLOADS_DIR, "pharmacists", invoice.pharmacist.toString(), invoiceId);
+        const invoiceDir = path.join(UPLOADS_DIR, "pharmacists", invoice.pharmacist.toString(), "invoices", invoiceId);
         try {
             await fs.access(invoiceDir);
             await fs.rm(invoiceDir, { force: true, recursive: true });
-        } catch (e) {}
+        } catch (e) {
+            console.log(e);
+        }
 
         await invoice.deleteOne();
 

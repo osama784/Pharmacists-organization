@@ -2,7 +2,7 @@ import { NextFunction, Request, TypedResponse } from "express";
 import Pharmacist from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
 import { PharmacistResponseDto, toPharmacistResponseDto, UpdateUniversityDegreeDto } from "../../../types/dtos/pharmacist.dto";
-import { processPharmacistImage } from "../../../utils/images";
+import { PARENT_DIR, processPharmacistImage } from "../../../utils/images";
 import fs from "fs/promises";
 import path from "path";
 
@@ -35,7 +35,7 @@ const updateUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
             // handle deleted images
             const deletedImages = oldImages.filter((image) => !newImages.includes(image));
             for (const image of deletedImages) {
-                const imagePath = path.join(__dirname, "..", "..", "..", "..", "..", image);
+                const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
                 } catch (e) {

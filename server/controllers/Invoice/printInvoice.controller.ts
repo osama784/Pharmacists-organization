@@ -7,6 +7,7 @@ import Invoice from "../../models/invoice.model";
 import { responseMessages } from "../../translation/response.ar";
 import { PharmacistDocument } from "../../types/models/pharmacist.types";
 import puppeteer from "puppeteer-core";
+import { PROJECT_DIR } from "../../utils/images";
 
 const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -16,7 +17,7 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
             return;
         }
 
-        let invoiceHTML = await fs.readFile(path.join(path.join(__dirname, "..", "..", "..", "templates", "invoice.html")), {
+        let invoiceHTML = await fs.readFile(path.join(path.join(PROJECT_DIR, "templates", "invoice.html")), {
             encoding: "utf-8",
         });
         invoiceHTML = invoiceHTML.replace("{{bank}}", invoice.bank.name);

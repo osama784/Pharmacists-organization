@@ -10,7 +10,8 @@ const TreasuryIncomeSchema = z.object({
         keyName: TreasuryIncomeModelTR.associatedSection,
         data: Object.values(TREASURY_SECTIONS) as [string, ...string[]],
     }),
+    image: StringSchema({ keyName: TreasuryIncomeModelTR.image, optional: true }),
 });
 
-export const TreasuryIncomeCreateSchema = TreasuryIncomeSchema;
+export const TreasuryIncomeCreateSchema = TreasuryIncomeSchema.omit({ image: true });
 export const TreasuryIncomeUpdateSchema = TreasuryIncomeSchema.partial();
