@@ -7,7 +7,7 @@ import {
 import TreasuryExpenditure from "../../models/treasuryExpenditure.model";
 import { responseMessages } from "../../translation/response.ar";
 import fs from "fs/promises";
-import { processTreasuryImage, PROJECT_DIR } from "../../utils/images";
+import { processTreasuryImage, PARENT_DIR } from "../../utils/images";
 import path from "path";
 
 const updateTreasuryExpenditure = async (req: Request, res: TypedResponse<TreasuryExpenditureResponseDto>, next: NextFunction) => {
@@ -18,13 +18,16 @@ const updateTreasuryExpenditure = async (req: Request, res: TypedResponse<Treasu
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        let updatedFields: TreasuryExpenditureUpdateDto = validatedData;
-        if ((validatedData.image == null || req.file) && fee.image) {
-            const imagePath = path.join(PROJECT_DIR, fee.image);
+        let updatedFields: TreasuryExpenditureUpdateDto = { ...validatedData, image: undefined };
+        if ((validatedData.image == null || validatedData.image == "" || req.file) && fee.image) {
+            updatedFields = { ...updatedFields, image: "" };
+            const imagePath = path.join(PARENT_DIR, fee.image);
             try {
                 await fs.access(imagePath);
                 await fs.rm(imagePath, { force: true, recursive: true });
-            } catch (e) {}
+            } catch (e) {
+                console.log(e);
+            }
         }
         if (req.file) {
             const file = req.file;
@@ -39,9 +42,7 @@ const updateTreasuryExpenditure = async (req: Request, res: TypedResponse<Treasu
             updatedFields = { ...updatedFields, image: processedImage.imageURL };
             try {
                 await fs.unlink(file.path);
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) {}
         }
 
         await fee.updateOne(updatedFields);

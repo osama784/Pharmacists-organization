@@ -27,6 +27,7 @@ router.get("/list", checkPermissions(permissions.listTreasuryExpenditures), list
 router.post(
     "/create",
     checkPermissions(permissions.createTreasuryExpenditure),
+    upload.single("file"),
     validate(TreasuryExpenditureCreateSchema),
     createTreasuryExpenditure
 );

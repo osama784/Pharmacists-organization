@@ -10,6 +10,7 @@ import validate from "../middlewares/validate.middleware";
 import { TreasuryIncomeCreateSchema, TreasuryIncomeUpdateSchema } from "../validators/treasuryIncome.schema";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
+import upload from "../middlewares/multer.middleware";
 
 const router = Router();
 
@@ -23,8 +24,20 @@ router.param("id", (req, res, next, value, name) => {
 router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermissions(permissions.listTreasuryIncomes), listTreasuryIncomes);
-router.post("/create", checkPermissions(permissions.createTreasuryIncome), validate(TreasuryIncomeCreateSchema), createTreasuryIncome);
-router.patch("/update/:id", checkPermissions(permissions.updateTreasuryIncome), validate(TreasuryIncomeUpdateSchema), updateTreasuryIncome);
+router.post(
+    "/create",
+    checkPermissions(permissions.createTreasuryIncome),
+    upload.single("file"),
+    validate(TreasuryIncomeCreateSchema),
+    createTreasuryIncome
+);
+router.patch(
+    "/update/:id",
+    checkPermissions(permissions.updateTreasuryIncome),
+    upload.single("file"),
+    validate(TreasuryIncomeUpdateSchema),
+    updateTreasuryIncome
+);
 router.delete("/delete/:id", checkPermissions(permissions.deleteTreasuryIncome), deleteTreasuryIncome);
 
 export default router;
