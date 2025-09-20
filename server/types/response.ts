@@ -6,5 +6,5 @@ export interface SuccessResponse<T> {
 
 export interface ErrorResponse {
     success: false;
-    details?: string[];
+    details: string[];
 }

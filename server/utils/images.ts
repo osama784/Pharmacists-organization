@@ -81,14 +81,14 @@ export const processTreasuryImage = async (
     const { supportsWebP, isLegacyBrowser } = options;
 
     // Create output directory
-    let Dir: string;
+    let feeDir: string;
     if (info.imageType == "expenditure") {
-        Dir = path.join("uploads", "expenditures");
+        feeDir = path.join("uploads", "expenditures", info.documentId);
     } else {
-        Dir = path.join("uploads", "incomes");
+        feeDir = path.join("uploads", "incomes", info.documentId);
     }
     // const pharmacistDir = path.join("uploads", "pharmacists", pharmacistId);
-    const fullPath = path.join(__dirname, "..", "..", "..", Dir);
+    const fullPath = path.join(__dirname, "..", "..", "..", feeDir);
     try {
         await fs.access(fullPath);
     } catch (e) {
@@ -102,8 +102,8 @@ export const processTreasuryImage = async (
     }
     // Generate unique filename
     const filename = file.filename;
-    const imageURL = path.join(Dir, `${info.documentId}.${outputFormat}`);
-    const outputPath = path.join(fullPath, `${info.documentId}.${outputFormat}`);
+    const imageURL = path.join(feeDir, `${filename}.${outputFormat}`);
+    const outputPath = path.join(fullPath, `${filename}.${outputFormat}`);
 
     // Create sharp instance
     let processor = sharp(file.path).resize(1920, 1080, {

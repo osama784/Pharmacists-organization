@@ -48,4 +48,10 @@ export const responseMessages = {
     REGISTRY_OFFICE_CONTROLLERS: {
         BAD_REQUEST: "يجب عليك أن ترسل المعلومات كاملة بشكل صحيح لإتمام إرسال الوثيقة المطلوبة",
     },
+    TREASURY_EXPENDITURE_CONTROLLERS: {
+        PREVENT_ADDING_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
+    },
+    TREASURY_INCOMES_CONTROLLERS: {
+        PREVENT_ADDING_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
+    },
 };
