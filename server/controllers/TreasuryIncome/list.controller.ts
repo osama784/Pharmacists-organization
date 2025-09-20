@@ -14,7 +14,7 @@ const listTreasuryIncomes = async (req: Request, res: TypedResponse<Record<strin
 
         const filters = buildTreasuryIncomeFilters(queries);
 
-        const fees = await TreasuryIncome.find(filters).skip(skip).limit(limit);
+        const fees = await TreasuryIncome.find(filters).sort("-updatedAt").skip(skip).limit(limit);
         let result: Record<string, TreasuryIncomeResponseDto[]> = {};
         for (const section of Object.values(TREASURY_SECTIONS)) {
             let currentFees = fees.filter((fee) => fee.associatedSection == section);

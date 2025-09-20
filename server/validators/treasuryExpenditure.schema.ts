@@ -10,8 +10,14 @@ const TreasuryExpenditureSchema = z.object({
         keyName: TreasuryExpenditureModelTR.associatedSection,
         data: Object.values(TREASURY_SECTIONS) as [string, ...string[]],
     }),
-    image: StringSchema({ keyName: TreasuryExpenditureModelTR.image, optional: true }),
+    images: z.preprocess((data) => {
+        if (typeof data == "string") {
+            if (data != "") return [data];
+            return [];
+        }
+        return data;
+    }, z.array(StringSchema(TreasuryExpenditureModelTR.images))),
 });
 
-export const TreasuryExpenditureCreateSchema = TreasuryExpenditureSchema.omit({ image: true });
+export const TreasuryExpenditureCreateSchema = TreasuryExpenditureSchema.omit({ images: true });
 export const TreasuryExpenditureUpdateSchema = TreasuryExpenditureSchema.partial();

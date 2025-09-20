@@ -7,19 +7,18 @@ import { PARENT_DIR, UPLOADS_DIR } from "../../utils/images";
 
 const deleteTreasuryExpenditure = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const fee = await TreasuryExpenditure.findOne({ serialID: req.params.id });
+        const feeId = req.params.id;
+        const fee = await TreasuryExpenditure.findOne({ serialID: feeId });
         if (!fee) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        if (fee.image) {
-            const image = path.join(PARENT_DIR, fee.image);
-            console.log(image);
-            try {
-                await fs.access(image);
-                await fs.rm(image, { force: true, recursive: true });
-            } catch (e) {}
-        }
+        const feeDir = path.join(UPLOADS_DIR, "expenditures", feeId);
+        try {
+            await fs.access(feeDir);
+            await fs.rm(feeDir, { force: true, recursive: true });
+        } catch (e) {}
+
         await fee.deleteOne();
 
         res.sendStatus(204);

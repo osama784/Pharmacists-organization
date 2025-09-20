@@ -6,7 +6,7 @@ export interface ITreasuryExpenditure {
     name: string;
     value: number;
     associatedSection: TREASURY_SECTIONS;
-    image?: string;
+    images: string[];
 }
 
 export type TreasuryExpenditureDocument = HydratedDocument<ITreasuryExpenditure> & {

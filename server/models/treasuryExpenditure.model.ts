@@ -8,7 +8,7 @@ const TreasuryExpenditure = new Schema<TreasuryExpenditureDocument>(
         name: { type: String, required: true },
         value: { type: Number, required: true },
         associatedSection: { type: String, required: true },
-        image: String,
+        images: [String],
     },
     { timestamps: true }
 );

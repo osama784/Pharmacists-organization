@@ -18,7 +18,7 @@ const listTreasuryExpenditures = async (
 
         const filters = buildTreasuryExpenditureFilters(queries);
 
-        const fees = await TreasuryExpenditure.find(filters).skip(skip).limit(limit);
+        const fees = await TreasuryExpenditure.find(filters).sort("-updatedAt").skip(skip).limit(limit);
         let result: Record<string, TreasuryExpenditureResponseDto[]> = {};
         for (const section of Object.values(TREASURY_SECTIONS)) {
             let currentFees = fees.filter((fee) => fee.associatedSection == section);

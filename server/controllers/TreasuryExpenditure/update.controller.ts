@@ -12,40 +12,60 @@ import path from "path";
 
 const updateTreasuryExpenditure = async (req: Request, res: TypedResponse<TreasuryExpenditureResponseDto>, next: NextFunction) => {
     try {
+        const feeId = req.params.id;
         const validatedData: TreasuryExpenditureUpdateDto = req.validatedData;
-        const fee = await TreasuryExpenditure.findOne({ serialID: req.params.id });
+        const fee = await TreasuryExpenditure.findOne({ serialID: feeId });
         if (!fee) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        let updatedFields: TreasuryExpenditureUpdateDto = { ...validatedData, image: undefined };
-        if ((validatedData.image == null || validatedData.image == "" || req.file) && fee.image) {
-            updatedFields = { ...updatedFields, image: "" };
-            const imagePath = path.join(PARENT_DIR, fee.image);
-            try {
-                await fs.access(imagePath);
-                await fs.rm(imagePath, { force: true, recursive: true });
-            } catch (e) {
-                console.log(e);
+        const newImages = validatedData.images;
+        const oldImages = fee.images;
+        let imagesURLs: string[] = [];
+        if (newImages) {
+            // check if added a new url to the source array
+            for (const image of newImages) {
+                if (!oldImages.includes(image)) {
+                    res.status(400).json({
+                        success: false,
+                        details: [responseMessages.TREASURY_EXPENDITURE_CONTROLLERS.PREVENT_ADDING_IMAGES_URLS],
+                    });
+                    return;
+                }
+            }
+            // handle deleted images
+            const deletedImages = oldImages.filter((image) => !newImages.includes(image));
+            for (const image of deletedImages) {
+                const imagePath = path.join(PARENT_DIR, image);
+                try {
+                    await fs.unlink(imagePath);
+                } catch (e) {}
+            }
+            imagesURLs = newImages;
+        } else {
+            imagesURLs = oldImages;
+        }
+        // handle uploaded images
+        if (req.files) {
+            for (const file of req.files as Express.Multer.File[]) {
+                const processedImage = await processTreasuryImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "expenditure", documentId: feeId }
+                );
+                if (!imagesURLs.includes(processedImage.imageURL)) {
+                    imagesURLs.push(processedImage.imageURL);
+                }
+                try {
+                    await fs.unlink(file.path);
+                } catch (e) {}
             }
         }
-        if (req.file) {
-            const file = req.file;
-            const processedImage = await processTreasuryImage(
-                file,
-                {
-                    supportsWebP: res.locals.supportsWebP,
-                    isLegacyBrowser: res.locals.isLegacyBrowser,
-                },
-                { imageType: "expenditure", documentId: fee.serialID }
-            );
-            updatedFields = { ...updatedFields, image: processedImage.imageURL };
-            try {
-                await fs.unlink(file.path);
-            } catch (e) {}
-        }
 
-        await fee.updateOne(updatedFields);
+        await fee.updateOne({ ...validatedData, images: imagesURLs });
 
         const doc = await TreasuryExpenditure.findById(fee.id);
 

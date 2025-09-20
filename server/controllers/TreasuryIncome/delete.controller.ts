@@ -1,25 +1,24 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import TreasuryIncome from "../../models/treasuryIncome.model";
 import { responseMessages } from "../../translation/response.ar";
-import { PARENT_DIR } from "../../utils/images";
+import { UPLOADS_DIR } from "../../utils/images";
 import path from "path";
 import fs from "fs/promises";
 
-const deleteTreasuryIncome = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
+const deleteTreasuryIncome = async (req: Request, res: TypedResponse<undefined>, next: NextFunction) => {
     try {
-        const fee = await TreasuryIncome.findOne({ serialID: req.params.id });
+        const feeId = req.params.id;
+        const fee = await TreasuryIncome.findOne({ serialID: feeId });
         if (!fee) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        if (fee.image) {
-            const image = path.join(PARENT_DIR, fee.image);
-            console.log(image);
-            try {
-                await fs.access(image);
-                await fs.rm(image, { force: true, recursive: true });
-            } catch (e) {}
-        }
+        const feeDir = path.join(UPLOADS_DIR, "incomes", feeId);
+        try {
+            await fs.access(feeDir);
+            await fs.rm(feeDir, { force: true, recursive: true });
+        } catch (e) {}
+
         await fee.deleteOne();
 
         res.sendStatus(204);

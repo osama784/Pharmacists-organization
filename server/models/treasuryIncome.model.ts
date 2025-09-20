@@ -8,7 +8,7 @@ const TreasuryIncome = new Schema<TreasuryIncomeDocument>(
         name: { type: String, required: true },
         value: { type: Number, required: true },
         associatedSection: { type: String, required: true },
-        image: String,
+        images: [String],
     },
     { timestamps: true }
 );

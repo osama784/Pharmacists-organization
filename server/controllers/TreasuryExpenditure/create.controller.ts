@@ -12,22 +12,24 @@ const createTreasuryExpenditure = async (req: Request, res: TypedResponse<Treasu
     try {
         const validatedData: TreasuryExpenditureCreateDto = req.validatedData;
         const fee = await TreasuryExpenditure.create(validatedData);
-
-        if (req.file) {
-            const file = req.file;
-            const processedImage = await processTreasuryImage(
-                file,
-                {
-                    supportsWebP: res.locals.supportsWebP,
-                    isLegacyBrowser: res.locals.isLegacyBrowser,
-                },
-                { imageType: "expenditure", documentId: fee.serialID }
-            );
-            fee.image = processedImage.imageURL;
+        const processed: string[] = [];
+        if (req.files) {
+            for (const file of req.files as Express.Multer.File[]) {
+                const processedImage = await processTreasuryImage(
+                    file,
+                    {
+                        supportsWebP: res.locals.supportsWebP,
+                        isLegacyBrowser: res.locals.isLegacyBrowser,
+                    },
+                    { imageType: "expenditure", documentId: fee.serialID }
+                );
+                processed.push(processedImage.imageURL);
+                try {
+                    await fs.unlink(file.path);
+                } catch (e) {}
+            }
+            fee.images = processed;
             await fee.save();
-            try {
-                await fs.unlink(file.path);
-            } catch (e) {}
         }
 
         res.json({ success: true, data: toTreasuryExpenditureResponseDto(fee) });

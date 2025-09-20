@@ -10,8 +10,14 @@ const TreasuryIncomeSchema = z.object({
         keyName: TreasuryIncomeModelTR.associatedSection,
         data: Object.values(TREASURY_SECTIONS) as [string, ...string[]],
     }),
-    image: StringSchema({ keyName: TreasuryIncomeModelTR.image, optional: true }),
+    images: z.preprocess((data) => {
+        if (typeof data == "string") {
+            if (data != "") return [data];
+            return [];
+        }
+        return data;
+    }, z.array(StringSchema(TreasuryIncomeModelTR.images))),
 });
 
-export const TreasuryIncomeCreateSchema = TreasuryIncomeSchema.omit({ image: true });
+export const TreasuryIncomeCreateSchema = TreasuryIncomeSchema.omit({ images: true });
 export const TreasuryIncomeUpdateSchema = TreasuryIncomeSchema.partial();

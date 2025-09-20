@@ -11,7 +11,7 @@ export type TreasuryExpenditureResponseDto = {
     name: string;
     value: number;
     associatedSection: string;
-    image?: string;
+    images: string[];
 
     createdAt: Date;
 };
@@ -35,7 +35,7 @@ function _toTreasuryExpenditureResponseDto(doc: TreasuryExpenditureDocument): Tr
         name: doc.name,
         value: doc.value,
         associatedSection: doc.associatedSection,
-        image: doc.image,
+        images: doc.images,
 
         createdAt: dateUtils.toLocaleDate(doc.createdAt)!,
     };

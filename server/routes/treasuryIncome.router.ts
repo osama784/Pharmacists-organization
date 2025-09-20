@@ -27,14 +27,14 @@ router.get("/list", checkPermissions(permissions.listTreasuryIncomes), listTreas
 router.post(
     "/create",
     checkPermissions(permissions.createTreasuryIncome),
-    upload.single("file"),
+    upload.array("files"),
     validate(TreasuryIncomeCreateSchema),
     createTreasuryIncome
 );
 router.patch(
     "/update/:id",
     checkPermissions(permissions.updateTreasuryIncome),
-    upload.single("file"),
+    upload.array("files"),
     validate(TreasuryIncomeUpdateSchema),
     updateTreasuryIncome
 );

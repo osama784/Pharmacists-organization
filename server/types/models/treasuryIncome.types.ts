@@ -6,7 +6,7 @@ export interface ITreasuryIncome {
     name: string;
     value: number;
     associatedSection: TREASURY_SECTIONS;
-    image?: string;
+    images: string[];
 }
 
 export type TreasuryIncomeDocument = HydratedDocument<ITreasuryIncome> & {
