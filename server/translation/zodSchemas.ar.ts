@@ -27,4 +27,7 @@ export const zodSchemasMessages = {
     PHARMACIST_SCHEMA: {
         DUPLICATE_SYNDICATE: "يجب عدم إضافة نقابة جديدة موجودة مسبقاً",
     },
+    TREASURY_FEES_SCHEMA: {
+        INVALID_FEES: "يجب أن تشمل قائمة الرسوم معلومات صحيحة",
+    },
 };

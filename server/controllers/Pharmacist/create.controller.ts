@@ -38,12 +38,11 @@ const createPharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
                 processed.push(processedImage.imageURL);
                 try {
                     await fs.unlink(file.path);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
+            await doc.updateOne({ $set: { images: processed } });
         }
-        await doc.updateOne({ $set: { images: processed } });
+
         const pharmacist = await handlePharmacistFields(doc);
         res.json({ success: true, data: toPharmacistResponseDto(pharmacist) });
         return;

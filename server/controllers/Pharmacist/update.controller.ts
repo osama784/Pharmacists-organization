@@ -31,9 +31,7 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
                 const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
             imagesURLs = newImages;
         } else {
@@ -55,9 +53,7 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
                 }
                 try {
                     await fs.unlink(file.path);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
         }
 

@@ -24,12 +24,4 @@ router.post(
 router.post("/forgot-password", validate(sendPasswordResetEmailSchema), initiatePasswordReset);
 router.patch("/reset-password", validate(PasswordResetSchema), resetPassword);
 
-router.post("/status", (req: Request, res: TypedResponse<PopulatedUserDocument>) => {
-    if (req.isAuthenticated()) {
-        res.status(200).json({ success: true, data: req.user });
-    } else {
-        res.status(401).json({ success: false });
-    }
-});
-
 export default router;

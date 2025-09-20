@@ -19,6 +19,7 @@ const listTreasuryFees = async (
 
         const filters = await buildTreasuryFeeFilters(queries);
         const fees = await TreasuryFee.find(filters)
+            .sort("-updatedAt")
             .skip(skip)
             .limit(limit)
             .populate<{ associatedSection: SectionDocument }>("associatedSection");

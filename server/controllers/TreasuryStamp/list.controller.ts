@@ -13,7 +13,7 @@ const listTreasuryStamps = async (req: Request, res: TypedResponse<TreasuryStamp
 
         const filters = buildTreasuryStampFilters(queries);
 
-        const fees = await TreasuryStamp.find(filters).skip(skip).limit(limit);
+        const fees = await TreasuryStamp.find(filters).sort("-updatedAt").skip(skip).limit(limit);
 
         const totalItems = await TreasuryStamp.countDocuments(filters);
 
