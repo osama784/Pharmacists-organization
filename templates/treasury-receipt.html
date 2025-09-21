@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إشعار قيد محاسبي</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Times New Roman', serif;
+            direction: rtl;
+            text-align: right;
+            background: #f8f6f0;
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.0;
+            color: #000;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .receipt {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: #f8f6f0;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        
+        .header-right {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: inline-flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .header-left {
+            text-align: left;
+            flex: 1;
+        }
+        
+        .union-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .damascus {
+            font-size: 16px;
+            margin-right: 60px;
+        }
+        
+        .receipt-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0 30px 0;
+        }
+
+        
+        .to-section {
+            margin-bottom: 25px;
+            position: relative;
+            font-size: 16px;
+        }
+        
+        .dotted-line {
+            border-bottom: 2px dotted #000;
+            display: inline-block;
+            width: 420px;
+            margin-right: 15px;
+            height: 25px;
+        }
+        
+        .description {
+            margin-bottom: 15px;
+            text-align: right;
+            font-size: 16px;
+        }
+        
+        .table-container {
+            border: 3px solid #000;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #fff;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: flex;
+            border-bottom: 3px solid #000;
+            background: #f0f0f0;
+        }
+        
+        .table-header-statement {
+            flex: 1.7;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-left: 4px solid #000;
+        }
+        
+        .table-header-amount {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .table-rows {
+            background: #fff;
+        }
+        
+        .table-row {
+            display: flex;
+            border-bottom: 1px dotted #333;
+            height: 30px;
+            background: #fff;
+        }
+        
+        .table-row:last-child {
+            border-bottom: 1px dotted #333;
+        }
+        
+        .table-row-statement {
+            flex: 1.6;
+            border-left: 4px solid #000;
+            position: relative;
+            background: #fff;
+        }
+        
+        .table-row-amount {
+            flex: 1;
+            position: relative;
+            background: #fff;
+        }
+        
+        .amount-columns {
+            display: flex;
+            height: 100%;
+        }
+        
+        .amount-col {
+            flex: 1;
+            border-left: 1px dotted #333;
+            background: #fff;
+        }
+        
+        .amount-col:last-child {
+            border-left: none;
+        }
+        
+        .total-row {
+            display: flex;
+            border-top: 3px solid #000;
+            background: #f0f0f0;
+            height: 50px;
+        }
+        
+        .total-statement {
+            flex: 1.6;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-left: 4px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .total-amount {
+            flex: 1;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .total-amount-columns {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .total-amount-col {
+            flex: 1;
+            border-left: 2px dotted #333;
+            background: #fff;
+            margin: 2px;
+        }
+        
+        .total-amount-col:last-child {
+            border-left: none;
+        }
+        
+        .only-section {
+            margin: 25px 0 15px;
+            text-align: right;
+            font-size: 16px;
+        }
+        
+        .only-line {
+            border-bottom: 2px dotted #000;
+            border-bottom-style: dotted;
+            display: inline-block;
+            width: 400px;
+            margin-right: 15px;
+            height: 25px;
+        }
+        
+        .bottom-section {
+            margin-top: 30px;
+        }
+        
+        .date-section {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .register-text {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            font-size: 16px;
+        }
+        
+        .signature-left {
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .signature-right {
+            text-align: right;
+            font-weight: bold;
+        }
+        
+
+        /* .amount-col {
+            border-left: 1px dotted #333 !important;
+        }
+        
+        .total-amount-col {
+            border-left: 2px dotted #333 !important;
+        }
+        
+        .table-row-statement {
+            border-left: 4px solid #000 !important;
+        } */
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .receipt {
+                background: white;
+                padding: 30px;
+                box-shadow: none;
+            }
+            
+            .table-container {
+                background: white;
+            }
+            
+            .table-rows {
+                background: white;
+            }
+            
+            .table-row {
+                background: white;
+            }
+            
+            .table-row-statement, .table-row-amount, .amount-col {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <div class="header">
+            <div class="header-right">
+                <div class="header-title-en">ASSOCIATION OF SYRIAN PHARMACISTS</div>
+                <div class="header-title-ar">نقابة صيادلة سورية</div>
+            </div>
+            <div class="header-left">
+                <div class="receipt-number">N° 42735</div>
+            </div>
+        </div>
+        
+        <div class="title">إشعار قيد محاسبي</div>
+                
+        <div class="to-section">
+            إلى السيد <span class="dotted-line"></span> المحترم
+        </div>
+        
+        <div class="description">
+            قيدنا لكم في الحساب المبلغ التالي تفصيله :
+        </div>
+        
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-header-statement">البيان</div>
+                <div class="table-header-amount">المبلغ</div>
+            </div>
+            
+            <div class="table-rows">
+                <!-- Row 1 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 2 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 3 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 4 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 5 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 6 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 7 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 8 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 9 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 10 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 11 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 12 -->
+                <div class="table-row">
+                    <div class="table-row-statement"></div>
+                    <div class="table-row-amount">
+                        <div class="amount-columns">
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                            <div class="amount-col"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="total-row">
+                <div class="total-statement">المجموع</div>
+                <div class="total-amount">
+                </div>
+            </div>
+        </div>
+        
+        <div class="only-section">
+            فقط <span class="only-line"></span>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="date-section">
+                {{createdAt}}
+            </div>
+            
+            <div class="register-text">
+                جرى قيده في السجل الخاص
+            </div>
+            
+            <div class="signatures">
+                <div class="signature-left">المحاسب</div>
+                <div class="signature-right">الخازن</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

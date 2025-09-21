@@ -75,6 +75,12 @@ const permissions = {
     createTreasuryStamp: "إنشاء طابع",
     updateTreasuryStamp: "تعديل طابع",
     deleteTreasuryStamp: "حذف طابع",
+
+    listTreasuryReceipts: "قراءة معلومات فواتير الخزانة",
+    getTreasuryReceipt: "قراءة معلومات فواتير خزانة",
+    createTreasuryReceipt: "إنشاء فاتورة خزانة",
+    updateTreasuryReceipt: "تعديل فاتورة خزانة",
+    deleteTreasuryReceipt: "حذف فاتورة خزانة",
 };
 
 export const ReadablePermissions = {
@@ -124,6 +130,11 @@ export const ReadablePermissions = {
         "إنشاء طابع",
         "تعديل طابع",
         "حذف طابع",
+
+        "قراءة معلومات فواتير الخزانة",
+        "إنشاء فاتورة خزانة",
+        "تعديل فاتورة خزانة",
+        "حذف فاتورة خزانة",
     ],
 };
 

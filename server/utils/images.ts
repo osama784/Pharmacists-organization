@@ -29,47 +29,24 @@ export const processPharmacistImage = async (
     }
 
     // Determine output format
-    let outputFormat = "webp";
-    if (isLegacyBrowser || !supportsWebP) {
+    let outputFormat = file.mimetype === "application/pdf" ? "pdf" : "webp";
+    if ((isLegacyBrowser || !supportsWebP) && outputFormat == "webp") {
         outputFormat = "jpeg";
     }
+
     // Generate unique filename
     const filename = file.filename;
     const imageURL = path.join(pharmacistDir, `${filename}.${outputFormat}`);
     const outputPath = path.join(fullPath, `${filename}.${outputFormat}`);
 
-    // Create sharp instance
-    let processor = sharp(file.path).resize(1920, 1080, {
-        fit: "inside",
-        withoutEnlargement: true,
-    });
-
-    // Apply format-specific settings
-    if (outputFormat === "webp") {
-        processor = processor.webp({
-            quality: 70,
-            effort: 6, // Better compression
-        });
+    if (outputFormat == "jpeg" || outputFormat == "webp") {
+        await processImage(file, { outputFormat, outputPath });
     } else {
-        processor = processor.jpeg({
-            quality: 75,
-            progressive: true, // For better legacy browser loading
-        });
+        await processPDF(file, { outputPath });
     }
 
-    // Process and save main image
-    await processor.toFile(outputPath);
-
-    // Get metadata
-    const metadata = await sharp(outputPath).metadata();
-
     return {
-        fullPath: outputPath,
         imageURL: imageURL.replace(/\\/g, "/"),
-        format: outputFormat,
-        size: metadata.size,
-        width: metadata.width,
-        height: metadata.height,
     };
 };
 
@@ -87,7 +64,6 @@ export const processTreasuryImage = async (
     } else {
         feeDir = path.join("uploads", "incomes", info.documentId);
     }
-    // const pharmacistDir = path.join("uploads", "pharmacists", pharmacistId);
     const fullPath = path.join(__dirname, "..", "..", "..", feeDir);
     try {
         await fs.access(fullPath);
@@ -96,15 +72,28 @@ export const processTreasuryImage = async (
     }
 
     // Determine output format
-    let outputFormat = "webp";
-    if (isLegacyBrowser || !supportsWebP) {
+    let outputFormat = file.mimetype === "application/pdf" ? "pdf" : "webp";
+    if ((isLegacyBrowser || !supportsWebP) && outputFormat == "webp") {
         outputFormat = "jpeg";
     }
+
     // Generate unique filename
     const filename = file.filename;
     const imageURL = path.join(feeDir, `${filename}.${outputFormat}`);
     const outputPath = path.join(fullPath, `${filename}.${outputFormat}`);
 
+    if (outputFormat == "jpeg" || outputFormat == "webp") {
+        await processImage(file, { outputFormat, outputPath });
+    } else {
+        await processPDF(file, { outputPath });
+    }
+
+    return {
+        imageURL: imageURL.replace(/\\/g, "/"),
+    };
+};
+
+const processImage = async (file: Express.Multer.File, info: { outputFormat: string; outputPath: string }) => {
     // Create sharp instance
     let processor = sharp(file.path).resize(1920, 1080, {
         fit: "inside",
@@ -112,30 +101,26 @@ export const processTreasuryImage = async (
     });
 
     // Apply format-specific settings
-    if (outputFormat === "webp") {
+    if (info.outputFormat === "webp") {
         processor = processor.webp({
             quality: 70,
             effort: 6, // Better compression
         });
-    } else {
+    } else if (info.outputFormat == "jpeg") {
         processor = processor.jpeg({
             quality: 75,
             progressive: true, // For better legacy browser loading
         });
     }
-
     // Process and save main image
-    await processor.toFile(outputPath);
+    await processor.toFile(info.outputPath);
 
     // Get metadata
-    const metadata = await sharp(outputPath).metadata();
+    const metadata = await sharp(info.outputPath).metadata();
 
-    return {
-        fullPath: outputPath,
-        imageURL: imageURL.replace(/\\/g, "/"),
-        format: outputFormat,
-        size: metadata.size,
-        width: metadata.width,
-        height: metadata.height,
-    };
+    return metadata;
+};
+
+const processPDF = async (file: Express.Multer.File, info: { outputPath: string }) => {
+    await fs.rename(file.path, info.outputPath);
 };
