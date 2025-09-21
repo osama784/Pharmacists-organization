@@ -81,6 +81,7 @@ const permissions = {
     createTreasuryReceipt: "إنشاء فاتورة خزانة",
     updateTreasuryReceipt: "تعديل فاتورة خزانة",
     deleteTreasuryReceipt: "حذف فاتورة خزانة",
+    printTreasuryReceipt: "طباعة معلومات إيصال الخزانة",
 };
 
 export const ReadablePermissions = {

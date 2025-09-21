@@ -13,7 +13,7 @@ import deleteInvoice from "../controllers/Invoice/delete.controller.js";
 import exportInvoicesAsExcel from "../controllers/Invoice/exportExcel.controller.js";
 import AppError from "../utils/AppError.js";
 import { responseMessages } from "../translation/response.ar.js";
-import printInvoice from "../controllers/Invoice/printInvoice.controller.js";
+import printInvoice from "../controllers/Invoice/print.controller.js";
 import upload from "../middlewares/multer.middleware.js";
 import downloadInvoiceImages from "../controllers/Invoice/downloadImages.controller.js";
 

@@ -8,6 +8,7 @@ import { responseMessages } from "../../translation/response.ar";
 import { PharmacistDocument } from "../../types/models/pharmacist.types";
 import puppeteer from "puppeteer-core";
 import { PROJECT_DIR } from "../../utils/images";
+import getChromePath from "../../utils/getChromePath";
 
 const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -140,23 +141,3 @@ const printInvoice = async (req: Request, res: TypedResponse<null>, next: NextFu
 };
 
 export default printInvoice;
-
-function getChromePath() {
-    const platform = process.platform;
-
-    if (platform === "win32") {
-        // Common Windows paths for Chrome
-        return (
-            [
-                "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-                "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-            ].find((path) => require("fs").existsSync(path)) || undefined
-        );
-    } else if (platform === "darwin") {
-        // macOS path
-        return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-    } else {
-        // Linux path
-        return "/usr/bin/google-chrome";
-    }
-}

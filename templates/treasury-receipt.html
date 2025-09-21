@@ -42,6 +42,8 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 30px;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
         }
         
         .header-right {
@@ -50,6 +52,7 @@
             display: inline-flex;
             flex-direction: column;
             gap: 5px;
+            font-weight: 600;
         }
         
         .header-left {
@@ -149,20 +152,21 @@
         
         .table-row-statement {
             flex: 1.6;
+            display: inline-flex;
+            align-items: center;
             border-left: 4px solid #000;
             position: relative;
             background: #fff;
+            padding-right: 5px;
         }
         
         .table-row-amount {
             flex: 1;
+            display: inline-flex;
+            align-items: center;
             position: relative;
             background: #fff;
-        }
-        
-        .amount-columns {
-            display: flex;
-            height: 100%;
+            padding-right: 5px;
         }
         
         .amount-col {
@@ -199,12 +203,6 @@
             padding: 5px;
             display: flex;
             align-items: center;
-        }
-        
-        .total-amount-columns {
-            display: flex;
-            height: 100%;
-            width: 100%;
         }
         
         .total-amount-col {
@@ -320,194 +318,23 @@
                 <div class="header-title-ar">نقابة صيادلة سورية</div>
             </div>
             <div class="header-left">
-                <div class="receipt-number">N° 42735</div>
+                <div class="receipt-number">N° {{receiptID}}</div>
             </div>
         </div>
         
         <div class="title">إشعار قيد محاسبي</div>
                 
-        <div class="to-section">
-            إلى السيد <span class="dotted-line"></span> المحترم
-        </div>
+        <div class="to-section"></div>
         
         <div class="description">
             قيدنا لكم في الحساب المبلغ التالي تفصيله :
         </div>
         
-        <div class="table-container">
-            <div class="table-header">
-                <div class="table-header-statement">البيان</div>
-                <div class="table-header-amount">المبلغ</div>
-            </div>
-            
-            <div class="table-rows">
-                <!-- Row 1 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 2 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 3 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 4 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 5 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 6 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 7 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 8 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 9 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 10 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 11 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Row 12 -->
-                <div class="table-row">
-                    <div class="table-row-statement"></div>
-                    <div class="table-row-amount">
-                        <div class="amount-columns">
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                            <div class="amount-col"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="total-row">
-                <div class="total-statement">المجموع</div>
-                <div class="total-amount">
-                </div>
-            </div>
-        </div>
+        <div class="table-container"></div>
         
-        <div class="only-section">
+        <!-- <div class="only-section">
             فقط <span class="only-line"></span>
-        </div>
+        </div> -->
         
         <div class="bottom-section">
             <div class="date-section">

@@ -43,7 +43,7 @@ import deletePracticeRecord from "../controllers/Pharmacist/practiceRecords/dele
 import createUniversityDegree from "../controllers/Pharmacist/universityDegrees/createUniversityDegree.controller.js";
 import updateUniversityDegree from "../controllers/Pharmacist/universityDegrees/updateUniversityDegree.controller.js";
 import deleteUniversityDegree from "../controllers/Pharmacist/universityDegrees/deleteUniversityDegree.controller.js";
-import printPhramacist from "../controllers/Pharmacist/printPharmacist.controller.js";
+import printPhramacist from "../controllers/Pharmacist/print.controller.js";
 import downloadPharmacistImagesSignedURL from "../controllers/Pharmacist/downloadImagesSignedURL.controller.js";
 
 const router = Router();
