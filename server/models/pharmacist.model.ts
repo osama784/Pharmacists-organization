@@ -1,9 +1,18 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { IPharmacistModel, IPracticeRecord, PharmacistDocument } from "../types/models/pharmacist.types.js";
+import {
+    ILicense,
+    IPenalty,
+    IPharmacistModel,
+    ISyndicateRecord,
+    IUniversityDegree,
+    PharmacistDocument,
+    PopulatedPharmacistDocument,
+} from "../types/models/pharmacist.types.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
 import crypto from "crypto";
+import { PracticeState } from "../enums/pharmacist.enums.js";
 
-const Pharmacist = new Schema<PharmacistDocument>(
+const pharmacistSchema = new Schema<PharmacistDocument>(
     {
         firstName: {
             type: String,
@@ -63,58 +72,43 @@ const Pharmacist = new Schema<PharmacistDocument>(
         register: String,
         oathTakingDate: Date,
 
+        deathDate: Date,
+        retirementDate: Date,
+
         syndicateMembershipStatus: String,
-        practiceState: String,
+        practiceState: { type: String, required: true, default: PracticeState.UNPRACTICED },
         currentSyndicate: {
-            syndicate: String,
-            startDate: Date,
-            endDate: Date,
-            registrationNumber: String,
+            type: Schema.Types.ObjectId,
+            ref: "SyndicateRecord",
+            required: true,
+        },
+        currentLicense: {
+            type: Schema.Types.ObjectId,
+            ref: "License",
         },
 
         licenses: [
             {
-                licenseType: { type: String, required: true },
-                startDate: { type: Date, required: true },
-                endDate: Date,
-                details: String,
-
-                images: [String],
-            },
-        ],
-        practiceRecords: [
-            {
-                syndicate: { type: String, required: true },
-                startDate: { type: Date, required: true },
-                endDate: Date,
-                sector: { type: String, required: true },
-                place: { type: String, required: true },
-                practiceType: { type: String, required: true },
+                type: Schema.Types.ObjectId,
+                ref: "License",
             },
         ],
         syndicateRecords: [
             {
-                syndicate: { type: String, required: true },
-                startDate: { type: Date, required: true },
-                endDate: Date,
-                registrationNumber: { type: String, required: true },
+                type: Schema.Types.ObjectId,
+                ref: "SyndicateRecord",
             },
         ],
         universityDegrees: [
             {
-                degreeType: { type: String, required: true },
-                obtainingDate: { type: Date, required: true },
-                university: { type: String, required: true },
-
-                images: [String],
+                type: Schema.Types.ObjectId,
+                ref: "UniversityDegree",
             },
         ],
         penalties: [
             {
-                penaltyType: { type: String, required: true },
-                date: { type: Date, required: true },
-                reason: String,
-                details: String,
+                type: Schema.Types.ObjectId,
+                ref: "Penalty",
             },
         ],
 
@@ -126,7 +120,7 @@ const Pharmacist = new Schema<PharmacistDocument>(
     { timestamps: true }
 );
 
-Pharmacist.pre("validate", async function (next) {
+pharmacistSchema.pre("validate", async function (next) {
     if (this.isNew) {
         try {
             this.folderToken = crypto.randomBytes(32).toString("hex");
@@ -139,100 +133,7 @@ Pharmacist.pre("validate", async function (next) {
     }
 });
 
-export enum LicenseTypesEnum {
-    TEMPORARY = "مؤقت",
-    PERMANENT = "دائم",
-}
-export enum GenderEnum {
-    MALE = "ذكر",
-    FEMALE = "أنثى",
-}
-export enum UniversityDegreesEnum {
-    BACHELOR = "بكالوريوس صيدلة",
-    DIPLOMA = "دبلوم صيدلة",
-    PHD = "دكتوراه صيدلة",
-    MASTERS = "ماجستير صيدلة",
-    BOARD = "بورد صيدلة",
-}
-export const practiceRecordsInfo = {
-    syndicate: [
-        "نقابة الصيادلة المركزية",
-        "نقابة صيادلة دمشق",
-        "نقابة صيادلة السويداء",
-        "نقابة صيادلة دير الزور",
-        "نقابة صيادلة الحسكة",
-        "نقابة صيادلة القامشلي",
-        "نقابة صيادلة إدلب",
-        "نقابة صيادلة الرقة",
-        "نقابة صيادلة ريف دمشق",
-        "نقابة صيادلة حلب",
-        "نقابة صيادلة حمص",
-        "نقابة صيادلة اللاذقية",
-        "نقابة صيادلة طرطوس",
-        "نقابة صيادلة حماة",
-        "نقابة صيادلة درعا",
-        "نقابة صيادلة القنيطرة",
-    ],
-    practiceType: [
-        "مكاتب علمية-مندوبي دعاية",
-        "قيد النقل",
-        "متقاعد",
-        "مزاولة",
-        "في النقابة المركزية",
-        "ترقين قيد",
-        "صيدليات-خاصة",
-        "صيدليات-عامة المعلمين او صيادلة عمالية",
-        "إدارة فنية-صيدليات خاصة",
-        "إدارة فنية-صيدليات عامة",
-        "مستودعات-أدوية",
-        "مستودعات-كيميائية",
-        "مستودعات-بيطرية",
-        "الموظفين-موظف",
-        "الموظفين-مقيم",
-        "الموظفين-معيد في كلية الصيدلة",
-        "معامل الأدوية-مدير فني في معمل أدوية",
-        "معامل الأدوية- رئيس خط إنتاج",
-        "معامل الأدوية-صيدلي في معمل",
-        "معامل الأدوية-منشأة مطهرات",
-        "معامل الأدوية-شركة مبيدات حشرية",
-        "معامل الأدوية-منشأة تجميل",
-        "مخابر-خاصة",
-        "مخابر-موظف+مخبر طبي",
-        "متابعة الدراسة",
-        "مكاتب علمية-مدراء فنيين",
-        "مكاتب علمية-مندوبي دعاية",
-        "خدمة إلزامية",
-        "خارج القطر-عمل",
-        "خارج القطر-دراسة",
-        "مشطوب قيدهم",
-        "بدون عمل",
-        "أوضاع أخرى-صيدلي إضافي في صيدلية",
-        "أوضاع أخرى-في مستودع",
-    ],
-};
-
-export const syndicateRecordsInfo = {
-    syndicate: [
-        "نقابة الصيادلة المركزية",
-        "نقابة صيادلة دمشق",
-        "نقابة صيادلة السويداء",
-        "نقابة صيادلة دير الزور",
-        "نقابة صيادلة الحسكة",
-        "نقابة صيادلة القامشلي",
-        "نقابة صيادلة إدلب",
-        "نقابة صيادلة الرقة",
-        "نقابة صيادلة ريف دمشق",
-        "نقابة صيادلة حلب",
-        "نقابة صيادلة حمص",
-        "نقابة صيادلة اللاذقية",
-        "نقابة صيادلة طرطوس",
-        "نقابة صيادلة حماة",
-        "نقابة صيادلة درعا",
-        "نقابة صيادلة القنيطرة",
-    ],
-};
-
-export async function handlePharmacistFields(doc: PharmacistDocument): Promise<PharmacistDocument> {
+export async function handlePharmacistFields(doc: PharmacistDocument | PopulatedPharmacistDocument) {
     // handling "fullName"
     doc.fullName = `${doc.firstName} ${doc.fatherName} ${doc.lastName}`;
 
@@ -259,4 +160,62 @@ export async function handlePharmacistFields(doc: PharmacistDocument): Promise<P
     return doc;
 }
 
-export default mongoose.model<PharmacistDocument, IPharmacistModel>("Pharmacist", Pharmacist, "pharmacists");
+export default mongoose.model<PharmacistDocument, IPharmacistModel>("Pharmacist", pharmacistSchema, "pharmacists");
+
+const universityDegreeSchema = new Schema<IUniversityDegree>(
+    {
+        pharmacist: { type: Schema.Types.ObjectId, required: true },
+        degreeType: { type: String, required: true },
+        obtainingDate: { type: Date, required: true },
+        university: { type: String, required: true },
+
+        images: [String],
+    },
+    { timestamps: true }
+);
+
+const syndicateRecordSchema = new Schema<ISyndicateRecord>(
+    {
+        pharmacist: { type: Schema.Types.ObjectId, required: true },
+        syndicate: { type: String, required: true },
+        startDate: { type: Date, required: true },
+        endDate: Date,
+        transferReason: String,
+        registrationNumber: { type: String, required: true },
+    },
+    { timestamps: true }
+);
+
+const licenseSchema = new Schema<ILicense>(
+    {
+        pharmacist: { type: Schema.Types.ObjectId, required: true },
+        syndicate: { type: String, required: true },
+        licenseType: { type: String, required: true },
+        practiceStartDate: { type: Date, required: true },
+        licenseStartDate: { type: Date, required: true },
+        practiceType: { type: String, required: true },
+        practicePlace: { type: String, required: true },
+        practiceSector: { type: String, required: true },
+        endDate: Date,
+        details: String,
+
+        images: [String],
+    },
+    { timestamps: true }
+);
+
+const penaltySchema = new Schema<IPenalty>(
+    {
+        pharmacist: { type: Schema.Types.ObjectId, required: true },
+        penaltyType: { type: String, required: true },
+        date: { type: Date, required: true },
+        reason: String,
+        details: String,
+    },
+    { timestamps: true }
+);
+
+export const universityDegreeModel = mongoose.model("UniversityDegree", universityDegreeSchema, "universityDegrees");
+export const syndicateRecordModel = mongoose.model("SyndicateRecord", syndicateRecordSchema, "syndicateRecords");
+export const licenseModel = mongoose.model("License", licenseSchema, "licenses");
+export const penaltyModel = mongoose.model("Penalty", penaltySchema, "penalties");

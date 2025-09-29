@@ -1,4 +1,4 @@
-import Pharmacist from "../../models/pharmacist.model.js";
+import pharmacistSchema from "../../models/pharmacist.model.js";
 import ExcelJS from "exceljs";
 import { PharmacistModelTR } from "../../translation/models.ar.js";
 import { NextFunction, Request, text, TypedResponse } from "express";
@@ -14,8 +14,9 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
         const skip = page * limit;
         const filters = buildPharmacistFilters(queries);
 
-        const result = await Pharmacist.find(filters)
-            .select("-invoices -licenses -universityDegrees -penalties -practiceRecords -syndicateRecords")
+        const result = await pharmacistSchema
+            .find(filters)
+            .select("-invoices -licenses -universityDegrees -penalties -syndicateRecords")
             .skip(skip)
             .limit(limit);
         const workbook = new ExcelJS.Workbook();
@@ -25,7 +26,6 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
             "licenses",
             "universityDegrees",
             "penalties",
-            "practiceRecords",
             "syndicateRecords",
             "__v",
             "_id",
@@ -40,7 +40,7 @@ const exportPharmacistsAsExcel = async (req: Request, res: TypedResponse<null>, 
             "updatedAt",
         ];
 
-        const headers = Object.keys(Pharmacist.schema.paths).filter((key) => {
+        const headers = Object.keys(pharmacistSchema.schema.paths).filter((key) => {
             if (key.includes("currentSyndicate")) return false;
             return !excludedFields.includes(key);
         });

@@ -1,15 +1,21 @@
-import Pharmacist, { handlePharmacistFields } from "../../models/pharmacist.model.js";
+import pharmacistSchema, { handlePharmacistFields } from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { PharmacistResponseDto, toPharmacistResponseDto, UpdatePharmacistDto } from "../../types/dtos/pharmacist.dto.js";
 import { responseMessages } from "../../translation/response.ar.js";
 import fs from "fs/promises";
 import path from "path";
 import { PARENT_DIR, processPharmacistImage } from "../../utils/images.js";
+import {
+    LicenseDocument,
+    PenaltyDocument,
+    SyndicateRecordDocument,
+    UniversityDegreeDocument,
+} from "../../types/models/pharmacist.types.js";
 
 const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
         const validatedData: UpdatePharmacistDto = req.validatedData;
-        const pharmacist = await Pharmacist.findById(req.params.id);
+        const pharmacist = await pharmacistSchema.findById(req.params.id);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
@@ -58,7 +64,14 @@ const updatePharmacist = async (req: Request, res: TypedResponse<PharmacistRespo
         }
 
         await pharmacist.updateOne({ $set: { ...validatedData, images: imagesURLs } });
-        const doc = await Pharmacist.findById(pharmacist._id);
+        const doc = await pharmacistSchema.findById(pharmacist._id).populate<{
+            currentSyndicate: SyndicateRecordDocument;
+            currentLicense: LicenseDocument;
+            licenses: LicenseDocument[];
+            syndicateRecords: SyndicateRecordDocument[];
+            universityDegrees: UniversityDegreeDocument[];
+            penalties: PenaltyDocument[];
+        }>(["licenses", "universityDegrees", "syndicateRecords", "penalties", "currentSyndicate", "currentLicense"]);
         const newDoc = await handlePharmacistFields(doc!);
 
         res.json({ success: true, data: toPharmacistResponseDto(newDoc!) });

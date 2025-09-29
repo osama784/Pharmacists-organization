@@ -73,7 +73,8 @@ app.use((err: Error | AppError, req: Request, res: TypedResponse<null>, next: Ne
             details: [err.message],
         });
     } else {
-        console.error(`${err.name}: ${err.message}`);
+        // console.error(`${err.name}: ${err.message}`);
+        console.log(err);
         if (err instanceof MulterError) {
             res.status(400).json({ success: false, details: [MulterErrorTranslator(err.code)] });
         } else {

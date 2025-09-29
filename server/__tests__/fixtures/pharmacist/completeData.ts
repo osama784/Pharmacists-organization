@@ -1,4 +1,4 @@
-import { GenderEnum } from "../../../models/pharmacist.model";
+import { Gender } from "../../../enums/pharmacist.enums";
 import { CreatePharmacistDto } from "../../../types/dtos/pharmacist.dto";
 
 const date = new Date();
@@ -20,7 +20,7 @@ export const CompleteData: CreatePharmacistDto = {
     nationality: "سوري",
     nationalNumber: "232132",
     phoneNumber: "09932132",
-    gender: GenderEnum.MALE,
+    gender: Gender.MALE,
     graduationYear: date.toString(),
     landlineNumber: "6291951",
 
@@ -43,7 +43,7 @@ export const RequiredData = {
     nationality: "سوري",
     nationalNumber: "232132",
     phoneNumber: "09932132",
-    gender: GenderEnum.MALE,
+    gender: Gender.MALE,
     graduationYear: date.toString(),
 
     registrationNumber: "231312",

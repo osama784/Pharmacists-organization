@@ -4,13 +4,13 @@ import fs from "fs/promises";
 import { responseMessages } from "../../translation/response.ar";
 import AdmZip from "adm-zip";
 import { UPLOADS_DIR } from "../../utils/images";
-import Pharmacist from "../../models/pharmacist.model";
+import pharmacistSchema from "../../models/pharmacist.model";
 
 const downloadPharmacistImagesSignedURL = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const pharmacistId = req.params.id;
         const folderToken = req.params.folderToken;
-        const pharmacist = await Pharmacist.findById(pharmacistId);
+        const pharmacist = await pharmacistSchema.findById(pharmacistId);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;

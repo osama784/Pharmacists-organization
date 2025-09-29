@@ -1,20 +1,48 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import Pharmacist from "../../../models/pharmacist.model";
+import pharmacistSchema, { licenseModel, syndicateRecordModel } from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
-import { CreateLicenseDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
+import { LicenseCreateDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
+import {
+    LicenseDocument,
+    PenaltyDocument,
+    SyndicateRecordDocument,
+    UniversityDegreeDocument,
+} from "../../../types/models/pharmacist.types";
 import fs from "fs/promises";
 import { processPharmacistImage } from "../../../utils/images";
+import { PracticeState, Syndicate } from "../../../enums/pharmacist.enums";
 
 const createLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: CreateLicenseDto = req.validatedData;
+        const validatedData: LicenseCreateDto = req.validatedData;
         const pharmacistId = req.params.id;
-        const pharmacist = await Pharmacist.findById(pharmacistId);
+        const pharmacist = await pharmacistSchema.findById(pharmacistId);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const processed: string[] = [];
+        // handle currentLicense
+        if (pharmacist.currentLicense) {
+            res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.PHARMACIST_HAS_CURRENT_LICENSE] });
+            return;
+            // const currentLicense = await licenseModel.findById(pharmacist.currentLicense);
+            // // check currentLicense endDate
+            // if (currentLicense?.endDate && currentLicense.endDate > new Date()) {
+            //     res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.CANT_CREATE_LICENSE] });
+            //     return;
+            // }
+        }
+        const currentSyndicate = await syndicateRecordModel.findById(pharmacist.currentSyndicate);
+        if (currentSyndicate?.syndicate == Syndicate.CENTRAL) {
+            res.status(400).json({
+                success: false,
+                details: [responseMessages.PHARMACIST_CONTROLLERS.CANT_CREATE_LICENSE_IN_CENTRAL_SYNDICATE],
+            });
+            return;
+        }
+
+        // handle uploaded files
+        const imagesURLS: string[] = [];
         if (req.files) {
             for (const file of req.files as Express.Multer.File[]) {
                 const processedImage = await processPharmacistImage(
@@ -25,21 +53,45 @@ const createLicense = async (req: Request, res: TypedResponse<PharmacistResponse
                     },
                     { imageType: "personal", pharmacistId: req.params.id }
                 );
-                processed.push(processedImage.imageURL);
+                imagesURLS.push(processedImage.imageURL);
                 try {
                     await fs.unlink(file.path);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
         }
 
-        await pharmacist.updateOne({
-            $push: {
-                licenses: { ...validatedData, images: processed },
-            },
+        const license = await licenseModel.create({
+            ...validatedData,
+            images: imagesURLS,
+            pharmacist: pharmacistId,
+            syndicate: currentSyndicate?.syndicate,
         });
-        const doc = await Pharmacist.findById(pharmacistId);
+        let updatedFields: Record<string, any> = {
+            $push: {
+                licenses: license.id,
+            },
+            currentLicense: license.id,
+            practiceState: PracticeState.PRACTICED,
+        };
+        const doc = await pharmacistSchema
+            .findOneAndUpdate(
+                {
+                    _id: pharmacistId,
+                },
+                updatedFields,
+                {
+                    new: true,
+                }
+            )
+            .populate<{
+                currentSyndicate: SyndicateRecordDocument;
+                currentLicense: LicenseDocument;
+                licenses: LicenseDocument[];
+                syndicateRecords: SyndicateRecordDocument[];
+                universityDegrees: UniversityDegreeDocument[];
+                penalties: PenaltyDocument[];
+            }>(["licenses", "universityDegrees", "syndicateRecords", "penalties", "currentSyndicate", "currentLicense"]);
+        await pharmacist.updateOne(updatedFields);
 
         res.json({ success: true, data: toPharmacistResponseDto(doc!) });
     } catch (e) {

@@ -1,28 +1,34 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import Pharmacist from "../../../models/pharmacist.model";
+import pharmacistSchema, { licenseModel } from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
-import { UpdateLicenseDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
+import { LicenseUpdateDto, PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
 import fs from "fs/promises";
 import { PARENT_DIR, processPharmacistImage } from "../../../utils/images";
 import path from "path";
+import {
+    LicenseDocument,
+    PenaltyDocument,
+    SyndicateRecordDocument,
+    UniversityDegreeDocument,
+} from "../../../types/models/pharmacist.types";
 
 const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: UpdateLicenseDto = req.validatedData;
+        const validatedData: LicenseUpdateDto = req.validatedData;
         const pharmacistId = req.params.id;
         const licenseId = req.params.licenseId;
-        const pharmacist = await Pharmacist.findById(pharmacistId);
+        const pharmacist = await pharmacistSchema.findById(pharmacistId);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const exist = pharmacist.licenses.find((value) => value._id.toString() == licenseId);
-        if (!exist) {
+        const license = await licenseModel.findById(licenseId);
+        if (!license) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         const newImages = validatedData.images;
-        const oldImages = exist.images;
+        const oldImages = license.images;
         let imagesURLs: string[] = [];
         if (newImages) {
             // check if added a new url to the source array
@@ -38,9 +44,7 @@ const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponse
                 const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
             imagesURLs = newImages;
         } else {
@@ -62,31 +66,24 @@ const updateLicense = async (req: Request, res: TypedResponse<PharmacistResponse
                 }
                 try {
                     await fs.unlink(file.path);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
         }
-        const updatedFields: Record<any, any> = {};
-        for (const key of Object.keys(validatedData)) {
-            updatedFields[`licenses.$.${key}`] = validatedData[key as keyof UpdateLicenseDto];
-        }
-        updatedFields["licenses.$.images"] = imagesURLs;
-        updatedFields["licenses.$._id"] = licenseId;
-        const doc = await Pharmacist.findOneAndUpdate(
-            {
-                _id: pharmacistId,
-                "licenses._id": licenseId,
-            },
-            {
-                $set: updatedFields,
-            },
-            {
-                new: true,
-            }
-        );
 
-        res.json({ success: true, data: toPharmacistResponseDto(doc!) });
+        await licenseModel.updateOne({
+            ...validatedData,
+            images: imagesURLs,
+        });
+        await pharmacist.populate<{
+            currentSyndicate: SyndicateRecordDocument;
+            currentLicense: LicenseDocument;
+            licenses: LicenseDocument[];
+            syndicateRecords: SyndicateRecordDocument[];
+            universityDegrees: UniversityDegreeDocument[];
+            penalties: PenaltyDocument[];
+        }>(["licenses", "universityDegrees", "syndicateRecords", "penalties", "currentSyndicate", "currentLicense"]);
+
+        res.json({ success: true, data: toPharmacistResponseDto(pharmacist) });
     } catch (e) {
         next(e);
     }

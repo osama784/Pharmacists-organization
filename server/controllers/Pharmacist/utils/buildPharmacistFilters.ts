@@ -31,6 +31,8 @@ const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any
     if (queries.integrity) filters.integrity = buildStringFilter(queries.integrity);
     if (queries.register) filters.register = buildStringFilter(queries.register);
     if (queries.oathTakingDate) filters.oathTakingDate = buildDateFilter(queries.oathTakingDate);
+    if (queries.deathDate) filters.deathDate = buildDateFilter(queries.deathDate);
+    if (queries.retirementDate) filters.retirementDate = buildDateFilter(queries.retirementDate);
 
     if (queries.syndicateMembershipStatus) filters.syndicateMembershipStatus = buildStringFilter(queries.syndicateMembershipStatus);
     if (queries.currentSyndicate) filters["currentSyndicate.syndicate"] = buildStringFilter(queries.currentSyndicate);

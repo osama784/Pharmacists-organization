@@ -1,4 +1,4 @@
-import Pharmacist from "../../models/pharmacist.model.js";
+import pharmacistSchema from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import IPharmacistQueries from "../../types/queries/pharmacist.query.js";
 import buildPharmacistFilters from "./utils/buildPharmacistFilters.js";
@@ -11,9 +11,9 @@ const listPharmacists = async (req: Request, res: TypedResponse<PharmacistRespon
         const limit = parseInt(queries.limit!) || 10;
         const skip = page * limit;
         const filters = buildPharmacistFilters(queries);
-        const result = await Pharmacist.find(filters).sort("-createdAt").skip(skip).limit(limit);
+        const result = await pharmacistSchema.find(filters).sort("-createdAt").skip(skip).limit(limit);
 
-        const totalItems = await Pharmacist.find(filters).countDocuments();
+        const totalItems = await pharmacistSchema.find(filters).countDocuments();
 
         res.json({
             success: true,

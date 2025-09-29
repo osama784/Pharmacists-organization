@@ -1,5 +1,5 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import Pharmacist from "../../models/pharmacist.model";
+import pharmacistSchema from "../../models/pharmacist.model";
 import { responseMessages } from "../../translation/response.ar";
 import fs from "fs/promises";
 import path from "path";
@@ -8,10 +8,16 @@ import { pharmacistTamplate } from "../../utils/templatesUtils/pharmacistInfoTem
 import { dateUtils } from "../../utils/dateUtils";
 import { PROJECT_DIR } from "../../utils/images";
 import getChromePath from "../../utils/getChromePath";
+import { LicenseDocument, PenaltyDocument, SyndicateRecordDocument, UniversityDegreeDocument } from "../../types/models/pharmacist.types";
 
 const printPhramacist = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
-        const pharmacist = await Pharmacist.findById(req.params.id);
+        const pharmacist = await pharmacistSchema.findById(req.params.id).populate<{
+            licenses: LicenseDocument[];
+            syndicateRecords: SyndicateRecordDocument[];
+            universityDegrees: UniversityDegreeDocument[];
+            penalties: PenaltyDocument[];
+        }>(["licenses", "universityDegrees", "syndicateRecords", "penalties"]);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
@@ -19,7 +25,7 @@ const printPhramacist = async (req: Request, res: TypedResponse<null>, next: Nex
         let pharmacistHTML = await fs.readFile(path.join(path.join(PROJECT_DIR, "templates", "pharmacist.html")), {
             encoding: "utf-8",
         });
-        const { universityDegrees, practiceRecords, syndicateRecords, penalties, licenses, personalInfo } = req.query;
+        const { universityDegrees, syndicateRecords, penalties, licenses, personalInfo } = req.query;
         pharmacistHTML = pharmacistHTML.replace("{{createdAt}}", dateUtils.formatDate(new Date()));
         pharmacistHTML = pharmacistHTML.replace("{{fullName}}", pharmacist.fullName);
 
@@ -63,14 +69,6 @@ const printPhramacist = async (req: Request, res: TypedResponse<null>, next: Nex
             pharmacistHTML = pharmacistHTML.replace(
                 `<div id="universityDegrees" class="card">`,
                 `<div id="universityDegrees" style = "display: none;" class="card">`
-            );
-        }
-        if (practiceRecords == "true") {
-            pharmacistHTML = pharmacistTamplate.appendPracticeRecords(pharmacist.practiceRecords, pharmacistHTML);
-        } else {
-            pharmacistHTML = pharmacistHTML.replace(
-                `<div id="practiceRecords" class="card">`,
-                `<div id="practiceRecords" style = "display: none;" class="card">`
             );
         }
         if (syndicateRecords == "true") {

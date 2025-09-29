@@ -1,5 +1,5 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import pharmacistSchema, { penaltyModel } from "../../../models/pharmacist.model";
+import pharmacistSchema from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
 import { PharmacistResponseDto, toPharmacistResponseDto } from "../../../types/dtos/pharmacist.dto";
 import {
@@ -8,10 +8,10 @@ import {
     SyndicateRecordDocument,
     UniversityDegreeDocument,
 } from "../../../types/models/pharmacist.types";
+import { PracticeState } from "../../../enums/pharmacist.enums";
 
-const deletePenalty = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
+const terminateCurrentLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
-        const penaltyId = req.params.penaltyId;
         const pharmacistId = req.params.id;
 
         const pharmacist = await pharmacistSchema.findById(pharmacistId);
@@ -19,22 +19,18 @@ const deletePenalty = async (req: Request, res: TypedResponse<PharmacistResponse
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const penalty = await penaltyModel.findById(penaltyId);
-        if (!penalty) {
-            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
+        if (!pharmacist.currentLicense) {
+            res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.NO_CURRENT_LICENSE_FOUND] });
             return;
         }
-        await penalty.deleteOne();
-
         const doc = await pharmacistSchema
             .findOneAndUpdate(
                 {
                     _id: pharmacistId,
                 },
                 {
-                    $pull: {
-                        penalties: penaltyId,
-                    },
+                    currentLicense: null,
+                    practiceState: PracticeState.UNPRACTICED,
                 },
                 {
                     new: true,
@@ -54,4 +50,4 @@ const deletePenalty = async (req: Request, res: TypedResponse<PharmacistResponse
     }
 };
 
-export default deletePenalty;
+export default terminateCurrentLicense;

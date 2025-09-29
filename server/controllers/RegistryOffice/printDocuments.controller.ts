@@ -2,12 +2,13 @@ import { NextFunction, Request, TypedResponse } from "express";
 import fs from "fs/promises";
 import path from "path";
 import { fillMainContent, fillSignutreContent, RegistryOfficePrintsTypesEnum } from "../../utils/templatesUtils/registryOfficeTemplate";
-import Pharmacist from "../../models/pharmacist.model";
+import pharmacistSchema from "../../models/pharmacist.model";
 import { responseMessages } from "../../translation/response.ar";
 import { PrintRegistryOfficeDocument } from "../../types/dtos/registryOffice.dto";
 import puppeteer from "puppeteer-core";
 import { PROJECT_DIR } from "../../utils/images";
 import getChromePath from "../../utils/getChromePath";
+import { LicenseDocument, PenaltyDocument, SyndicateRecordDocument, UniversityDegreeDocument } from "../../types/models/pharmacist.types";
 
 const printDocuments = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
@@ -16,7 +17,14 @@ const printDocuments = async (req: Request, res: TypedResponse<null>, next: Next
             encoding: "utf-8",
         });
 
-        const pharmacist = await Pharmacist.findById(validatedData.pharmacist);
+        const pharmacist = await pharmacistSchema.findById(validatedData.pharmacist).populate<{
+            currentSyndicate: SyndicateRecordDocument;
+            currentLicense: LicenseDocument;
+            licenses: LicenseDocument[];
+            syndicateRecords: SyndicateRecordDocument[];
+            universityDegrees: UniversityDegreeDocument[];
+            penalties: PenaltyDocument[];
+        }>(["licenses", "universityDegrees", "syndicateRecords", "penalties", "currentSyndicate", "currentLicense"]);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;

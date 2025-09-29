@@ -1,4 +1,4 @@
-import Pharmacist from "../../models/pharmacist.model.js";
+import pharmacistSchema from "../../models/pharmacist.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { responseMessages } from "../../translation/response.ar.js";
 import fs from "fs/promises";
@@ -9,7 +9,7 @@ import Invoice from "../../models/invoice.model.js";
 const deletePharmacist = async (req: Request, res: TypedResponse<null>, next: NextFunction) => {
     try {
         const pharmacistId = req.params.id;
-        const pharmacist = await Pharmacist.findById(pharmacistId);
+        const pharmacist = await pharmacistSchema.findById(pharmacistId);
 
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });

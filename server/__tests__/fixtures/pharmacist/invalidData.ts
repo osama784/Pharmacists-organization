@@ -1,4 +1,3 @@
-import { GenderEnum } from "../../../models/pharmacist.model";
 import { createPharmacistData } from "./factory";
 
 const date = new Date();

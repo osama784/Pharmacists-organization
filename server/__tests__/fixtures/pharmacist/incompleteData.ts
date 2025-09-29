@@ -1,4 +1,4 @@
-import { GenderEnum } from "../../../models/pharmacist.model";
+import { Gender } from "../../../enums/pharmacist.enums";
 
 const date = new Date();
 
@@ -27,7 +27,7 @@ export const missingOptionalFields = {
     nationality: "سوري",
     nationalNumber: "232132",
     phoneNumber: "09932132",
-    gender: GenderEnum.MALE,
+    gender: Gender.MALE,
     graduationYear: date.toString(),
 
     registrationNumber: "231312",

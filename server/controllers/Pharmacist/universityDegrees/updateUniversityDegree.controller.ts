@@ -1,28 +1,34 @@
 import { NextFunction, Request, TypedResponse } from "express";
-import Pharmacist from "../../../models/pharmacist.model";
+import pharmacistSchema, { universityDegreeModel } from "../../../models/pharmacist.model";
 import { responseMessages } from "../../../translation/response.ar";
-import { PharmacistResponseDto, toPharmacistResponseDto, UpdateUniversityDegreeDto } from "../../../types/dtos/pharmacist.dto";
+import { PharmacistResponseDto, toPharmacistResponseDto, UniversityDegreeUpdateDto } from "../../../types/dtos/pharmacist.dto";
 import { PARENT_DIR, processPharmacistImage } from "../../../utils/images";
+import {
+    LicenseDocument,
+    PenaltyDocument,
+    SyndicateRecordDocument,
+    UniversityDegreeDocument,
+} from "../../../types/models/pharmacist.types";
 import fs from "fs/promises";
 import path from "path";
 
 const updateUniversityDegree = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: UpdateUniversityDegreeDto = req.validatedData;
+        const validatedData: UniversityDegreeUpdateDto = req.validatedData;
         const pharmacistId = req.params.id;
         const universityDegreeId = req.params.universityDegreeId;
-        const pharmacist = await Pharmacist.findById(pharmacistId);
+        const pharmacist = await pharmacistSchema.findById(pharmacistId);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
-        const exist = pharmacist.universityDegrees.find((value) => value._id.toString() == universityDegreeId);
-        if (!exist) {
+        const universityDegree = await universityDegreeModel.findById(universityDegreeId);
+        if (!universityDegree) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         const newImages = validatedData.images;
-        const oldImages = exist.images;
+        const oldImages = universityDegree.images;
         let imagesURLs: string[] = [];
         if (newImages) {
             // check if added a new url to the source array
@@ -38,9 +44,7 @@ const updateUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
                 const imagePath = path.join(PARENT_DIR, image);
                 try {
                     await fs.unlink(imagePath);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
             imagesURLs = newImages;
         } else {
@@ -62,32 +66,24 @@ const updateUniversityDegree = async (req: Request, res: TypedResponse<Pharmacis
                 }
                 try {
                     await fs.unlink(file.path);
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) {}
             }
         }
-        const updatedFields: Record<any, any> = {};
-        for (const key of Object.keys(validatedData)) {
-            updatedFields[`universityDegrees.$.${key}`] = validatedData[key as keyof UpdateUniversityDegreeDto];
-        }
-        updatedFields["universityDegrees.$.images"] = imagesURLs;
-        updatedFields["universityDegrees.$._id"] = universityDegreeId;
 
-        const doc = await Pharmacist.findOneAndUpdate(
-            {
-                _id: pharmacistId,
-                "universityDegrees._id": universityDegreeId,
-            },
-            {
-                $set: updatedFields,
-            },
-            {
-                new: true,
-            }
-        );
+        await universityDegreeModel.updateOne({
+            ...validatedData,
+            images: imagesURLs,
+        });
+        await pharmacist.populate<{
+            currentSyndicate: SyndicateRecordDocument;
+            currentLicense: LicenseDocument;
+            licenses: LicenseDocument[];
+            syndicateRecords: SyndicateRecordDocument[];
+            universityDegrees: UniversityDegreeDocument[];
+            penalties: PenaltyDocument[];
+        }>(["licenses", "universityDegrees", "syndicateRecords", "penalties", "currentSyndicate", "currentLicense"]);
 
-        res.json({ success: true, data: toPharmacistResponseDto(doc!) });
+        res.json({ success: true, data: toPharmacistResponseDto(pharmacist) });
     } catch (e) {
         next(e);
     }
