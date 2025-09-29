@@ -9,37 +9,37 @@
         "name": "إعادة قيد نقابة",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 1500
     },
     {
         "name": "رسم الهوية",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 35000
     },
     {
         "name": "رسوم سنين سابقة",
         "isRepeatable": true,
         "isMutable": false,
-        "value": 0
+        "value": 20000
     },
     {
         "name": "دعم فروع",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 5000
     },
     {
         "name": "معونة اجتماعية",
         "isRepeatable": true,
         "isMutable": false,
-        "value": 0
+        "value": 5000
     },
     {
         "name": "نشر اسم بجدول لاحق",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 500
     },
     {
         "name": "انتقال نقابة",
@@ -51,7 +51,7 @@
         "name": "رسوم متنوعة",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 15000
     },
     {
         "name": "غرامات تأخير نقابة",
@@ -75,7 +75,7 @@
         "name": "انتساب نقابة أجانب",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 100000
     },
     {
         "name": "إيرادات نقابة متنوعة",

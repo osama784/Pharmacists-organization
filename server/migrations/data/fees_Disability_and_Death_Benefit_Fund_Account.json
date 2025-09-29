@@ -4,35 +4,35 @@
         "section": "",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 10000
     },
     {
         "name": "إعادة قيد معونة",
         "section": "",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 10000
     },
     {
         "name": "سلف التعاون",
         "section": "",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 10000
     },
     {
         "name": "رسوم تعاونية",
         "section": "",
         "isRepeatable": true,
         "isMutable": false,
-        "value": 0
+        "value": 27000
     },
     {
         "name": "مكافأة نهاية الخدمة تعاون",
         "section": "",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 32000
     },
     {
         "name": "غرامات تأخير معونة الوفاة",
@@ -46,13 +46,13 @@
         "section": "",
         "isRepeatable": false,
         "isMutable": false,
-        "value": 0
+        "value": 500000
     },
     {
         "name": "إيرادات معونة متنوعة",
         "section": "",
         "isRepeatable": true,
         "isMutable": false,
-        "value": 0
+        "value": 18000
     }
 ]

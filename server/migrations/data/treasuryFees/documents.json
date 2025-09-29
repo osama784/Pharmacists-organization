@@ -1,0 +1,116 @@
+[
+    {
+        "name": "ترخيص مستحضر أجنبي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "ترخيص مستحضر وطني",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "ترخيص دائم",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "ترخيص مؤقت",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح صيدلية",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "مندوب دعاية",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "صيدلي إضافي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "استيراد مواد أولية",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "تجديد إذن صيدلية",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "تجديد ترخيص صيدلية ",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح معمل",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح مخبر",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح مستودع",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح مكتب علمي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "تجديد إذن فتح مستودع",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "تجديد إذن فتح مكتب علمي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح مكتب علمي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح مكتب علمي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    },
+    {
+        "name": "إذن فتح مكتب علمي",
+        "value": 0,
+        "associatedSection": "",
+        "receiptBook": "وثائق"
+    }
+]
