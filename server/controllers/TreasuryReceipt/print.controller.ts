@@ -10,14 +10,14 @@ import { dateUtils } from "../../utils/dateUtils";
 import { TreasuryReceiptTemplate } from "../../utils/templatesUtils/treasuryReceiptTemplate";
 import puppeteer from "puppeteer-core";
 import getChromePath from "../../utils/getChromePath";
-import { GenderEnum } from "../../models/pharmacist.model";
+import { Gender } from "../../enums/pharmacist.enums";
 
 const printTreasuryReceipt = async (req: Request, res: TypedResponse<undefined>, next: NextFunction) => {
     try {
         const receiptID = req.params.id;
         const receipt = await TreasuryReceipt.findOne({ serialID: receiptID }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         if (!receipt) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         let receiptHTML = await fs.readFile(path.join(path.join(PROJECT_DIR, "templates", "treasury-receipt.html")), {
@@ -27,8 +27,8 @@ const printTreasuryReceipt = async (req: Request, res: TypedResponse<undefined>,
         receiptHTML = receiptHTML.replace(
             `<div class="to-section"></div>`,
             `<div class="to-section">
-                إلى ${receipt.pharmacist.gender == GenderEnum.MALE ? "السيد" : "الآنسة"} ${receipt.pharmacist.fullName} ${
-                receipt.pharmacist.gender == GenderEnum.MALE ? "المحترم" : "المحترمة"
+                إلى ${receipt.pharmacist.gender == Gender.MALE ? "السيد" : "الآنسة"} ${receipt.pharmacist.fullName} ${
+                receipt.pharmacist.gender == Gender.MALE ? "المحترم" : "المحترمة"
             }
             </div>`
         );
@@ -55,7 +55,7 @@ const printTreasuryReceipt = async (req: Request, res: TypedResponse<undefined>,
 
         // Set response headers
         res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", 'attachment; filename="invoice.pdf"');
+        res.setHeader("Content-Disposition", 'attachment; filename="receipt.pdf"');
 
         // Send the PDF
         res.send(pdfBuffer);

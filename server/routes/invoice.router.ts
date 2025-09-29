@@ -3,7 +3,7 @@ import passport from "passport";
 import checkPermissions from "../middlewares/checkPermissions.middleware.js";
 import createInvoice from "../controllers/Invoice/create.controller.js";
 import validate from "../middlewares/validate.middleware.js";
-import { InvoiceCreateSchema, InvoiceUpdateSchema } from "../validators/invoice.schema.js";
+import { createInvoiceZodSchema, updateInvoiceZodSchema } from "../validators/invoice.schema.js";
 import mongoose from "mongoose";
 import updateInvoice from "../controllers/Invoice/update.controller.js";
 import listInvoices from "../controllers/Invoice/list.controller.js";
@@ -40,7 +40,7 @@ router.post(
     "/create/:pharmacistID",
     checkPermissions(permissions.createInvoice),
     upload.array("files"),
-    validate(InvoiceCreateSchema),
+    validate(createInvoiceZodSchema),
     createInvoice
 );
 router.delete("/delete/:id", checkPermissions(permissions.deleteInvoice), deleteInvoice);
@@ -48,7 +48,7 @@ router.patch(
     "/update/:id",
     upload.array("files"),
     checkPermissions(permissions.updateInvoice),
-    validate(InvoiceUpdateSchema),
+    validate(updateInvoiceZodSchema),
     updateInvoice
 );
 router.get("/list", checkPermissions(permissions.listInvoices), listInvoices);

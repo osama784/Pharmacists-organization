@@ -65,11 +65,13 @@ const permissions = {
     createTreasuryExpenditure: "إنشاء نفقة",
     updateTreasuryExpenditure: "تعديل نفقة",
     deleteTreasuryExpenditure: "حذف نفقة",
+    downloadTreasuryExpenditureFiles: "تحميل صور النفقة",
 
     listTreasuryIncomes: "قراءة معلومات الواردات",
     createTreasuryIncome: "إنشاء وارد",
     updateTreasuryIncome: "تعديل وارد",
     deleteTreasuryIncome: "حذف وارد",
+    downloadTreasuryIncomeFiles: "تحميل صور الوارد",
 
     listTreasuryStamps: "قراءة معلومات الطوابع",
     createTreasuryStamp: "إنشاء طابع",
@@ -121,11 +123,13 @@ export const ReadablePermissions = {
         "إنشاء نفقة",
         "تعديل نفقة",
         "حذف نفقة",
+        "تحميل صور النفقة",
 
         "قراءة معلومات الواردات",
         "إنشاء وارد",
         "تعديل وارد",
         "حذف وارد",
+        "تحميل صور الوارد",
 
         "قراءة معلومات الطوابع",
         "إنشاء طابع",

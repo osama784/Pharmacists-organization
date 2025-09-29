@@ -2,12 +2,12 @@ import User from "../../models/user.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { RoleDocument } from "../../types/models/role.types.js";
 import { responseMessages } from "../../translation/response.ar.js";
-import { CreateUserDto, toUserResponseDto, UserResponseDto } from "../../types/dtos/user.dto.js";
+import { UserCreateDto, toUserResponseDto, UserResponseDto } from "../../types/dtos/user.dto.js";
 import Role from "../../models/role.model.js";
 
 const createUser = async (req: Request, res: TypedResponse<UserResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: CreateUserDto = req.validatedData;
+        const validatedData: UserCreateDto = req.validatedData;
         const email = validatedData.email;
         const exists = await User.checkUniqueEmail(null, email);
         if (exists) {

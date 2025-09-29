@@ -1,4 +1,4 @@
-import Pharmacist from "../../../models/pharmacist.model";
+import pharmacistSchema from "../../../models/pharmacist.model";
 import { ITreasuryReceiptQuery } from "../../../types/queries/treasuryReceipt.query";
 import { buildDateFilter, buildNumberFilter, buildStringFilter } from "../../../utils/buildFilters";
 import buildPharmacistFilters from "../../Pharmacist/utils/buildPharmacistFilters";
@@ -13,7 +13,7 @@ const buildTreasuryReceiptFilters = async (queries: ITreasuryReceiptQuery) => {
     if (queries.pharmacist) {
         const pharmacistsFilter = buildPharmacistFilters(queries.pharmacist);
         if (Object.keys(pharmacistsFilter).length != 0) {
-            const pharmacists = await Pharmacist.find(pharmacistsFilter);
+            const pharmacists = await pharmacistSchema.find(pharmacistsFilter);
             filters = { ...filters, pharmacist: { $in: pharmacists } };
         }
     }

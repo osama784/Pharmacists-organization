@@ -4,7 +4,7 @@ import { UserStatuses } from "../models/user.model.js";
 import { EmailSchema, EnumSchema, mongooseIDSchema, PasswordSchema, StringSchema } from "../utils/customSchemas.js";
 import { UserModelTR } from "../translation/models.ar.js";
 
-const UserSchema = z.object({
+const userValidationSchema = z.object({
     username: StringSchema({ keyName: UserModelTR.username }),
     email: EmailSchema({ keyName: UserModelTR.email }),
     password: PasswordSchema({ keyName: UserModelTR.password }).transform(async (value) => {
@@ -18,6 +18,6 @@ const UserSchema = z.object({
     role: mongooseIDSchema({ keyName: UserModelTR.role }),
 });
 
-export const UserUpdateSchema = UserSchema.omit({ password: true }).partial();
+export const userUpdateSchema = userValidationSchema.omit({ password: true }).partial();
 
-export default UserSchema;
+export default userValidationSchema;

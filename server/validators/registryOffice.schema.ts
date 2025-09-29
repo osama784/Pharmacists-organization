@@ -1,9 +1,9 @@
-import { Schema, z } from "zod";
+import { z } from "zod";
 import { BooleanSchema, EnumSchema, mongooseIDSchema, StringSchema } from "../utils/customSchemas";
 import { RegistryOfficePrintsTypes, SignerTypes } from "../utils/templatesUtils/registryOfficeTemplate";
 import { RegistryOfficeTR } from "../translation/models.ar";
 
-export const RegistryOfficePrintDocumentSchema = z.object({
+export const registryOfficePrintZodSchema = z.object({
     pharmacist: mongooseIDSchema({ keyName: RegistryOfficeTR.pharmacist }),
     signer: EnumSchema({
         keyName: RegistryOfficeTR.signer,

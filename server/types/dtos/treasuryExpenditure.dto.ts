@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { TreasuryExpenditureDocument } from "../models/treasuryExpenditure.types";
-import { TreasuryExpenditureCreateSchema, TreasuryExpenditureUpdateSchema } from "../../validators/treasuryExpenditure.schema";
+import { createTreasuryExpenditureZodSchema, updateTreasuryExpenditureZodSchema } from "../../validators/treasuryExpenditure.schema";
 import { dateUtils } from "../../utils/dateUtils";
 
-export type TreasuryExpenditureCreateDto = z.infer<typeof TreasuryExpenditureCreateSchema>;
-export type TreasuryExpenditureUpdateDto = z.infer<typeof TreasuryExpenditureUpdateSchema>;
+export type TreasuryExpenditureCreateDto = z.infer<typeof createTreasuryExpenditureZodSchema>;
+export type TreasuryExpenditureUpdateDto = z.infer<typeof updateTreasuryExpenditureZodSchema>;
 
 export type TreasuryExpenditureResponseDto = {
     id: string;

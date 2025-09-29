@@ -2,7 +2,7 @@ import { NextFunction, Request, TypedResponse } from "express";
 import Invoice, { getPharmacistRelatedFees, invoiceStatuses } from "../../models/invoice.model.js";
 import { createInvoiceDto, InvoiceResponseDto, toInvoiceResponseDto } from "../../types/dtos/invoice.dto.js";
 import staticData from "../../config/static-data.json";
-import Pharmacist from "../../models/pharmacist.model.js";
+import pharmacistSchema from "../../models/pharmacist.model.js";
 import { responseMessages } from "../../translation/response.ar.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
 import Section from "../../models/section.model.js";
@@ -23,7 +23,7 @@ const createInvoice = async (
         const validatedData: createInvoiceDto = req.validatedData;
         const finesDate = new Date(staticData["finesDate"]);
 
-        const pharmacist = await Pharmacist.findById(req.params.pharmacistID);
+        const pharmacist = await pharmacistSchema.findById(req.params.pharmacistID);
         if (!pharmacist) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;

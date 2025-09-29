@@ -1,7 +1,7 @@
 import IInvoiceQueries from "../../../types/queries/invoice.query.js";
 import { buildBooleanFilter, buildDateFilter, buildNumberFilter, buildStringFilter } from "../../../utils/buildFilters.js";
 import buildPharmacistFilters from "../../Pharmacist/utils/buildPharmacistFilters.js";
-import Pharmacist from "../../../models/pharmacist.model.js";
+import pharmacistSchema from "../../../models/pharmacist.model.js";
 import buildBankFilters from "../../Bank/utils/buildBankFilters.js";
 
 const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<string, any>> => {
@@ -23,7 +23,7 @@ const buildInvoiceFilters = async (queries: IInvoiceQueries): Promise<Record<str
     if (queries.pharmacist) {
         const pharmacistsFilter = buildPharmacistFilters(queries.pharmacist);
         if (Object.keys(pharmacistsFilter).length != 0) {
-            const pharmacists = await Pharmacist.find(pharmacistsFilter);
+            const pharmacists = await pharmacistSchema.find(pharmacistsFilter);
             filters = { ...filters, pharmacist: { $in: pharmacists } };
         }
     }

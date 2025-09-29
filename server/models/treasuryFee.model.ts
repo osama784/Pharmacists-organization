@@ -1,6 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { StringSchema } from "../utils/customSchemas";
-import { TreasuryFeeModelTR } from "../translation/models.ar";
 import { ITreasuryFeeModel, TreasuryFeeDocument } from "../types/models/treasuryFee.types";
 
 const TreasuryFee = new Schema<TreasuryFeeDocument>(

@@ -4,7 +4,7 @@ import { BankModelTR } from "../translation/models.ar";
 import { SectionsEnum } from "../models/section.model";
 import { responseMessages } from "../translation/response.ar";
 
-const BankSchema = z.object({
+const bankZodSchema = z.object({
     name: StringSchema({ keyName: BankModelTR.name }),
     accounts: z
         .array(
@@ -23,5 +23,5 @@ const BankSchema = z.object({
         ),
 });
 
-export const BankCreateSchema = BankSchema;
-export const BankUpdateSchema = BankSchema.partial();
+export const createBankZodSchema = bankZodSchema;
+export const updateBankZodSchema = bankZodSchema.partial();

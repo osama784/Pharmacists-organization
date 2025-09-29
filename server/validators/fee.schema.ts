@@ -3,7 +3,7 @@ import { mongooseIDSchema, NumberSchemaPositive, StringSchema } from "../utils/c
 import { zodSchemasMessages } from "../translation/zodSchemas.ar";
 import { FeeModelTR } from "../translation/models.ar";
 
-export const FeesUpdateValuesSchema = z.array(
+export const updateFeesValuesZodSchema = z.array(
     z.object({
         id: mongooseIDSchema({ keyName: FeeModelTR.id }),
         value: NumberSchemaPositive({ keyName: FeeModelTR.value }).optional(),
@@ -45,7 +45,7 @@ export const FeesUpdateValuesSchema = z.array(
     })
 );
 
-export const updateDetailedPrintsSchema = z.object({
+export const updateDetailedPrintsZodSchema = z.object({
     "سجل الأدوية العادية/صيدليات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
     "سجل الأدوية النفسية/صيدليات": NumberSchemaPositive({ keyName: FeeModelTR.value }),
     "سجل الأدوية المخدرة/صيدليات": NumberSchemaPositive({ keyName: FeeModelTR.value }),

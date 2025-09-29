@@ -2,12 +2,12 @@ import User from "../../models/user.model.js";
 import { NextFunction, Request, TypedResponse } from "express";
 import { responseMessages } from "../../translation/response.ar.js";
 import { RoleDocument } from "../../types/models/role.types.js";
-import { toUserResponseDto, UpdateUserDto, UserResponseDto } from "../../types/dtos/user.dto.js";
+import { toUserResponseDto, UserUpdateDto, UserResponseDto } from "../../types/dtos/user.dto.js";
 import Role from "../../models/role.model.js";
 
 const updateUser = async (req: Request, res: TypedResponse<UserResponseDto>, next: NextFunction) => {
     try {
-        const validatedData: UpdateUserDto = req.validatedData;
+        const validatedData: UserUpdateDto = req.validatedData;
         const user = await User.findById(req.params.id);
         if (!user) {
             res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });

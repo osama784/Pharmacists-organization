@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import printDocuments from "../controllers/RegistryOffice/printDocuments.controller";
 import validate from "../middlewares/validate.middleware";
-import { RegistryOfficePrintDocumentSchema } from "../validators/registryOffice.schema";
+import { registryOfficePrintZodSchema } from "../validators/registryOffice.schema";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
 import getSecretaryName from "../controllers/RegistryOffice/getSecretaryName.controller";
@@ -17,7 +17,7 @@ router.use(passport.authenticate("jwt", { session: false }));
 router.post(
     "/print-document",
     checkPermissions(permissions.printRegistryOfficeDocument),
-    validate(RegistryOfficePrintDocumentSchema),
+    validate(registryOfficePrintZodSchema),
     printDocuments
 );
 

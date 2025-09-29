@@ -7,7 +7,7 @@ const deleteTreasuryReceipt = async (req: Request, res: TypedResponse<undefined>
         const receiptID = req.params.id;
         const receipt = await TreasuryReceipt.findOne({ serialID: receiptID });
         if (!receipt) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
 

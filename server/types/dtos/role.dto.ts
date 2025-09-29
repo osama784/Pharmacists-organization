@@ -1,8 +1,8 @@
 import { z } from "zod";
-import RoleSchema from "../../validators/role.schema";
+import roleZodSchema from "../../validators/role.schema";
 import { RoleDocument } from "../models/role.types";
 
-export type CreateRoleDto = z.infer<typeof RoleSchema>;
+export type CreateRoleDto = z.infer<typeof roleZodSchema>;
 export type UpdateRoleDto = Partial<CreateRoleDto>;
 
 export type RoleResponseDto = {

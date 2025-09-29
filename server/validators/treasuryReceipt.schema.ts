@@ -4,7 +4,7 @@ import { TreasuryReceiptModelTR } from "../translation/models.ar";
 import TreasuryFee, { RECEIPT_BOOKS } from "../models/treasuryFee.model";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar";
 
-const TreasuryReceiptSchema = z.object({
+const treasuryReceiptZodSchema = z.object({
     pharmacist: mongooseIDSchema({ keyName: TreasuryReceiptModelTR.pharmacist }),
     receiptBook: EnumSchema({
         keyName: TreasuryReceiptModelTR.receiptBook,
@@ -31,5 +31,5 @@ const TreasuryReceiptSchema = z.object({
         ),
 });
 
-export const TreasuryReceiptCreateSchema = TreasuryReceiptSchema;
-export const TreasuryReceiptUpdateSchema = TreasuryReceiptSchema.omit({ receiptBook: true }).partial();
+export const createTreasuryReceiptZodSchema = treasuryReceiptZodSchema;
+export const updateTreasuryReceiptZodSchema = treasuryReceiptZodSchema.omit({ receiptBook: true }).partial();

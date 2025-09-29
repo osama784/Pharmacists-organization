@@ -1,10 +1,10 @@
 import { z } from "zod";
-import UserSchema from "../../validators/user.schema";
+import userValidationSchema from "../../validators/user.schema";
 import { PopulatedUserDocument } from "../models/user.types";
 import { RoleDocument } from "../models/role.types";
 
-export type CreateUserDto = z.infer<typeof UserSchema>;
-export type UpdateUserDto = Partial<CreateUserDto>;
+export type UserCreateDto = z.infer<typeof userValidationSchema>;
+export type UserUpdateDto = Partial<UserCreateDto>;
 
 export type UserResponseDto = {
     id: string;

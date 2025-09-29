@@ -4,11 +4,10 @@ import { createInvoiceDto } from "../types/dtos/invoice.dto.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
 import { PharmacistDocument } from "../types/models/pharmacist.types.js";
 import Fee, { REREGISTRATION_FEES } from "./fee.model.js";
-import { FeeDocument, PopulatedFeeDocument } from "../types/models/fee.types.js";
+import { FeeDocument } from "../types/models/fee.types.js";
 import SyndicateMembership from "./syndicateMembership.model.js";
 import Section from "./section.model.js";
 import staticData from "../config/static-data.json";
-import { SectionDocument } from "../types/models/section.types.js";
 import Counter from "./counter.model.js";
 
 export const invoiceStatuses = {
@@ -70,7 +69,6 @@ export const getPharmacistRelatedFees = async (
     // finding the required year (the last year he paid at, or the graduation year if he didn't pay before)
     let syndicateMembershipStatus: string;
     let requiredYear = graduationYear;
-    let shouldPayReregistrationFees: boolean = false;
     if (lastTimePaidYear) {
         requiredYear = lastTimePaidYear + 1;
         const difference = currentYear - requiredYear + 1;
@@ -122,13 +120,6 @@ export const getPharmacistRelatedFees = async (
         } else {
             syndicateMembershipStatus = syndicateMembershipsTR["foreign-affiliation"];
         }
-        // check for Reregistration fees
-        if (
-            validatedData.syndicateMembership == syndicateMembershipsTR["re-registration-of-non-practitioner"] ||
-            validatedData.syndicateMembership == syndicateMembershipsTR["re-registration-of-practitioner"]
-        ) {
-            shouldPayReregistrationFees = true;
-        }
     }
     // initiating some variables to track fees and their values
     let fees: { name: string; value: number; numOfYears: number }[] = [];
@@ -138,140 +129,25 @@ export const getPharmacistRelatedFees = async (
 
     if ([syndicateMembershipsTR["foreign-affiliation"], syndicateMembershipsTR["affiliation"]].includes(syndicateMembershipStatus)) {
         const affiliationSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
-            fees: PopulatedFeeDocument[];
-        }>({
-            path: "fees",
-            populate: {
-                path: "section",
-            },
-        });
+            fees: FeeDocument[];
+        }>("fees");
         // adding related fees' values
         affiliationSyndicateMembership?.fees.forEach((fee) => {
-            if (fee.isMutable) {
-                // summing value depending from last year to current year
-                let tmpYear = requiredYear;
-                numOfYears = currentYear - requiredYear + 1;
-                while (tmpYear != currentYear + 1) {
-                    value += fee.details?.get(`${tmpYear}`)!;
-                    tmpYear += 1;
-                }
-                tmpYear = requiredYear;
-            } else if (fee.isRepeatable) {
-                value = fee.value! * (currentYear - requiredYear + 1);
-                numOfYears = currentYear - requiredYear + 1;
-            } else {
-                value = fee.value!;
-                numOfYears = 1;
-            }
-
-            fees.push({
-                name: fee.name,
-                value: value,
-                numOfYears,
-            });
-            excludedFees.push(fee.name);
-            value = 0;
-            numOfYears = 0;
+            handleNewFee(fees, fee, excludedFees, { currentYear, requiredYear });
         });
-        // calculate last year
+        // calculate practicing fee
+        const practicingFee = await Fee.findOne({ name: "رسم المزاولة" });
         if (validatedData.willPracticeThisYear) {
-            const practicingYearSyndicateMembership = await SyndicateMembership.findOne({
-                name: syndicateMembershipsTR["practicing-year"],
-            }).populate<{
-                fees: PopulatedFeeDocument[];
-            }>({
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
-            });
-            practicingYearSyndicateMembership?.fees.forEach((fee) => {
-                if (fee.isMutable) {
-                    // value just for this year
-                    value = fee.details?.get(`${currentYear}`)!;
-                } else {
-                    value = fee.value!;
-                }
-                const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
-                if (existBefore == -1) {
-                    fees.push({
-                        name: fee.name,
-                        value: value,
-                        numOfYears: 1,
-                    });
-                    excludedFees.push(fee.name);
-                }
-                value = 0;
+            fees.push({
+                name: practicingFee?.name!,
+                value: practicingFee?.value! * (currentYear - requiredYear + 1),
+                numOfYears: currentYear - requiredYear + 1,
             });
         } else {
-            const unPracticingYearSyndicateMembership = await SyndicateMembership.findOne({
-                name: syndicateMembershipsTR["non-practicing-year"],
-            }).populate<{
-                fees: PopulatedFeeDocument[];
-            }>({
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
-            });
-            unPracticingYearSyndicateMembership?.fees.forEach((fee) => {
-                if (fee.isMutable) {
-                    // value just for this year
-                    value = fee.details?.get(`${currentYear}`)!;
-                } else {
-                    value = fee.value!;
-                }
-                const existBefore = fees.findIndex((_fee) => fee.name == _fee.name);
-                if (existBefore == -1) {
-                    fees.push({
-                        name: fee.name,
-                        value: value,
-                        numOfYears: 1,
-                    });
-                    excludedFees.push(fee.name);
-                }
-
-                value = 0;
-            });
-        }
-
-        if (shouldPayReregistrationFees) {
-            REREGISTRATION_FEES.forEach(async (fee) => {
-                const existBefore = fees.findIndex((_fee) => fee == _fee.name);
-                if (existBefore != -1) {
-                    // find the fee to get its value
-                    const currentFee = await Fee.findOne({ name: fee });
-                    if (currentFee?.isRepeatable) {
-                        fees[existBefore] = {
-                            name: fee,
-                            value: fees[existBefore].value + value,
-                            numOfYears: fees[existBefore].numOfYears + 1,
-                        };
-                    }
-                } else {
-                    fees.push({
-                        name: fee,
-                        value: value,
-                        numOfYears: 1,
-                    });
-                    excludedFees.push(fee);
-                }
-
-                value = 0;
-            });
-        } else {
-            // zeroing these fees
-            REREGISTRATION_FEES.forEach(async (fee) => {
-                const existBefore = fees.findIndex((_fee) => fee == _fee.name);
-                if (existBefore != -1) {
-                    fees[existBefore] = {
-                        name: fee,
-                        value: 0,
-                        numOfYears: 0,
-                    };
-                }
-
-                value = 0;
+            fees.push({
+                name: practicingFee?.name!,
+                value: practicingFee?.value! * (currentYear - requiredYear),
+                numOfYears: currentYear - requiredYear,
             });
         }
     } else if (
@@ -282,51 +158,17 @@ export const getPharmacistRelatedFees = async (
         ].includes(syndicateMembershipStatus)
     ) {
         const nonPracticingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
-            fees: PopulatedFeeDocument[];
-        }>({
-            path: "fees",
-            populate: {
-                path: "section",
-            },
-        });
+            fees: FeeDocument[];
+        }>("fees");
         if (validatedData.willPracticeThisYear) {
             nonPracticingSyndicateMembership?.fees.forEach((fee) => {
-                if (fee.isMutable) {
-                    // summing value depending from last year to current year
-                    let tmpYear = requiredYear;
-                    numOfYears = currentYear - requiredYear;
-                    while (tmpYear != currentYear) {
-                        value += fee.details?.get(`${tmpYear}`)!;
-                        tmpYear += 1;
-                    }
-                    tmpYear = requiredYear;
-                } else if (fee.isRepeatable) {
-                    value = fee.value! * (currentYear - requiredYear);
-                    numOfYears = currentYear - requiredYear;
-                } else {
-                    value = fee.value!;
-                    numOfYears = 1;
-                }
-
-                fees.push({
-                    name: fee.name,
-                    value: value,
-                    numOfYears,
-                });
-                excludedFees.push(fee.name);
-                value = 0;
-                numOfYears = 0;
+                handleNewFee(fees, fee, excludedFees, { currentYear, requiredYear: requiredYear - 1 });
             });
             const oneYearPracticingSyndicateMembership = await SyndicateMembership.findOne({
                 name: syndicateMembershipsTR["practicing-year"],
             }).populate<{
-                fees: PopulatedFeeDocument[];
-            }>({
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
-            });
+                fees: FeeDocument[];
+            }>("fees");
             // fees for practicing thi year
             oneYearPracticingSyndicateMembership?.fees.forEach((fee) => {
                 if (fee.isMutable) {
@@ -352,36 +194,10 @@ export const getPharmacistRelatedFees = async (
                     });
                     excludedFees.push(fee.name);
                 }
-
-                value = 0;
             });
         } else {
             nonPracticingSyndicateMembership?.fees.forEach((fee) => {
-                if (fee.isMutable) {
-                    // summing value depending from last year to current year
-                    let tmpYear = requiredYear;
-                    numOfYears = currentYear - requiredYear + 1;
-                    while (tmpYear != currentYear + 1) {
-                        value += fee.details?.get(`${tmpYear}`)!;
-                        tmpYear += 1;
-                    }
-                    tmpYear = requiredYear;
-                } else if (fee.isRepeatable) {
-                    value = fee.value! * (currentYear - requiredYear + 1);
-                    numOfYears = currentYear - requiredYear + 1;
-                } else {
-                    value = fee.value!;
-                    numOfYears = 1;
-                }
-
-                fees.push({
-                    name: fee.name,
-                    value: value,
-                    numOfYears,
-                });
-                excludedFees.push(fee.name);
-                value = 0;
-                numOfYears = 0;
+                handleNewFee(fees, fee, excludedFees, { currentYear, requiredYear });
             });
         }
         // check re-registartion fee for two years practicing
@@ -406,9 +222,7 @@ export const getPharmacistRelatedFees = async (
         }
     } else {
         let filter;
-        let calculateNonPracticed = true;
         if (syndicateMembershipsTR["practicing-year"] == syndicateMembershipStatus) {
-            calculateNonPracticed = false;
         } else if (syndicateMembershipsTR["two-years-of-practicing"] == syndicateMembershipStatus) {
             filter = {
                 name: syndicateMembershipsTR["two-years-of-non-practicing"],
@@ -421,85 +235,22 @@ export const getPharmacistRelatedFees = async (
 
         if (validatedData.willPracticeThisYear) {
             const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
-                fees: PopulatedFeeDocument[];
-            }>({
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
-            });
+                fees: FeeDocument[];
+            }>("fees");
             practicingSyndicateMembership?.fees.forEach((fee) => {
-                if (fee.isMutable) {
-                    // summing value depending from last year to (current year - 1)
-                    let tmpYear = requiredYear;
-                    numOfYears = currentYear - requiredYear + 1;
-                    while (tmpYear != currentYear + 1) {
-                        value += fee.details?.get(`${tmpYear}`)!;
-                        tmpYear += 1;
-                    }
-                    tmpYear = requiredYear;
-                } else if (fee.isRepeatable) {
-                    value = fee.value! * (currentYear - requiredYear + 1);
-                    numOfYears = currentYear - requiredYear + 1;
-                } else {
-                    value = fee.value!;
-                    numOfYears = 1;
-                }
-
-                fees.push({
-                    name: fee.name,
-                    value: value,
-                    numOfYears,
-                });
-                excludedFees.push(fee.name);
-                value = 0;
-                numOfYears = 0;
+                handleNewFee(fees, fee, excludedFees, { currentYear, requiredYear });
             });
         } else {
             // this year they will not practice
             const practicingSyndicateMembership = await SyndicateMembership.findOne({ name: syndicateMembershipStatus }).populate<{
-                fees: PopulatedFeeDocument[];
-            }>({
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
-            });
+                fees: FeeDocument[];
+            }>("fees");
             practicingSyndicateMembership?.fees.forEach((fee) => {
-                if (fee.isMutable) {
-                    // summing value depending from last year to (current year - 1)
-                    let tmpYear = requiredYear;
-                    numOfYears = currentYear - requiredYear;
-                    while (tmpYear != currentYear) {
-                        value += fee.details?.get(`${tmpYear}`)!;
-                        tmpYear += 1;
-                    }
-                    tmpYear = requiredYear;
-                } else if (fee.isRepeatable) {
-                    value = fee.value! * (currentYear - requiredYear);
-                    numOfYears = currentYear - requiredYear;
-                } else {
-                    value = fee.value!;
-                    numOfYears = 1;
-                }
-
-                fees.push({
-                    name: fee.name,
-                    value: value,
-                    numOfYears,
-                });
-                excludedFees.push(fee.name);
-                value = 0;
-                numOfYears = 0;
+                handleNewFee(fees, fee, excludedFees, { currentYear, requiredYear: requiredYear - 1 });
             });
             const nonPracticingSyndicateMembership = await SyndicateMembership.findOne(filter).populate<{
-                fees: PopulatedFeeDocument[];
-            }>({
-                path: "fees",
-                populate: {
-                    path: "section",
-                },
-            });
+                fees: FeeDocument[];
+            }>("fees");
             nonPracticingSyndicateMembership?.fees.forEach((fee) => {
                 if (fee.isMutable) {
                     value = fee.details?.get(`${currentYear}`)!;
@@ -567,14 +318,12 @@ export const getPharmacistRelatedFees = async (
             });
         });
     }
-    // appending other fees that is not related with the practice type with a value of 0.
+    // appending other fees that are not related with the practice type, with a value of 0.
     const otherFees = await Fee.find({
         name: {
             $nin: excludedFees,
         },
-    })
-        .select("_id name section")
-        .populate<{ section: SectionDocument }>("section");
+    }).select("_id name");
 
     otherFees.forEach((fee) => {
         fees.push({
@@ -662,6 +411,37 @@ export const getPharmacistRelatedFees = async (
     });
 
     return fees;
+};
+
+const handleNewFee = (
+    fees: { name: string; value: number; numOfYears: number }[],
+    newFee: FeeDocument,
+    excludedFees: string[],
+    info: { currentYear: number; requiredYear: number }
+) => {
+    let numOfYears = info.currentYear - info.requiredYear + 1;
+    let value = 0;
+    if (newFee.isMutable) {
+        // summing value depending from last year to current year
+        let tmpYear = info.requiredYear;
+        while (tmpYear != info.currentYear + 1) {
+            value += newFee.details?.get(`${tmpYear}`)!;
+            tmpYear += 1;
+        }
+        tmpYear = info.requiredYear;
+    } else if (newFee.isRepeatable) {
+        value = newFee.value! * numOfYears;
+    } else {
+        value = newFee.value!;
+        numOfYears = 1;
+    }
+
+    fees.push({
+        name: newFee.name,
+        value: value,
+        numOfYears,
+    });
+    excludedFees.push(newFee.name);
 };
 
 export default mongoose.model<InvoiceDocument, IInvoiceModel>("Invoice", Invoice, "invoices");

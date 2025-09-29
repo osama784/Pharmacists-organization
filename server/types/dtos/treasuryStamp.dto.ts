@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { dateUtils } from "../../utils/dateUtils";
 import { TreasuryStampDocument } from "../models/treasuryStamp.types";
-import { TreasuryStampCreateSchema, TreasuryStampUpdateSchema } from "../../validators/treasuryStamp.schema";
+import { createTreasuryStampZodSchema, updateTreasuryStampZodSchema } from "../../validators/treasuryStamp.schema";
 
-export type TreasuryStampCreateDto = z.infer<typeof TreasuryStampCreateSchema>;
-export type TreasuryStampUpdateDto = z.infer<typeof TreasuryStampUpdateSchema>;
+export type TreasuryStampCreateDto = z.infer<typeof createTreasuryStampZodSchema>;
+export type TreasuryStampUpdateDto = z.infer<typeof updateTreasuryStampZodSchema>;
 
 export type TreasuryStampResponseDto = {
     id: string;

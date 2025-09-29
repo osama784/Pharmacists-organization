@@ -59,7 +59,7 @@ export const ExtraInvoiceTR = {
     willPracticeThisYear: "سيزاول هذه السنة",
     calculateFines: "احتساب الغرامات",
 };
-type PharmacistModelTR = Record<keyof Omit<IPharmacist, "invoices" | "currentSyndicate">, any>;
+type PharmacistModelTR = Record<keyof IPharmacist, any>;
 export const PharmacistModelTR: PharmacistModelTR = {
     firstName: "الاسم الأول",
     lastName: "الشهرة",
@@ -92,6 +92,11 @@ export const PharmacistModelTR: PharmacistModelTR = {
     integrity: "الأمانة",
     register: "القيد",
     oathTakingDate: "تاريخ أداء اليمين",
+    deathDate: "تاريخ الوفاة",
+    retirementDate: "تاريخ التقاعد",
+
+    currentSyndicate: "النقابة الحالية",
+    currentLicense: "الترخيص الحالي",
 
     syndicateMembershipStatus: "مؤشر العضوية",
     practiceState: "نوع المزاولة",
@@ -101,24 +106,21 @@ export const PharmacistModelTR: PharmacistModelTR = {
 
     licenses: {
         licenseType: "نوع الترخيص",
-        startDate: "تاريخ بداية الترخيص",
+        licenseStartDate: "تاريخ بداية الترخيص",
+        practiceStartDate: "تاريخ بداية المزاولة",
+        practiceType: "صفة المزاولة",
+        practiceSector: "قطاع المزاولة",
+        practicePlace: "مكان المزاولة",
         endDate: "تاريخ نهاية الترخيص",
         details: "تفاصيل عن الترخيص",
 
         images: "صور عن الترخيص",
     },
-    practiceRecords: {
-        syndicate: "النقابة",
-        startDate: "تاريخ بداية المزاولة",
-        endDate: "تاريخ نهاية المزاولة",
-        sector: "قطاع المزاولة",
-        place: "مكان المزاولة",
-        practiceType: "نوع المزاولة",
-    },
     syndicateRecords: {
         syndicate: "النقابة",
         startDate: "تاريخ بداية السجل النقابي",
         endDate: "تاريخ نهاية السجل النقابي",
+        transferReason: "سبب النقل",
         registrationNumber: "رقم الانتساب النقابي",
     },
     universityDegrees: {
@@ -133,6 +135,8 @@ export const PharmacistModelTR: PharmacistModelTR = {
         reason: "سبب العقوبة",
         details: "تفاصيل عن العقوبة",
     },
+
+    invoices: "الفواتير",
 };
 
 type FeeModelTR = Record<keyof Omit<IFee, "isMutable" | "isRepeatable">, string> & { id: string };

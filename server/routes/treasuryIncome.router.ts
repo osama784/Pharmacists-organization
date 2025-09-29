@@ -7,10 +7,11 @@ import createTreasuryIncome from "../controllers/TreasuryIncome/create.controlle
 import updateTreasuryIncome from "../controllers/TreasuryIncome/update.controller";
 import deleteTreasuryIncome from "../controllers/TreasuryIncome/delete.controller";
 import validate from "../middlewares/validate.middleware";
-import { TreasuryIncomeCreateSchema, TreasuryIncomeUpdateSchema } from "../validators/treasuryIncome.schema";
+import { createTreasuryIncomeZodSchema, updateTreasuryIncomeZodSchema } from "../validators/treasuryIncome.schema";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
 import upload from "../middlewares/multer.middleware";
+import downloadTreasuryIncomeFiles from "../controllers/TreasuryIncome/downloadFiles.controller";
 
 const router = Router();
 
@@ -28,16 +29,18 @@ router.post(
     "/create",
     checkPermissions(permissions.createTreasuryIncome),
     upload.array("files"),
-    validate(TreasuryIncomeCreateSchema),
+    validate(createTreasuryIncomeZodSchema),
     createTreasuryIncome
 );
 router.patch(
     "/update/:id",
     checkPermissions(permissions.updateTreasuryIncome),
     upload.array("files"),
-    validate(TreasuryIncomeUpdateSchema),
+    validate(updateTreasuryIncomeZodSchema),
     updateTreasuryIncome
 );
 router.delete("/delete/:id", checkPermissions(permissions.deleteTreasuryIncome), deleteTreasuryIncome);
+
+router.get("/download/:id", checkPermissions(permissions.downloadTreasuryIncomeFiles), downloadTreasuryIncomeFiles);
 
 export default router;

@@ -7,7 +7,7 @@ import createTreasuryStamp from "../controllers/TreasuryStamp/create.controller"
 import updateTreasuryStamp from "../controllers/TreasuryStamp/update.controller";
 import deleteTreasuryStamp from "../controllers/TreasuryStamp/delete.controller";
 import validate from "../middlewares/validate.middleware";
-import { TreasuryStampCreateSchema, TreasuryStampUpdateSchema } from "../validators/treasuryStamp.schema";
+import { createTreasuryStampZodSchema, updateTreasuryStampZodSchema } from "../validators/treasuryStamp.schema";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
 
@@ -23,8 +23,8 @@ router.param("id", (req, res, next, value, name) => {
 router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/list", checkPermissions(permissions.listTreasuryStamps), listTreasuryStamps);
-router.post("/create", checkPermissions(permissions.createTreasuryStamp), validate(TreasuryStampCreateSchema), createTreasuryStamp);
-router.patch("/update/:id", checkPermissions(permissions.updateTreasuryStamp), validate(TreasuryStampUpdateSchema), updateTreasuryStamp);
+router.post("/create", checkPermissions(permissions.createTreasuryStamp), validate(createTreasuryStampZodSchema), createTreasuryStamp);
+router.patch("/update/:id", checkPermissions(permissions.updateTreasuryStamp), validate(updateTreasuryStampZodSchema), updateTreasuryStamp);
 router.delete("/delete/:id", checkPermissions(permissions.deleteTreasuryStamp), deleteTreasuryStamp);
 
 export default router;

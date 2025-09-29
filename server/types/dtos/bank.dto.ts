@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { BankCreateSchema, BankUpdateSchema } from "../../validators/bank.schema";
+import { createBankZodSchema, updateBankZodSchema } from "../../validators/bank.schema";
 import { BankDocument } from "../models/bank.types";
 
-export type CreateBankDto = z.infer<typeof BankCreateSchema>;
-export type UpdateBankDto = z.infer<typeof BankUpdateSchema>;
+export type CreateBankDto = z.infer<typeof createBankZodSchema>;
+export type UpdateBankDto = z.infer<typeof updateBankZodSchema>;
 
 export type BankResponseDto = {
     id: string;

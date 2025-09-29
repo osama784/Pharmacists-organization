@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { TreasuryIncomeDocument } from "../models/treasuryIncome.types";
-import { TreasuryIncomeCreateSchema, TreasuryIncomeUpdateSchema } from "../../validators/treasuryIncome.schema";
+import { createTreasuryIncomeZodSchema, updateTreasuryIncomeZodSchema } from "../../validators/treasuryIncome.schema";
 import { dateUtils } from "../../utils/dateUtils";
 
-export type TreasuryIncomeCreateDto = z.infer<typeof TreasuryIncomeCreateSchema>;
-export type TreasuryIncomeUpdateDto = z.infer<typeof TreasuryIncomeUpdateSchema>;
+export type TreasuryIncomeCreateDto = z.infer<typeof createTreasuryIncomeZodSchema>;
+export type TreasuryIncomeUpdateDto = z.infer<typeof updateTreasuryIncomeZodSchema>;
 
 export type TreasuryIncomeResponseDto = {
     id: string;

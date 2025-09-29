@@ -1,6 +1,6 @@
 import { NextFunction, Request, TypedResponse } from "express";
 import { toTreasuryReceiptResponseDto, TreasuryReceiptUpdateDto, TreasuryReceiptResponseDto } from "../../types/dtos/treasuryReceipt.dto";
-import Pharmacist from "../../models/pharmacist.model";
+import pharmacistSchema from "../../models/pharmacist.model";
 import { TreasuryReceiptModelTR } from "../../translation/models.ar";
 import { responseMessages } from "../../translation/response.ar";
 import TreasuryReceipt from "../../models/treasuryReceipt.model";
@@ -12,13 +12,13 @@ const updateTreasuryReceipt = async (req: Request, res: TypedResponse<TreasuryRe
         const validatedData: TreasuryReceiptUpdateDto = req.validatedData;
         const receipt = await TreasuryReceipt.findOne({ serialID: receiptID });
         if (!receipt) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
         if (validatedData.pharmacist) {
-            const pharmacist = await Pharmacist.findById(validatedData.pharmacist);
+            const pharmacist = await pharmacistSchema.findById(validatedData.pharmacist);
             if (!pharmacist) {
-                res.json({ success: false, details: [`${TreasuryReceiptModelTR.pharmacist}: ${responseMessages.NOT_FOUND}`] });
+                res.status(400).json({ success: false, details: [`${TreasuryReceiptModelTR.pharmacist}: ${responseMessages.NOT_FOUND}`] });
                 return;
             }
         }

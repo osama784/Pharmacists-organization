@@ -1,3 +1,5 @@
+import { TransferReason } from "../enums/pharmacist.enums";
+
 export const responseMessages = {
     FORBIDDEN: "ليس لديك الصلاحية للقيام بهذا الأمر",
     INAVLID_JSON_RESPONSE: "عليك أن ترسل مفاتيح مع قيمها أو قائمة",
@@ -36,6 +38,16 @@ export const responseMessages = {
         NO_IMAGES_FOUND: "لا يوجد صور لهذا الصيدلي بعد",
         PREVENT_ADDING_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
         NO_SYNICATE_FOUND: "لا يوجد نقابة كهذه في السجل النقابي",
+        PHARMACIST_HAS_CURRENT_LICENSE: "هناك ترخيص فعال للصيدلي يجب إنهاؤه أولاً",
+        NO_CURRENT_LICENSE_FOUND: "لا يوجد ترخيص حالي لهذا الصيدلي",
+        CANT_TRANSFER_TO_SYNDICATE_BRANCH: "لا يمكن للصيدلي الانتقال مباشرة إلى فرع نقابة آخر، يجب تحويله للنقابة المركزية أولاً",
+        CANT_TRANSFER_TO_SAME_SYNDICATE: "لا يمكن تحويل الصيدلي لنفس النقابة",
+        SHOULD_RETURN_TO_SAME_SYNDICATE_BRANCH: "هناك ترخيص فعال للصيدلي، لذلك يجب تحوله للفرع النقابي الذي أنشأ ترخيصه فيه",
+        TRANSFER_REASON_SHOULD_BE_TRANSFER_TO_BRANCH: `يجب أن يكون سبب النقل هو "${TransferReason.TRANSFER_TO_BRANCH}" عند النقل من النقابة المركزية إلى نقابة فرعية`,
+        INVALID_TRANSFER_REASON: `يجب أن يكون سبب النقل قيمة مناسبة (${TransferReason.DEATH}، ${TransferReason.RETIREMENT}، ${TransferReason.CANCELLATION_OF_REGISTRATION}) للانتقال من فرع نقابة إلى المركزية`,
+        CANT_CREATE_LICENSE_IN_CENTRAL_SYNDICATE: "لا يمكن أن يبدأ الصيدلي مزاولة من النقابة المركزية",
+        CANT_DELETE_CURRENT_LICENSE: "هذا الترخيص فعال ولا يمكن حذفه، يجب إنهاء الترخيص أولاً",
+        CANT_DELETE_CURRENT_SYNDICATE: "لا يمكن حذف النقابة الحالية للصيدلي",
     },
     REPORTS_CONTOLLERS: {
         MISSING_VALUES: "يجب عليك أن ترسل المعلومات الكاملة لإتمام إرسال التقارير المطلوبة",

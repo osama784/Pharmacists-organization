@@ -3,7 +3,7 @@ import { NextFunction, Request, TypedResponse } from "express";
 import { responseMessages } from "../../translation/response.ar.js";
 import { InvoiceResponseDto, toInvoiceResponseDto, updateInvoiceDto } from "../../types/dtos/invoice.dto.js";
 import { PharmacistDocument } from "../../types/models/pharmacist.types.js";
-import Pharmacist from "../../models/pharmacist.model.js";
+import pharmacistSchema from "../../models/pharmacist.model.js";
 import Section from "../../models/section.model.js";
 import { FeeDocument } from "../../types/models/fee.types.js";
 import Counter from "../../models/counter.model.js";
@@ -60,7 +60,7 @@ const updateInvoice = async (
                 paidDate: invoice.createdAt,
             };
             // updating "lastTimePaid" for the related pharmacist
-            await Pharmacist.updateOne(
+            await pharmacistSchema.updateOne(
                 { _id: invoice.pharmacist },
                 {
                     lastTimePaid: invoice.createdAt,

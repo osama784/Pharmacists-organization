@@ -1,5 +1,5 @@
-import { GenderEnum, UniversityDegreesEnum } from "../../models/pharmacist.model";
-import { PharmacistDocument } from "../../types/models/pharmacist.types";
+import { Gender, UniversityDegree } from "../../enums/pharmacist.enums";
+import { PharmacistDocument, PopulatedPharmacistDocument } from "../../types/models/pharmacist.types";
 import { dateUtils } from "../dateUtils";
 import staticData from "./../../config/static-data.json";
 
@@ -33,65 +33,71 @@ export const RegistryOfficePrintsTypes = [
 
 export function fillMainContent(
     templateType: RegistryOfficePrintsTypesEnum,
-    info: { pharmacist: PharmacistDocument; additionalContent?: string; travelPlace?: string; travelReason?: string; registered?: boolean }
+    info: {
+        pharmacist: PopulatedPharmacistDocument;
+        additionalContent?: string;
+        travelPlace?: string;
+        travelReason?: string;
+        registered?: boolean;
+    }
 ) {
-    const BachelorDegree = info.pharmacist.universityDegrees.find((element) => element.degreeType == UniversityDegreesEnum.BACHELOR);
-    const BoardDegree = info.pharmacist.universityDegrees.find((element) => element.degreeType == UniversityDegreesEnum.BOARD);
+    const BachelorDegree = info.pharmacist.universityDegrees.find((element) => element.degreeType == UniversityDegree.BACHELOR);
+    const BoardDegree = info.pharmacist.universityDegrees.find((element) => element.degreeType == UniversityDegree.BOARD);
     switch (templateType) {
         case RegistryOfficePrintsTypesEnum.GoodBehavior:
             return `
         <p>
-            إن ${info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"} <strong>${
+            إن ${info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"} <strong>${
                 info.pharmacist.fullName
             }</strong> مواليد ${info.pharmacist.birthDate.getFullYear()} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "حائز" : "حائزة"
+                info.pharmacist.gender == Gender.MALE ? "حائز" : "حائزة"
             } على إجازة في 
             الصيدلة والكيمياء الصيدلانية من ${
                 info.pharmacist.universityDegrees[0].university
             } ${info.pharmacist.universityDegrees[0].obtainingDate.getFullYear()} و${
-                info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"
+                info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"
             } في 
             سجلات وزارة الصحة برقم ${info.pharmacist.ministerialNumber} بتاريخ ${dateUtils.formatDate(
                 info.pharmacist.ministerialRegistrationDate!
             )} ومسجل لدى ${info.pharmacist.currentSyndicate?.syndicate}  بتاريخ ${dateUtils.formatDate(
                 info.pharmacist.currentSyndicate?.startDate!
-            )}، و${info.pharmacist.gender == GenderEnum.MALE ? "هو" : "هي"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "بريء" : "بريئة"
+            )}، و${info.pharmacist.gender == Gender.MALE ? "هو" : "هي"} ${
+                info.pharmacist.gender == Gender.MALE ? "بريء" : "بريئة"
             } الذمة لغاية ${new Date().getFullYear()}.
         </p>
         
         <p>
-            وحق ${info.pharmacist.gender == GenderEnum.MALE ? "للصيدلاني" : "للصيدلانية"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "المذكور" : "المذكورة"
+            وحق ${info.pharmacist.gender == Gender.MALE ? "للصيدلاني" : "للصيدلانية"} ${
+                info.pharmacist.gender == Gender.MALE ? "المذكور" : "المذكورة"
             } مزاولة المهنة في الجمهورية العربية السورية وفق القوانين 
-            والأنظمة النافذة، و${info.pharmacist.gender == GenderEnum.MALE ? "هو" : "هي"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "حسن" : "حسنة"
+            والأنظمة النافذة، و${info.pharmacist.gender == Gender.MALE ? "هو" : "هي"} ${
+                info.pharmacist.gender == Gender.MALE ? "حسن" : "حسنة"
             } السيرة والسلوك.
         </p>
         
         <strong style="text-align: center;" class="underlined">
-            وبناء على ${info.pharmacist.gender == GenderEnum.MALE ? "طلبه" : "طلبها"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "أعطي" : "أعطيت"
+            وبناء على ${info.pharmacist.gender == Gender.MALE ? "طلبه" : "طلبها"} ${
+                info.pharmacist.gender == Gender.MALE ? "أعطي" : "أعطيت"
             } هذه الوثيقة.
         </strong>
         `;
 
         case RegistryOfficePrintsTypesEnum.UnRegistered:
             return `
-            <p>لدى الرجوع إلى سجلات النقابة المركزية تبين أن ${info.pharmacist.gender == GenderEnum.MALE ? "السيد" : "السيدة"} ${
+            <p>لدى الرجوع إلى سجلات النقابة المركزية تبين أن ${info.pharmacist.gender == Gender.MALE ? "السيد" : "السيدة"} ${
                 info.pharmacist.firstName + " " + info.pharmacist.lastName
-            } ${info.pharmacist.gender == GenderEnum.MALE ? "بن" : "بنت"} ${info.pharmacist.fatherName} مواليد ${dateUtils.formatDate(
+            } ${info.pharmacist.gender == Gender.MALE ? "بن" : "بنت"} ${info.pharmacist.fatherName} مواليد ${dateUtils.formatDate(
                 info.pharmacist.birthDate
-            )} غير ${info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"} لدى نقابة صيادلة سوريا ولا أي فرع آخر.</p>
-            <p><strong>وبناء على ${info.pharmacist.gender == GenderEnum.MALE ? "طلبه" : "طلبها"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "أعطي" : "أعطيت"
+            )} غير ${info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"} لدى نقابة صيادلة سوريا ولا أي فرع آخر.</p>
+            <p><strong>وبناء على ${info.pharmacist.gender == Gender.MALE ? "طلبه" : "طلبها"} ${
+                info.pharmacist.gender == Gender.MALE ? "أعطي" : "أعطيت"
             } هذه الوثيقة</strong></p>
             `;
 
         case RegistryOfficePrintsTypesEnum.BoardCertification:
             return `
             <p>إن ${
-                info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"
+                info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"
             } فلانة مواليد ${info.pharmacist.birthDate.getFullYear()} حائزة على إجازة في الصيدلة و الكيمياء من ${
                 BoardDegree?.university
             } عام ${BoardDegree?.obtainingDate.getFullYear()} و مسجلة في سجلات وزارة الصحة برقم ${
@@ -110,17 +116,17 @@ export function fillMainContent(
 
         case RegistryOfficePrintsTypesEnum.PractitionerGoodBehavior:
             return `
-            <p>إن ${info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"} ${
+            <p>إن ${info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"} ${
                 info.pharmacist.firstName + " " + info.pharmacist.lastName
-            } ${info.pharmacist.gender == GenderEnum.MALE ? "بن" : "بنت"} ${
+            } ${info.pharmacist.gender == Gender.MALE ? "بن" : "بنت"} ${
                 info.pharmacist.fatherName
             } مواليد ${info.pharmacist.birthDate.getFullYear()} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "حائز" : "حائزة"
+                info.pharmacist.gender == Gender.MALE ? "حائز" : "حائزة"
             } على إجازة في الصيدلة و الكيمياء من ${BachelorDegree?.university} عام ${BachelorDegree?.obtainingDate.getFullYear()} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"
+                info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"
             } في سجلات وزارة الصحة برقم ${info.pharmacist.ministerialNumber} تاريخ ${dateUtils.formatDate(
                 info.pharmacist.ministerialRegistrationDate!
-            )} و${info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"} لدى ${
+            )} و${info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"} لدى ${
                 info.pharmacist.currentSyndicate ? info.pharmacist.currentSyndicate.syndicate : "نقابة صيادلة سوريا المركزية"
             } برقم ${
                 info.pharmacist.currentSyndicate ? info.pharmacist.currentSyndicate.registrationNumber : info.pharmacist.registrationNumber
@@ -129,48 +135,48 @@ export function fillMainContent(
                     ? dateUtils.formatDate(info.pharmacist.currentSyndicate.startDate)
                     : dateUtils.formatDate(info.pharmacist.registrationDate)
             } ${info.additionalContent}.</p>
-            <p>وإن ${info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "المذكور" : "المذكورة"
-            } لم يسجل في ${info.pharmacist.gender == GenderEnum.MALE ? "إضبارته" : "إضبارتها"} أي عقوبة مهنية أو مسلكية لغاية ${
-                info.pharmacist.gender == GenderEnum.MALE ? "تاريخه" : "تاريخها"
+            <p>وإن ${info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"} ${
+                info.pharmacist.gender == Gender.MALE ? "المذكور" : "المذكورة"
+            } لم يسجل في ${info.pharmacist.gender == Gender.MALE ? "إضبارته" : "إضبارتها"} أي عقوبة مهنية أو مسلكية لغاية ${
+                info.pharmacist.gender == Gender.MALE ? "تاريخه" : "تاريخها"
             }.</p>
-            <strong>وبناء على ${info.pharmacist.gender == GenderEnum.MALE ? "طلبه" : "طلبها"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "أعطي" : "أعطيت"
+            <strong>وبناء على ${info.pharmacist.gender == Gender.MALE ? "طلبه" : "طلبها"} ${
+                info.pharmacist.gender == Gender.MALE ? "أعطي" : "أعطيت"
             } هذه الوثيقة.</strong>
             `;
 
         case RegistryOfficePrintsTypesEnum.PermanentLicense:
             return `
-            <p>إن ${info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"} ${
+            <p>إن ${info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"} ${
                 info.pharmacist.firstName + " " + info.pharmacist.lastName
-            } ${info.pharmacist.gender == GenderEnum.MALE ? "بن" : "بنت"} ${
+            } ${info.pharmacist.gender == Gender.MALE ? "بن" : "بنت"} ${
                 info.pharmacist.fatherName
             } مواليد ${info.pharmacist.birthDate.getFullYear()} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "حائز" : "حائزة"
+                info.pharmacist.gender == Gender.MALE ? "حائز" : "حائزة"
             } على إجازة في الصيدلة و الكيمياء من ${BachelorDegree?.university} عام ${BachelorDegree?.obtainingDate.getFullYear()} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"
+                info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"
             } في سجلات وزارة الصحة برقم ${info.pharmacist.ministerialNumber} تاريخ ${dateUtils.formatDate(
                 info.pharmacist.ministerialRegistrationDate!
-            )} و${info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"} لدى ${
+            )} و${info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"} لدى ${
                 info.pharmacist.currentSyndicate ? info.pharmacist.currentSyndicate.syndicate : "نقابة صيادلة سوريا المركزية"
             } تاريخ ${
                 info.pharmacist.currentSyndicate
                     ? dateUtils.formatDate(info.pharmacist.currentSyndicate.startDate)
                     : dateUtils.formatDate(info.pharmacist.registrationDate)
-            } &#1548; و ${info.pharmacist.gender == GenderEnum.MALE ? "هو بريء" : "هي بريئة"} الذمة لغاية ${new Date().getFullYear()}.</p>
+            } &#1548; و ${info.pharmacist.gender == Gender.MALE ? "هو بريء" : "هي بريئة"} الذمة لغاية ${new Date().getFullYear()}.</p>
             <strong>وبناء على طلبها أعطيت هذه الوثيقة للحصول على الترخيص الدائم.</strong>
             `;
 
         case RegistryOfficePrintsTypesEnum.TravelPermit:
             return `
-            <p>يسمح ${info.pharmacist.gender == GenderEnum.MALE ? "للصيدلاني" : "للصيدلانية"} ${
+            <p>يسمح ${info.pharmacist.gender == Gender.MALE ? "للصيدلاني" : "للصيدلانية"} ${
                 info.pharmacist.firstName + " " + info.pharmacist.lastName
-            } ${info.pharmacist.gender == GenderEnum.MALE ? "بن" : "بنت"} ${
+            } ${info.pharmacist.gender == Gender.MALE ? "بن" : "بنت"} ${
                 info.pharmacist.fatherName
             } بمغادرة الجمهورية العربية السورية والدخول إلى ${info.travelPlace} (${info.travelReason}).</p>
-            <p>وإن ${info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "المذكور" : "المذكورة"
-            } ${info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة"} لدى ${
+            <p>وإن ${info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"} ${
+                info.pharmacist.gender == Gender.MALE ? "المذكور" : "المذكورة"
+            } ${info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة"} لدى ${
                 info.pharmacist.currentSyndicate ? info.pharmacist.currentSyndicate.syndicate : "نقابة صيادلة سوريا المركزية"
             } وتحمل الهوية النقابية برقم ${
                 info.pharmacist.currentSyndicate ? info.pharmacist.currentSyndicate.registrationNumber : info.pharmacist.registrationNumber
@@ -183,29 +189,29 @@ export function fillMainContent(
 
         case RegistryOfficePrintsTypesEnum.SyndicateTransfer:
             return `
-            <p>إن ${info.pharmacist.gender == GenderEnum.MALE ? "الصيدلاني" : "الصيدلانية"} ${
+            <p>إن ${info.pharmacist.gender == Gender.MALE ? "الصيدلاني" : "الصيدلانية"} ${
                 info.pharmacist.firstName + " " + info.pharmacist.lastName
-            } ${info.pharmacist.gender == GenderEnum.MALE ? "بن" : "بنت"} ${
+            } ${info.pharmacist.gender == Gender.MALE ? "بن" : "بنت"} ${
                 info.pharmacist.fatherName
             } مواليد ${info.pharmacist.birthDate.getFullYear()} ${
-                info.pharmacist.gender == GenderEnum.MALE ? "حائز" : "حائزة"
+                info.pharmacist.gender == Gender.MALE ? "حائز" : "حائزة"
             } على إجازة في الصيدلة و الكيمياء من ${BachelorDegree?.university} عام ${BachelorDegree?.obtainingDate.getFullYear()}.</p>
             <p>${
                 info.registered
-                    ? (info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة") +
+                    ? (info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة") +
                       " لدى نقابة صيادلة سوريا المركزية و " +
-                      (info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة") +
+                      (info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة") +
                       " لدى " +
                       info.pharmacist.currentSyndicate?.syndicate +
                       "."
                     : "غير " +
-                      (info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة") +
+                      (info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة") +
                       " لدى نقابة صيادلة سوريا المركزية وغير " +
-                      (info.pharmacist.gender == GenderEnum.MALE ? "مسجل" : "مسجلة") +
+                      (info.pharmacist.gender == Gender.MALE ? "مسجل" : "مسجلة") +
                       " في أي فرع."
             }</p>
             <strong>وبناء على ${
-                info.pharmacist.gender == GenderEnum.MALE ? "طلبه" : "طلبها"
+                info.pharmacist.gender == Gender.MALE ? "طلبه" : "طلبها"
             } أعطيت هذا البيان للحصول على تحويلة الوزارة بدل ضائع.</strong>
                 `;
     }

@@ -9,7 +9,7 @@ const getTreasuryReceipt = async (req: Request, res: TypedResponse<TreasuryRecei
         const receiptID = req.params.id;
         const receipt = await TreasuryReceipt.findOne({ serialID: receiptID }).populate<{ pharmacist: PharmacistDocument }>("pharmacist");
         if (!receipt) {
-            res.json({ success: false, details: [responseMessages.NOT_FOUND] });
+            res.status(400).json({ success: false, details: [responseMessages.NOT_FOUND] });
             return;
         }
 

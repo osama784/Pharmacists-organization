@@ -7,10 +7,11 @@ import createTreasuryExpenditure from "../controllers/TreasuryExpenditure/create
 import updateTreasuryExpenditure from "../controllers/TreasuryExpenditure/update.controller";
 import deleteTreasuryExpenditure from "../controllers/TreasuryExpenditure/delete.controller";
 import validate from "../middlewares/validate.middleware";
-import { TreasuryExpenditureCreateSchema, TreasuryExpenditureUpdateSchema } from "../validators/treasuryExpenditure.schema";
+import { createTreasuryExpenditureZodSchema, updateTreasuryExpenditureZodSchema } from "../validators/treasuryExpenditure.schema";
 import checkPermissions from "../middlewares/checkPermissions.middleware";
 import permissions from "../utils/permissions";
 import upload from "../middlewares/multer.middleware";
+import downloadTreasuryExpenditureFiles from "../controllers/TreasuryExpenditure/downloadFiles.controller";
 
 const router = Router();
 
@@ -28,16 +29,18 @@ router.post(
     "/create",
     checkPermissions(permissions.createTreasuryExpenditure),
     upload.array("files"),
-    validate(TreasuryExpenditureCreateSchema),
+    validate(createTreasuryExpenditureZodSchema),
     createTreasuryExpenditure
 );
 router.patch(
     "/update/:id",
     checkPermissions(permissions.updateTreasuryExpenditure),
     upload.array("files"),
-    validate(TreasuryExpenditureUpdateSchema),
+    validate(updateTreasuryExpenditureZodSchema),
     updateTreasuryExpenditure
 );
 router.delete("/delete/:id", checkPermissions(permissions.deleteTreasuryExpenditure), deleteTreasuryExpenditure);
+
+router.get("/download/:id", checkPermissions(permissions.downloadTreasuryExpenditureFiles), downloadTreasuryExpenditureFiles);
 
 export default router;

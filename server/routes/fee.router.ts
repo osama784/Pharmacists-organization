@@ -5,7 +5,7 @@ import updateFeesValues from "../controllers/Fee/updateValues.controller.js";
 import listFees from "../controllers/Fee/list.controller.js";
 import getFinesDate from "../controllers/Fee/getFinesDate.controller.js";
 import updateFinesDate from "../controllers/Fee/updateFinesDate.controller.js";
-import { updateDetailedPrintsSchema, FeesUpdateValuesSchema } from "../validators/fee.schema.js";
+import { updateDetailedPrintsZodSchema, updateFeesValuesZodSchema } from "../validators/fee.schema.js";
 import permissions from "../utils/permissions.js";
 import passport from "passport";
 import getDetailedPrints from "../controllers/Fee/getDetailedPrints.controller.js";
@@ -33,13 +33,13 @@ router.get("/detailed-prints", checkPermissions(permissions.getDetailedPrints), 
 router.put(
     "/detailed-prints",
     checkPermissions(permissions.updateDetailedPrints),
-    validate(updateDetailedPrintsSchema),
+    validate(updateDetailedPrintsZodSchema),
     updateDetailedPrints
 );
 router.get("/re-registration-date", checkPermissions(permissions.getFixedDates), getReRegistrationDate);
 router.put("/re-registration-date", checkPermissions(permissions.updateReRegistrationtDate), updateReRegistrationDate);
 
-router.patch("/update-values", checkPermissions(permissions.updateFeesValues), validate(FeesUpdateValuesSchema), updateFeesValues);
+router.patch("/update-values", checkPermissions(permissions.updateFeesValues), validate(updateFeesValuesZodSchema), updateFeesValues);
 router.get("/list", checkPermissions(permissions.listFees), listFees);
 
 export default router;

@@ -3,7 +3,7 @@ import { EnumSchema, NumberSchema, StringSchema } from "../utils/customSchemas";
 import { TreasuryExpenditureModelTR } from "../translation/models.ar";
 import { TREASURY_SECTIONS } from "../models/treasuryFee.model";
 
-const TreasuryExpenditureSchema = z.object({
+const treasuryExpenditureZodSchema = z.object({
     name: StringSchema({ keyName: TreasuryExpenditureModelTR.name }),
     value: NumberSchema({ keyName: TreasuryExpenditureModelTR.value }),
     associatedSection: EnumSchema({
@@ -19,5 +19,5 @@ const TreasuryExpenditureSchema = z.object({
     }, z.array(StringSchema(TreasuryExpenditureModelTR.images))),
 });
 
-export const TreasuryExpenditureCreateSchema = TreasuryExpenditureSchema.omit({ images: true });
-export const TreasuryExpenditureUpdateSchema = TreasuryExpenditureSchema.partial();
+export const createTreasuryExpenditureZodSchema = treasuryExpenditureZodSchema.omit({ images: true });
+export const updateTreasuryExpenditureZodSchema = treasuryExpenditureZodSchema.partial();

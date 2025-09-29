@@ -5,10 +5,10 @@ import {
     TreasuryReceiptDocument as TreasuryReceiptDocument,
 } from "../models/treasuryReceipt.types";
 import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto";
-import { TreasuryReceiptCreateSchema, TreasuryReceiptUpdateSchema } from "../../validators/treasuryReceipt.schema";
+import { createTreasuryReceiptZodSchema, updateTreasuryReceiptZodSchema } from "../../validators/treasuryReceipt.schema";
 
-export type TreasuryReceiptCreateDto = z.infer<typeof TreasuryReceiptCreateSchema>;
-export type TreasuryReceiptUpdateDto = z.infer<typeof TreasuryReceiptUpdateSchema>;
+export type TreasuryReceiptCreateDto = z.infer<typeof createTreasuryReceiptZodSchema>;
+export type TreasuryReceiptUpdateDto = z.infer<typeof updateTreasuryReceiptZodSchema>;
 
 export type TreasuryReceiptResponseDto = {
     id: string;
