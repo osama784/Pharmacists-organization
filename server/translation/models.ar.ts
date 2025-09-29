@@ -9,6 +9,7 @@ import { ITreasuryReceipt } from "../types/models/treasuryReceipt.types";
 import { ITreasuryIncome } from "../types/models/treasuryIncome.types";
 import { ITreasuryStamp } from "../types/models/treasuryStamp.types";
 import { IUser } from "../types/models/user.types";
+import { ILease } from "../types/models/lease.types";
 
 export const syndicateMembershipsTR = {
     affiliation: "انتساب",
@@ -236,4 +237,15 @@ export const TreasuryReceiptModelTR: TreasuryReceiptModelTR = {
         value: "قيمة الرسم",
     },
     total: "القيمة الإجمالية",
+};
+
+type LeaseModelTR = Record<keyof ILease, any>;
+export const LeaseModelTR: LeaseModelTR = {
+    pharmacistOwner: "الصيدلي المالك",
+    staffPharmacists: "الصيادلة الموظفين",
+    estatePlace: "مكان العقار",
+    estateNum: "رقم العقار",
+    startDate: "تاريخ بدء عقد الإيجار",
+    endDate: "تاريخ نهاية عقد الإيجار",
+    closedOut: "تمت التصفية",
 };

@@ -18,6 +18,7 @@ import TreasuryExpenditureRouter from "./routes/treasuryExpenditure.router.js";
 import TreasuryIncomeRouter from "./routes/treasuryIncome.router.js";
 import TreasuryStampRouter from "./routes/treasuryStamp.router.js";
 import TreasuryReceiptRouter from "./routes/treasuryReceipt.router.js";
+import LeaseRouter from "./routes/lease.router.js";
 import qs from "qs";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
@@ -61,6 +62,7 @@ app.use("/api/treasury/expenditures", TreasuryExpenditureRouter);
 app.use("/api/treasury/incomes", TreasuryIncomeRouter);
 app.use("/api/treasury/stamps", TreasuryStampRouter);
 app.use("/api/treasury/receipts", TreasuryReceiptRouter);
+app.use("/api/leases", LeaseRouter);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "front", "index.html"));

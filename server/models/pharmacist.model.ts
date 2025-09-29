@@ -5,8 +5,12 @@ import {
     IPharmacistModel,
     ISyndicateRecord,
     IUniversityDegree,
+    LicenseDocument,
+    PenaltyDocument,
     PharmacistDocument,
     PopulatedPharmacistDocument,
+    SyndicateRecordDocument,
+    UniversityDegreeDocument,
 } from "../types/models/pharmacist.types.js";
 import { syndicateMembershipsTR } from "../translation/models.ar.js";
 import crypto from "crypto";
@@ -162,7 +166,7 @@ export async function handlePharmacistFields(doc: PharmacistDocument | Populated
 
 export default mongoose.model<PharmacistDocument, IPharmacistModel>("Pharmacist", pharmacistSchema, "pharmacists");
 
-const universityDegreeSchema = new Schema<IUniversityDegree>(
+const universityDegreeSchema = new Schema<UniversityDegreeDocument>(
     {
         pharmacist: { type: Schema.Types.ObjectId, required: true },
         degreeType: { type: String, required: true },
@@ -174,7 +178,7 @@ const universityDegreeSchema = new Schema<IUniversityDegree>(
     { timestamps: true }
 );
 
-const syndicateRecordSchema = new Schema<ISyndicateRecord>(
+const syndicateRecordSchema = new Schema<SyndicateRecordDocument>(
     {
         pharmacist: { type: Schema.Types.ObjectId, required: true },
         syndicate: { type: String, required: true },
@@ -186,7 +190,7 @@ const syndicateRecordSchema = new Schema<ISyndicateRecord>(
     { timestamps: true }
 );
 
-const licenseSchema = new Schema<ILicense>(
+const licenseSchema = new Schema<LicenseDocument>(
     {
         pharmacist: { type: Schema.Types.ObjectId, required: true },
         syndicate: { type: String, required: true },
@@ -204,7 +208,7 @@ const licenseSchema = new Schema<ILicense>(
     { timestamps: true }
 );
 
-const penaltySchema = new Schema<IPenalty>(
+const penaltySchema = new Schema<PenaltyDocument>(
     {
         pharmacist: { type: Schema.Types.ObjectId, required: true },
         penaltyType: { type: String, required: true },
