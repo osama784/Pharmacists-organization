@@ -14,4 +14,6 @@ export type LeaseDocument = HydratedDocument<ILease> & {
     updatedAt: Date;
 };
 
-export interface ILeaseModel extends Model<LeaseDocument> {}
+export interface ILeaseModel extends Model<LeaseDocument> {
+    isEstateNumAvailable: (estateNum: string) => Promise<boolean>;
+}

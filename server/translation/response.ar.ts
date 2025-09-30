@@ -66,4 +66,8 @@ export const responseMessages = {
     TREASURY_INCOMES_CONTROLLERS: {
         PREVENT_ADDING_IMAGES_URLS: "لا يمكنك إضافة روابط لصور غير موجودة",
     },
+    LEASE_CONTROLLERS: {
+        UNAVAILABLE_ESTATE_NUM: "يوجد عقار فعال بنفس الرقم المعطى",
+        PREVENT_UPDATE_CLOSED_LEASE: "هذا العقار تمت تصفيته ولا يمكن التعديل عليه",
+    },
 };

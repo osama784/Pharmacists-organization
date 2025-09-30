@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { ILease, ILeaseModel, LeaseDocument } from "../types/models/lease.types";
+import { ILeaseModel, LeaseDocument } from "../types/models/lease.types";
 
 const leaseSchema = new Schema<LeaseDocument>(
     {
@@ -14,4 +14,9 @@ const leaseSchema = new Schema<LeaseDocument>(
     { timestamps: true }
 );
 
-export const leaseModel = mongoose.model("Lease", leaseSchema, "leases");
+leaseSchema.statics.isEstateNumAvailable = async function (estateNum: string): Promise<boolean> {
+    const exist = await this.exists({ estateNum, closedOut: false });
+    return exist ? false : true;
+};
+
+export default mongoose.model<LeaseDocument, ILeaseModel>("Lease", leaseSchema, "leases");

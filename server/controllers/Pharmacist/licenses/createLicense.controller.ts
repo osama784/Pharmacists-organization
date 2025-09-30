@@ -11,6 +11,8 @@ import {
 import fs from "fs/promises";
 import { processPharmacistImage } from "../../../utils/images";
 import { PracticeState, Syndicate } from "../../../enums/pharmacist.enums";
+import Lease from "../../../models/lease.model";
+import { PharmacistModelTR } from "../../../translation/models.ar";
 
 const createLicense = async (req: Request, res: TypedResponse<PharmacistResponseDto>, next: NextFunction) => {
     try {
@@ -31,6 +33,14 @@ const createLicense = async (req: Request, res: TypedResponse<PharmacistResponse
             //     res.status(400).json({ success: false, details: [responseMessages.PHARMACIST_CONTROLLERS.CANT_CREATE_LICENSE] });
             //     return;
             // }
+        }
+        const lease = await Lease.findById(validatedData.relatedLease);
+        if (!lease) {
+            res.status(400).json({
+                success: false,
+                details: [`${PharmacistModelTR.licenses.relatedLease}: ${responseMessages.NOT_FOUND}`],
+            });
+            return;
         }
         const currentSyndicate = await syndicateRecordModel.findById(pharmacist.currentSyndicate);
         if (currentSyndicate?.syndicate == Syndicate.CENTRAL) {
