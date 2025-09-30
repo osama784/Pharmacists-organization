@@ -106,6 +106,7 @@ export const PharmacistModelTR: PharmacistModelTR = {
     folderToken: "رمز الملف",
 
     licenses: {
+        relatedLease: "التعهد المرتبط",
         licenseType: "نوع الترخيص",
         licenseStartDate: "تاريخ بداية الترخيص",
         practiceStartDate: "تاريخ بداية المزاولة",

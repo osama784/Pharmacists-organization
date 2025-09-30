@@ -6,7 +6,6 @@ import listRoles from "../controllers/Role/list.controller.js";
 import createRole from "../controllers/Role/create.controller.js";
 import deleteRole from "../controllers/Role/delete.controller.js";
 import updateRole from "../controllers/Role/update.controller.js";
-import listPermissions from "../controllers/Role/listPermissions.controller.js";
 import roleZodSchema from "../validators/role.schema.js";
 import permissions from "../utils/permissions.js";
 import mongoose from "mongoose";
@@ -30,6 +29,5 @@ router.get("/list", checkPermissions(permissions.listRoles), listRoles);
 router.post("/create", checkPermissions(permissions.createRole), validate(roleZodSchema), createRole);
 router.delete("/delete/:id", checkPermissions(permissions.deleteRole), deleteRole);
 router.patch("/update/:id", checkPermissions(permissions.updateRole), validate(roleZodSchema.partial()), updateRole);
-router.get("/list-permissions", checkPermissions(permissions.listPermissions), listPermissions);
 
 export default router;

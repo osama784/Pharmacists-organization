@@ -178,6 +178,7 @@ export type LicenseUpdateDto = z.infer<typeof updateLicenseZodSchema>;
 type LicenseResponseDto = {
     id: string;
     pharmacist: string;
+    relatedLease: string;
     syndicate: string;
     practiceStartDate: Date;
     licenseStartDate: Date;
@@ -232,6 +233,7 @@ function toLicenseResponseDto(doc: LicenseDocument | Types.ObjectId): LicenseRes
     return {
         id: doc.id,
         pharmacist: doc.pharmacist.toString(),
+        relatedLease: doc.relatedLease.toString(),
         syndicate: doc.syndicate,
         licenseType: doc.licenseType,
         practiceType: doc.practiceType,

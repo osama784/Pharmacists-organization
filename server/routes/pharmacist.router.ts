@@ -131,53 +131,61 @@ router.get("/print/:id", checkPermissions(permissions.printPharmacist), printPhr
 
 router.post(
     "/:id/licenses/create",
-    checkPermissions(permissions.updatePharmacist),
+    checkPermissions(permissions.createLicense),
     upload.array("files"),
     validate(createLicenseZodSchema),
     createLicense
 );
-router.put(
+router.patch(
     "/:id/licenses/update/:licenseId",
-    checkPermissions(permissions.updatePharmacist),
+    checkPermissions(permissions.updateLicense),
     upload.array("files"),
     validate(updateLicenseZodSchema),
     updateLicense
 );
-router.delete("/:id/licenses/delete/:licenseId", checkPermissions(permissions.updatePharmacist), deleteLicense);
-router.put("/:id/licenses/terminate-current-license", checkPermissions(permissions.updatePharmacist), terminateCurrentLicense);
+router.delete("/:id/licenses/delete/:licenseId", checkPermissions(permissions.deleteLicense), deleteLicense);
+router.put("/:id/licenses/terminate-current-license", checkPermissions(permissions.terminateCurrentLicense), terminateCurrentLicense);
 
-router.post("/:id/penalties/create", checkPermissions(permissions.updatePharmacist), validate(createPenaltyZodSchema), createPenalty);
-router.put(
+router.post("/:id/penalties/create", checkPermissions(permissions.createPenalty), validate(createPenaltyZodSchema), createPenalty);
+router.patch(
     "/:id/penalties/update/:penaltyId",
-    checkPermissions(permissions.updatePharmacist),
+    checkPermissions(permissions.updatePenalty),
     validate(updatePenaltyZodSchema),
     updatePenalty
 );
-router.delete("/:id/penalties/delete/:penaltyId", checkPermissions(permissions.updatePharmacist), deletePenalty);
+router.delete("/:id/penalties/delete/:penaltyId", checkPermissions(permissions.deletePenalty), deletePenalty);
 
 router.post(
     "/:id/syndicate-records/create",
-    checkPermissions(permissions.updatePharmacist),
+    checkPermissions(permissions.createSyndicateRecord),
     validate(createSyndicateRecordZodSchema),
     createSyndicateRecord
 );
 
-router.delete("/:id/syndicate-records/delete/:syndicateRecordId", checkPermissions(permissions.updatePharmacist), deleteSyndicateRecord);
+router.delete(
+    "/:id/syndicate-records/delete/:syndicateRecordId",
+    checkPermissions(permissions.deleteSyndicateRecord),
+    deleteSyndicateRecord
+);
 
 router.post(
     "/:id/university-degrees/create",
-    checkPermissions(permissions.updatePharmacist),
+    checkPermissions(permissions.createUniversityDegree),
     upload.array("files"),
     validate(createUniversityDegreeZodSchema),
     createUniversityDegree
 );
-router.put(
+router.patch(
     "/:id/university-degrees/update/:universityDegreeId",
-    checkPermissions(permissions.updatePharmacist),
+    checkPermissions(permissions.updateUniversityDegree),
     upload.array("files"),
     validate(updateUniversityDegreeZodSchema),
     updateUniversityDegree
 );
-router.delete("/:id/university-degrees/delete/:universityDegreeId", checkPermissions(permissions.updatePharmacist), deleteUniversityDegree);
+router.delete(
+    "/:id/university-degrees/delete/:universityDegreeId",
+    checkPermissions(permissions.deleteUniversityDegree),
+    deleteUniversityDegree
+);
 
 export default router;

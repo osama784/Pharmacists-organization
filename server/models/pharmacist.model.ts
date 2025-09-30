@@ -193,6 +193,7 @@ const syndicateRecordSchema = new Schema<SyndicateRecordDocument>(
 const licenseSchema = new Schema<LicenseDocument>(
     {
         pharmacist: { type: Schema.Types.ObjectId, required: true },
+        relatedLease: { type: Schema.Types.ObjectId, required: true },
         syndicate: { type: String, required: true },
         licenseType: { type: String, required: true },
         practiceStartDate: { type: Date, required: true },

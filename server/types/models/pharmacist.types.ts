@@ -2,6 +2,7 @@ import { HydratedDocument, Model, Types } from "mongoose";
 
 export interface ILicense {
     pharmacist: Types.ObjectId;
+    relatedLease: Types.ObjectId;
     syndicate: string;
     practiceStartDate: Date;
     licenseStartDate: Date;

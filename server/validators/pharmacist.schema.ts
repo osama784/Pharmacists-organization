@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DateSchema, EnumSchema, NumberSchema, StringSchema } from "../utils/customSchemas.js";
+import { DateSchema, EnumSchema, mongooseIDSchema, NumberSchema, StringSchema } from "../utils/customSchemas.js";
 import { zodSchemasMessages } from "../translation/zodSchemas.ar.js";
 import { PharmacistModelTR } from "../translation/models.ar.js";
 import { Gender, licensesInfo, LicenseType, Syndicate, TransferReason, UniversityDegree } from "../enums/pharmacist.enums.js";
@@ -47,6 +47,7 @@ const pharmacistZodSchema = z.object({
 });
 
 const licenseZodSchema = z.object({
+    relatedLease: mongooseIDSchema({ keyName: PharmacistModelTR.licenses.relatedLease }),
     licenseType: EnumSchema({ data: Object.values(LicenseType) as [string], keyName: PharmacistModelTR.licenses.licenseType }),
     licenseStartDate: DateSchema({ keyName: PharmacistModelTR.licenses.licenseStartDate }),
     practiceStartDate: DateSchema({ keyName: PharmacistModelTR.licenses.practiceStartDate }),
