@@ -47,6 +47,7 @@ export const responseMessages = {
         INVALID_TRANSFER_REASON: `يجب أن يكون سبب النقل قيمة مناسبة (${TransferReason.DEATH}، ${TransferReason.RETIREMENT}، ${TransferReason.CANCELLATION_OF_REGISTRATION}) للانتقال من فرع نقابة إلى المركزية`,
         CANT_CREATE_LICENSE_IN_CENTRAL_SYNDICATE: "لا يمكن أن يبدأ الصيدلي مزاولة من النقابة المركزية",
         CANT_DELETE_CURRENT_LICENSE: "هذا الترخيص فعال ولا يمكن حذفه، يجب إنهاء الترخيص أولاً",
+        CANT_CREATE_PHARMACIST_IF_HE_LICENSE_OWNER: "هذا الصيدلي مالك لتعهد آخر و لا يمكن إنشاء ترخيص مرتبط بغير التعهد الذي يملكه",
         CANT_DELETE_CURRENT_SYNDICATE: "لا يمكن حذف النقابة الحالية للصيدلي",
     },
     REPORTS_CONTOLLERS: {
@@ -69,5 +70,7 @@ export const responseMessages = {
     LEASE_CONTROLLERS: {
         UNAVAILABLE_ESTATE_NUM: "يوجد عقار فعال بنفس الرقم المعطى",
         PREVENT_UPDATE_CLOSED_LEASE: "هذا العقار تمت تصفيته ولا يمكن التعديل عليه",
+        SHOULD_TERMINATE_ALL_RELATED_LICENSES: "لا يمكن تصفية أو حذف التعهد حتى إنهاء جميع التراخيص المتعلقة به",
+        PHARMACIST_OWNRE_FOR_ANOTHER_LEASE: "هذا الصيدلي مالك لتعهد آخر",
     },
 };

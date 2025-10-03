@@ -65,7 +65,7 @@ export type PharmacistResponseDto = {
     syndicateMembershipStatus?: string;
     currentSyndicate: string | SyndicateRecordResponseDto;
     currentLicense?: string | LicenseResponseDto | null;
-    practiceState?: string | null;
+    // practiceState?: string | null;
 
     licenses: (LicenseResponseDto | string)[];
     syndicateRecords: (SyndicateRecordResponseDto | string)[];
@@ -160,7 +160,7 @@ function _toPharmacistResponseDto(doc: PharmacistDocument | PopulatedPharmacistD
         deathDate: dateUtils.toLocaleDate(doc.deathDate)!,
         retirementDate: dateUtils.toLocaleDate(doc.retirementDate)!,
 
-        practiceState: doc.practiceState,
+        // practiceState: doc.practiceState,
         syndicateMembershipStatus: doc.syndicateMembershipStatus,
         currentSyndicate: currentSyndicate,
         currentLicense: currentLicense,

@@ -35,6 +35,6 @@ export default interface IPharmacistQueries {
     retirementDate?: string | null;
 
     syndicateMembershipStatus?: string | Object;
-    practiceState?: string | Object;
+    // practiceState?: string | Object;
     currentSyndicate?: string | Object;
 }

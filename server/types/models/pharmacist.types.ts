@@ -95,7 +95,7 @@ export interface IPharmacist {
     retirementDate?: Date | null;
 
     syndicateMembershipStatus?: string;
-    practiceState?: string | null;
+    // practiceState?: string | null;
     currentSyndicate: Types.ObjectId;
     currentLicense?: Types.ObjectId | null;
 

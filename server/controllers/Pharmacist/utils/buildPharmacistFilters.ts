@@ -36,7 +36,7 @@ const buildPharmacistFilters = (queries: IPharmacistQueries): Record<string, any
 
     if (queries.syndicateMembershipStatus) filters.syndicateMembershipStatus = buildStringFilter(queries.syndicateMembershipStatus);
     if (queries.currentSyndicate) filters["currentSyndicate.syndicate"] = buildStringFilter(queries.currentSyndicate);
-    if (queries.practiceState) filters.practiceState = buildStringFilter(queries.practiceState);
+    // if (queries.practiceState) filters.practiceState = buildStringFilter(queries.practiceState);
 
     Object.keys(filters).forEach((key) => {
         if (filters[key] == undefined) {

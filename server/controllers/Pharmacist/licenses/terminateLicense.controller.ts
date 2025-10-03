@@ -30,7 +30,7 @@ const terminateCurrentLicense = async (req: Request, res: TypedResponse<Pharmaci
                 },
                 {
                     currentLicense: null,
-                    practiceState: PracticeState.UNPRACTICED,
+                    // practiceState: PracticeState.UNPRACTICED,
                 },
                 {
                     new: true,

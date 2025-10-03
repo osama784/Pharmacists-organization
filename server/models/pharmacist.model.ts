@@ -80,7 +80,7 @@ const pharmacistSchema = new Schema<PharmacistDocument>(
         retirementDate: Date,
 
         syndicateMembershipStatus: String,
-        practiceState: { type: String, required: true, default: PracticeState.UNPRACTICED },
+        // practiceState: { type: String, required: true, default: PracticeState.UNPRACTICED },
         currentSyndicate: {
             type: Schema.Types.ObjectId,
             ref: "SyndicateRecord",
@@ -193,7 +193,7 @@ const syndicateRecordSchema = new Schema<SyndicateRecordDocument>(
 const licenseSchema = new Schema<LicenseDocument>(
     {
         pharmacist: { type: Schema.Types.ObjectId, required: true },
-        relatedLease: { type: Schema.Types.ObjectId, required: true },
+        relatedLease: { type: Schema.Types.ObjectId, required: true, ref: "Lease" },
         syndicate: { type: String, required: true },
         licenseType: { type: String, required: true },
         practiceStartDate: { type: Date, required: true },

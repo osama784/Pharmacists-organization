@@ -72,7 +72,7 @@ const licenseZodSchema = z.object({
 export const createLicenseZodSchema = licenseZodSchema.omit({
     images: true,
 });
-export const updateLicenseZodSchema = licenseZodSchema.partial();
+export const updateLicenseZodSchema = licenseZodSchema.omit({ relatedLease: true }).partial();
 
 const penaltyZodSchema = z.object({
     penaltyType: StringSchema({ keyName: PharmacistModelTR.penalties.penaltyType }),

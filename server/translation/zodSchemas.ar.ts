@@ -30,4 +30,7 @@ export const zodSchemasMessages = {
     TREASURY_FEES_SCHEMA: {
         INVALID_FEES: "يجب أن تشمل قائمة الرسوم معلومات صحيحة",
     },
+    LEASE_SCHEMA: {
+        NOT_FOUND_STAFF_PHARMACISTS: "تم إرفاق رقم تعريف لصيدلي غير موجود",
+    },
 };

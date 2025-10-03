@@ -100,7 +100,7 @@ export const PharmacistModelTR: PharmacistModelTR = {
     currentLicense: "الترخيص الحالي",
 
     syndicateMembershipStatus: "مؤشر العضوية",
-    practiceState: "نوع المزاولة",
+    // practiceState: "نوع المزاولة",
 
     images: "صور عن المعلومات الشخصية",
     folderToken: "رمز الملف",
@@ -242,8 +242,9 @@ export const TreasuryReceiptModelTR: TreasuryReceiptModelTR = {
 
 type LeaseModelTR = Record<keyof ILease, any>;
 export const LeaseModelTR: LeaseModelTR = {
+    name: "اسم العقار",
     pharmacistOwner: "الصيدلي المالك",
-    staffPharmacists: "الصيادلة الموظفين",
+    // staffPharmacists: "الصيادلة الموظفين",
     estatePlace: "مكان العقار",
     estateNum: "رقم العقار",
     startDate: "تاريخ بدء عقد الإيجار",
