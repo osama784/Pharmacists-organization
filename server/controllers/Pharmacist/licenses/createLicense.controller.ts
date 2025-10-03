@@ -42,6 +42,15 @@ const createLicense = async (req: Request, res: TypedResponse<PharmacistResponse
             });
             return;
         }
+        // check if pharmacist is owner for a lease
+        const leaseExist = await Lease.exists({ pharmacistOwner: pharmacist.id });
+        if (leaseExist && !leaseExist._id.equals(validatedData.relatedLease)) {
+            res.status(400).json({
+                success: false,
+                details: [responseMessages.PHARMACIST_CONTROLLERS.CANT_CREATE_PHARMACIST_IF_HE_LICENSE_OWNER],
+            });
+            return;
+        }
         const currentSyndicate = await syndicateRecordModel.findById(pharmacist.currentSyndicate);
         if (currentSyndicate?.syndicate == Syndicate.CENTRAL) {
             res.status(400).json({
@@ -81,7 +90,7 @@ const createLicense = async (req: Request, res: TypedResponse<PharmacistResponse
                 licenses: license.id,
             },
             currentLicense: license.id,
-            practiceState: PracticeState.PRACTICED,
+            // practiceState: PracticeState.PRACTICED,
         };
         const doc = await pharmacistSchema
             .findOneAndUpdate(

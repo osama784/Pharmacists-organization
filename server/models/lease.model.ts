@@ -3,8 +3,9 @@ import { ILeaseModel, LeaseDocument } from "../types/models/lease.types";
 
 const leaseSchema = new Schema<LeaseDocument>(
     {
+        name: { type: String, required: true },
         pharmacistOwner: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
-        staffPharmacists: [{ type: Types.ObjectId, ref: "Pharmacist" }],
+        // staffPharmacists: [{ type: Types.ObjectId, ref: "Pharmacist" }],
         estatePlace: { type: String, required: true },
         estateNum: { type: String, required: true },
         startDate: { type: Date, required: true },
@@ -14,8 +15,8 @@ const leaseSchema = new Schema<LeaseDocument>(
     { timestamps: true }
 );
 
-leaseSchema.statics.isEstateNumAvailable = async function (estateNum: string): Promise<boolean> {
-    const exist = await this.exists({ estateNum, closedOut: false });
+leaseSchema.statics.isEstateNumAvailable = async function (estateNum: string, estatePlace: string): Promise<boolean> {
+    const exist = await this.exists({ estateNum, estatePlace, closedOut: false });
     return exist ? false : true;
 };
 

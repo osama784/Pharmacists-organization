@@ -3,7 +3,7 @@ const allowedDateOperators = ["$gt", "$lt", "$gte", "$lte"];
 const allowedNumberOperators = ["$gt", "$lt", "$gte", "$lte"];
 import { ParsedQs } from "qs";
 
-export const buildFilter = (queryParam: ParsedQs | string | undefined, type: "Date" | "string" | "number" | "boolean" | "custom") => {
+export const buildFilter = (queryParam: ParsedQs, type: "Date" | "string" | "number" | "boolean" | "custom") => {
     switch (type) {
         case "string":
             return buildStringFilter(queryParam);

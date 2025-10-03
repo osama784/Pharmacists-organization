@@ -1,8 +1,9 @@
 import { HydratedDocument, Model, Types } from "mongoose";
 
 export interface ILease {
+    name: string;
     pharmacistOwner: Types.ObjectId;
-    staffPharmacists: [Types.ObjectId];
+    // staffPharmacists: [Types.ObjectId];
     estatePlace: string;
     estateNum: string;
     startDate: Date;
@@ -15,5 +16,5 @@ export type LeaseDocument = HydratedDocument<ILease> & {
 };
 
 export interface ILeaseModel extends Model<LeaseDocument> {
-    isEstateNumAvailable: (estateNum: string) => Promise<boolean>;
+    isEstateNumAvailable: (estateNum: string, estatePlace: string) => Promise<boolean>;
 }

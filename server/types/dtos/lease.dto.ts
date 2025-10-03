@@ -9,8 +9,9 @@ export type LeaseUpdateDto = z.infer<typeof updateLeaseZodSchema>;
 
 export type LeaseResponseDto = {
     id: string;
+    name: string;
     pharmacistOwner: string;
-    staffPharmacists: string[];
+    // staffPharmacists: string[];
     estatePlace: string;
     estateNum: string;
     startDate: Date;
@@ -32,11 +33,12 @@ export function toLeaseResponseDto(data: LeaseDocument | LeaseDocument[]): Lease
 }
 
 function _toLeaseResponseDto(doc: LeaseDocument): LeaseResponseDto {
-    const staffPharmacists = doc.staffPharmacists.map((staff) => staff.toString());
+    // const staffPharmacists = doc.staffPharmacists.map((staff) => staff.toString());
     return {
         id: doc.id,
+        name: doc.name,
         pharmacistOwner: doc.pharmacistOwner.toString(),
-        staffPharmacists: staffPharmacists,
+        // staffPharmacists: staffPharmacists,
         estatePlace: doc.estatePlace,
         estateNum: doc.estateNum,
         startDate: dateUtils.toLocaleDate(doc.startDate)!,
