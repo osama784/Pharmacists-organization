@@ -3,6 +3,7 @@ import { isPharmacyLease, LeaseDocument } from "../models/lease.types";
 import { dateUtils } from "../../utils/dateUtils";
 import { z } from "zod";
 import { createLeaseZodSchema, updateLeaseZodSchema } from "../../validators/lease.schema";
+import { PharmacistResponseDto, toPharmacistResponseDto } from "./pharmacist.dto";
 
 export type LeaseCreateDto = z.infer<typeof createLeaseZodSchema>;
 export type LeaseUpdateDto = z.infer<typeof updateLeaseZodSchema>;
@@ -10,7 +11,7 @@ export type LeaseUpdateDto = z.infer<typeof updateLeaseZodSchema>;
 export type LeaseResponseDto = {
     id: string;
     name: string;
-    pharmacistOwner?: string;
+    pharmacistOwner?: string | PharmacistResponseDto;
     // staffPharmacists: string[];
     estatePlace: string;
     estateNum: string;
@@ -34,9 +35,13 @@ export function toLeaseResponseDto(data: LeaseDocument | LeaseDocument[]): Lease
 
 function _toLeaseResponseDto(doc: LeaseDocument): LeaseResponseDto {
     // const staffPharmacists = doc.staffPharmacists.map((staff) => staff.toString());
-    let pharmacistOwner: string | undefined = undefined;
+    let pharmacistOwner: string | PharmacistResponseDto | undefined = undefined;
     if (isPharmacyLease(doc)) {
-        pharmacistOwner = doc.pharmacistOwner.toString();
+        if ("__v" in doc.pharmacistOwner) {
+            pharmacistOwner = toPharmacistResponseDto(doc.pharmacistOwner);
+        } else {
+            pharmacistOwner = doc.pharmacistOwner.toString();
+        }
     }
 
     return {

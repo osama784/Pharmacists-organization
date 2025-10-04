@@ -1,9 +1,10 @@
 import { HydratedDocument, Model, Types } from "mongoose";
 import { LeaseType } from "../../enums/lease.enums";
+import { PharmacistDocument } from "./pharmacist.types";
 
 export interface ILease {
     name: string;
-    pharmacistOwner?: Types.ObjectId;
+    pharmacistOwner?: Types.ObjectId | PharmacistDocument;
     leaseType: LeaseType;
     // staffPharmacists: [Types.ObjectId];
     estatePlace: string;
