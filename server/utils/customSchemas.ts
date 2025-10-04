@@ -30,8 +30,24 @@ export const EmailSchema = (options: EmailSchemaOptions) => {
 
 type mongooseIDSchemaOptions = {
     keyName: string;
+    optional?: boolean;
 };
 export const mongooseIDSchema = (options: mongooseIDSchemaOptions) => {
+    if (options.optional) {
+        return StringSchema({ keyName: options.keyName })
+            .optional()
+            .refine(
+                async (data) => {
+                    if (data == undefined) return true;
+                    const isValid = mongoose.Types.ObjectId.isValid(data);
+                    if (!isValid) {
+                        return false;
+                    }
+                    return true;
+                },
+                { message: `${options.keyName}: ${zodSchemasMessages.INVALID_MONGOOSE_ID}` }
+            );
+    }
     return StringSchema({ keyName: options.keyName }).refine(
         async (data) => {
             const isValid = mongoose.Types.ObjectId.isValid(data);

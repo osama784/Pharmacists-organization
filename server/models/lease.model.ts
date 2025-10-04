@@ -4,7 +4,8 @@ import { ILeaseModel, LeaseDocument } from "../types/models/lease.types";
 const leaseSchema = new Schema<LeaseDocument>(
     {
         name: { type: String, required: true },
-        pharmacistOwner: { type: Schema.Types.ObjectId, ref: "Pharmacist", required: true },
+        pharmacistOwner: { type: Schema.Types.ObjectId, ref: "Pharmacist" },
+        leaseType: { type: String, required: true },
         // staffPharmacists: [{ type: Types.ObjectId, ref: "Pharmacist" }],
         estatePlace: { type: String, required: true },
         estateNum: { type: String, required: true },

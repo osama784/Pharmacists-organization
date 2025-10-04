@@ -243,6 +243,7 @@ export const TreasuryReceiptModelTR: TreasuryReceiptModelTR = {
 type LeaseModelTR = Record<keyof ILease, any>;
 export const LeaseModelTR: LeaseModelTR = {
     name: "اسم العقار",
+    leaseType: "نوع التعهد",
     pharmacistOwner: "الصيدلي المالك",
     // staffPharmacists: "الصيادلة الموظفين",
     estatePlace: "مكان العقار",

@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { LeaseDocument } from "../models/lease.types";
+import { isPharmacyLease, LeaseDocument } from "../models/lease.types";
 import { dateUtils } from "../../utils/dateUtils";
 import { z } from "zod";
 import { createLeaseZodSchema, updateLeaseZodSchema } from "../../validators/lease.schema";
@@ -10,7 +10,7 @@ export type LeaseUpdateDto = z.infer<typeof updateLeaseZodSchema>;
 export type LeaseResponseDto = {
     id: string;
     name: string;
-    pharmacistOwner: string;
+    pharmacistOwner?: string;
     // staffPharmacists: string[];
     estatePlace: string;
     estateNum: string;
@@ -34,10 +34,15 @@ export function toLeaseResponseDto(data: LeaseDocument | LeaseDocument[]): Lease
 
 function _toLeaseResponseDto(doc: LeaseDocument): LeaseResponseDto {
     // const staffPharmacists = doc.staffPharmacists.map((staff) => staff.toString());
+    let pharmacistOwner: string | undefined = undefined;
+    if (isPharmacyLease(doc)) {
+        pharmacistOwner = doc.pharmacistOwner.toString();
+    }
+
     return {
         id: doc.id,
         name: doc.name,
-        pharmacistOwner: doc.pharmacistOwner.toString(),
+        pharmacistOwner: pharmacistOwner,
         // staffPharmacists: staffPharmacists,
         estatePlace: doc.estatePlace,
         estateNum: doc.estateNum,
